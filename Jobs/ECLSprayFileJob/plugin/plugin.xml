@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="ECLSprayFile"
+	iconfile="spray.png"
+	description="Spray"
+	tooltip="Spray" 
+	category="HPCC Systems"
+	classname="org.hpccsystems.pentaho.job.eclsprayfile.ECLSprayFile">
+            
+    <libraries>
+        <library name="ECLSprayFileJob.jar"/>
+    </libraries>            
+</plugin>
