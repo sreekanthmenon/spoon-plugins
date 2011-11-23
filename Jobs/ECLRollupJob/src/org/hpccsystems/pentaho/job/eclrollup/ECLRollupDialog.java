@@ -51,7 +51,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     private Text transform;
     private Text fieldlist;
     private Text group;
-    private Text runLocal;//optional
+    private Combo runLocal;//optional
     
     
     
@@ -142,7 +142,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         fieldlist = buildMultiText("Fieldlist", transform, lsMod, middle, margin, iterateGroup);
         group = buildText("Transform", fieldlist, lsMod, middle, margin, iterateGroup);
         
-        runLocal = buildText("RUNLOCAL", group, lsMod, middle, margin, iterateGroup);
+        runLocal = buildCombo("RUNLOCAL", group, lsMod, middle, margin, iterateGroup, new String[]{"false", "true"});
      
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");

@@ -6,7 +6,7 @@ package org.hpccsystems.pentaho.job.ecldedup;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.hpccsystems.ecldirect.Iterate;
+import org.hpccsystems.ecldirect.Dedup;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -39,6 +39,62 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
     private String keeper;
     private Boolean runLocal;
 
+    public String getCondition() {
+        return condition;
+    }
+
+    public void setCondition(String condition) {
+        this.condition = condition;
+    }
+
+    public Boolean getIsAll() {
+        return isAll;
+    }
+
+    public void setIsAll(Boolean isAll) {
+        this.isAll = isAll;
+    }
+
+    public Boolean getIsHash() {
+        return isHash;
+    }
+
+    public void setIsHash(Boolean isHash) {
+        this.isHash = isHash;
+    }
+
+    public String getKeep() {
+        return keep;
+    }
+
+    public void setKeep(String keep) {
+        this.keep = keep;
+    }
+
+    public String getKeeper() {
+        return keeper;
+    }
+
+    public void setKeeper(String keeper) {
+        this.keeper = keeper;
+    }
+
+    public String getRecordset() {
+        return recordset;
+    }
+
+    public void setRecordset(String recordset) {
+        this.recordset = recordset;
+    }
+
+    public Boolean getRunLocal() {
+        return runLocal;
+    }
+
+    public void setRunLocal(Boolean runLocal) {
+        this.runLocal = runLocal;
+    }
+
     
     
 
@@ -60,6 +116,42 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
             return "false";
         }
     }
+    
+    public void setIsHashString(String isHash) {
+        
+        if(isHash.equals("true")){
+            this.isHash = true;
+        }else{
+            this.isHash = false;
+        }
+        
+    }
+    
+    public String getIsHashString() {
+        if(this.isHash != null && this.isHash){
+            return "true";
+        }else{
+            return "false";
+        }
+    }
+    
+    public void setIsAllString(String isall) {
+        
+        if(isall.equals("true")){
+            this.isAll = true;
+        }else{
+            this.isAll = false;
+        }
+        
+    }
+    
+    public String getIsAllString() {
+        if(this.isAll != null && this.isAll){
+            return "true";
+        }else{
+            return "false";
+        }
+    }
 
 
 
@@ -67,21 +159,27 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
     public Result execute(Result prevResult, int k) throws KettleException {
         
         Result result = prevResult;
-        
-    
-        Iterate iterate = new Iterate();
-        iterate.setName(this.getName());
-        iterate.setRecordset(this.getRecordset());
-        iterate.setRunLocal(this.getRunLocal());
+      
 
-        logBasic("{Iterate Job} Execute = " + iterate.ecl());
+        Dedup dedup = new Dedup();
+        dedup.setName(this.getName());
+        dedup.setRecordset(this.getRecordset());
+        dedup.setRunLocal(this.getRunLocal());
+        dedup.setCondition(this.getCondition());
+        dedup.setIsAll(this.getIsAll());
+        dedup.setIsHash(this.getIsHash());
+        dedup.setKeep(this.getKeep());
+        dedup.setKeeper(this.getKeeper());
+        
+
+        logBasic("{Iterate Job} Execute = " + dedup.ecl());
         
         logBasic("{Iterate Job} Previous =" + result.getLogText());
         
         result.setResult(true);
         
         RowMetaAndData data = new RowMetaAndData();
-        data.addValue("ecl", Value.VALUE_TYPE_STRING, iterate.ecl());
+        data.addValue("ecl", Value.VALUE_TYPE_STRING, dedup.ecl());
         
         
         List list = result.getRows();
@@ -112,13 +210,15 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
         try {
             super.loadXML(node, list, list1);
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
-            
 
             this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
             this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
-            this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
-            this.setFieldlist(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"fieldlist")));
-            this.setGroup(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"group")));
+            this.setIsAllString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isAll")));
+            this.setIsHashString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isHash")));
+            this.setKeep(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keep")));
+            this.setKeeper(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keeper")));
+            
+            
             this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
 
         } catch (Exception e) {
@@ -131,14 +231,17 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
         String retval = "";
         
         retval += super.getXML();
+                    
+
         
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <condition>"+this.condition+"</condition>"+Const.CR;
-        retval += "             <transform>"+this.transform+"</transform>"+Const.CR;
-        retval += "             <fieldlist>"+this.fieldlist+"</fieldlist>"+Const.CR;
-        retval += "             <group>"+this.group+"</group>"+Const.CR;
         retval += "             <runLocal>"+this.getRunLocalString()+"</runLocal>"+Const.CR;
-       
+        retval += "             <isAll>"+this.getIsAllString()+"</isAll>"+Const.CR;
+        retval += "             <isHash>"+this.getIsHashString()+"</isHash>"+Const.CR;
+        retval += "             <keep>"+this.getKeep()+"</keep>"+Const.CR;
+        retval += "             <keeper>"+this.getKeeper()+"</keeper>"+Const.CR;
+        
 
        
        
@@ -154,14 +257,18 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
 
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
             
-
+ 
+            
             recordset = rep.getStepAttributeString(id_jobentry, "recordset");
             condition = rep.getStepAttributeString(id_jobentry, "condition");
-            transform = rep.getStepAttributeString(id_jobentry, "transform");
-            fieldlist = rep.getStepAttributeString(id_jobentry, "fieldlist");
-            group = rep.getStepAttributeString(id_jobentry, "group");            
             this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
-
+            this.setIsAllString(rep.getStepAttributeString(id_jobentry, "isAll"));
+            this.setIsHashString(rep.getStepAttributeString(id_jobentry, "isHash"));
+            keep = rep.getStepAttributeString(id_jobentry, "keep");
+            keeper = rep.getStepAttributeString(id_jobentry, "keeper");
+            
+            
+            
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
         }
@@ -172,13 +279,25 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
             //rep.saveStepAttribute(id_job, getObjectId(), "jobName", jobName); //$NON-NLS-1$
 
             //rep.saveStepAttribute(id_job, getObjectId(), "name", name); //$NON-NLS-1$
-
+                
+                   /*
+        private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
+    private String condition;
+    private Boolean isAll;
+    private Boolean isHash;
+    private String keep;
+    private String keeper;
+    private Boolean runLocal;
+    */
+            
             rep.saveStepAttribute(id_job, getObjectId(), "recordset", recordset);
             rep.saveStepAttribute(id_job, getObjectId(), "condition", condition);
-            rep.saveStepAttribute(id_job, getObjectId(), "transform", transform);
-            rep.saveStepAttribute(id_job, getObjectId(), "fieldlist", fieldlist);
-            rep.saveStepAttribute(id_job, getObjectId(), "group", group);
             rep.saveStepAttribute(id_job, getObjectId(), "runLocal", this.getRunLocalString());
+            rep.saveStepAttribute(id_job, getObjectId(), "isAll", this.getIsAllString());
+            rep.saveStepAttribute(id_job, getObjectId(), "isHash", this.getIsHashString());
+            rep.saveStepAttribute(id_job, getObjectId(), "keep", keep);
+            rep.saveStepAttribute(id_job, getObjectId(), "keeper", keeper);
+        
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

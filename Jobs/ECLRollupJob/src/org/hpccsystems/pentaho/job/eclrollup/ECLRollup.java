@@ -6,7 +6,7 @@ package org.hpccsystems.pentaho.job.eclrollup;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.hpccsystems.ecldirect.Iterate;
+import org.hpccsystems.ecldirect.Rollup;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -115,19 +115,33 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
         Result result = prevResult;
         
     
-        Iterate iterate = new Iterate();
-        iterate.setName(this.getName());
-        iterate.setRecordset(this.getRecordset());
-        iterate.setRunLocal(this.getRunLocal());
-
-        logBasic("{Iterate Job} Execute = " + iterate.ecl());
+        Rollup rollup = new Rollup();
+        rollup.setName(this.getName());
+        rollup.setRecordset(this.getRecordset());
+        rollup.setRunLocal(this.getRunLocal());
         
-        logBasic("{Iterate Job} Previous =" + result.getLogText());
+        rollup.setCondition(this.getCondition());
+        rollup.setFieldlist(this.getFieldlist());
+        rollup.setGroup(this.getGroup());
+        
+        
+        /*
+         *     private String recordset;
+    private String condition;
+    private String transform;
+    private String fieldlist;
+    private String group;
+    private Boolean runLocal;
+         */
+
+        logBasic("{rollup Job} Execute = " + rollup.ecl());
+        
+        logBasic("{rollup Job} Previous =" + result.getLogText());
         
         result.setResult(true);
         
         RowMetaAndData data = new RowMetaAndData();
-        data.addValue("ecl", Value.VALUE_TYPE_STRING, iterate.ecl());
+        data.addValue("ecl", Value.VALUE_TYPE_STRING, rollup.ecl());
         
         
         List list = result.getRows();

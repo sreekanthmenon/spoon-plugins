@@ -47,7 +47,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
 
     private Text transform;
     private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
-    private Text runLocal;
+    private Combo runLocal;
     
     
     
@@ -132,7 +132,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         
         transform = buildText("Transform", null, lsMod, middle, margin, iterateGroup);
         recordset = buildMultiText("Recordset", transform, lsMod, middle, margin, iterateGroup);
-        runLocal = buildText("RUNLOCAL", recordset, lsMod, middle, margin, iterateGroup);
+        runLocal = buildCombo("RUNLOCAL", recordset, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
      
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");

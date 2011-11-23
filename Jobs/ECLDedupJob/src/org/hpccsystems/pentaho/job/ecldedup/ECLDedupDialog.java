@@ -48,11 +48,13 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
     
     private Text recordset;
     private Text condition;
-    private Text transform;
-    private Text fieldlist;
-    private Text group;
-    private Text runLocal;//optional
+    private Combo runLocal;//optional
     
+
+    private Combo isAll;
+    private Combo isHash;
+    private Text keep;
+    private Text keeper;
     
     
     private Button wOK, wCancel;
@@ -63,7 +65,7 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
         super(parent, jobEntryInt, rep, jobMeta);
         jobEntry = (ECLDedup) jobEntryInt;
         if (this.jobEntry.getName() == null) {
-            this.jobEntry.setName("Iterate");
+            this.jobEntry.setName("Dedup");
         }
     }
 
@@ -138,11 +140,19 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
         
         recordset = buildMultiText("Recordset", null, lsMod, middle, margin, iterateGroup);
         condition = buildText("Condtion", recordset, lsMod, middle, margin, iterateGroup);
-        transform = buildText("Transform", condition, lsMod, middle, margin, iterateGroup);
-        fieldlist = buildMultiText("Fieldlist", transform, lsMod, middle, margin, iterateGroup);
-        group = buildText("Transform", fieldlist, lsMod, middle, margin, iterateGroup);
         
-        runLocal = buildText("RUNLOCAL", group, lsMod, middle, margin, iterateGroup);
+    /*private Text isAll;
+    private Text isHash;
+    private Text keep;
+    private Text keeper;
+     */   
+        isAll = buildCombo("All", condition, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
+        isHash = buildCombo("Hash", isAll, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
+        keep = buildText("Keep", isHash, lsMod, middle, margin, iterateGroup);
+        keeper = buildText("Keeper", keep, lsMod, middle, margin, iterateGroup);
+       
+        
+        runLocal = buildCombo("RUNLOCAL", keeper, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
      
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -209,17 +219,26 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
             condition.setText(jobEntry.getCondition());
         }
         
-        
-        if (jobEntry.getTransform() != null) {
-            transform.setText(jobEntry.getTransform());
+            /*private Text isAll;
+    private Text isHash;
+    private Text keep;
+    private Text keeper;
+     */
+         if (jobEntry.getIsAllString() != null) {
+            isAll.setText(jobEntry.getIsAllString());
         }
+          if (jobEntry.getIsHashString() != null) {
+            isHash.setText(jobEntry.getIsHashString());
+        }
+          
+
         
-        if (jobEntry.getFieldlist() != null) {
-            fieldlist.setText(jobEntry.getFieldlist());
+        if (jobEntry.getKeep() != null) {
+            keep.setText(jobEntry.getKeep());
         }
        
-        if (jobEntry.getGroup() != null) {
-            group.setText(jobEntry.getGroup());
+        if (jobEntry.getKeeper() != null) {
+            keeper.setText(jobEntry.getKeeper());
         }
         if (jobEntry.getRunLocalString() != null) {
             runLocal.setText(jobEntry.getRunLocalString());
@@ -332,9 +351,17 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
         
         jobEntry.setRecordset(recordset.getText());
         jobEntry.setCondition(condition.getText());
-        jobEntry.setTransform(transform.getText());
-        jobEntry.setFieldlist(fieldlist.getText());
-        jobEntry.setGroup(group.getText());
+        
+                    /*private Text isAll;
+    private Text isHash;
+    private Text keep;
+    private Text keeper;
+     */
+        
+        jobEntry.setIsAllString(isAll.getText());
+        jobEntry.setIsHashString(isHash.getText());
+        jobEntry.setKeep(keep.getText());
+        jobEntry.setKeeper(keeper.getText());
         jobEntry.setRunLocalString(runLocal.getText());
 
         dispose();
