@@ -46,6 +46,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
     private Text jobEntryName;
 
     private Text transform;
+     private Text transformName;
     private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private Combo runLocal;
     
@@ -129,8 +130,8 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
 
 
-        
-        transform = buildText("Transform", null, lsMod, middle, margin, iterateGroup);
+        transformName = buildText("Transform Name", null, lsMod, middle, margin, iterateGroup);
+        transform = buildMultiText("Transform", transformName, lsMod, middle, margin, iterateGroup);
         recordset = buildMultiText("Recordset", transform, lsMod, middle, margin, iterateGroup);
         runLocal = buildCombo("RUNLOCAL", recordset, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
      
@@ -191,7 +192,9 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
          */
         
 
-        
+        if (jobEntry.getTransformName() != null) {
+            transformName.setText(jobEntry.getTransformName());
+        }
         if (jobEntry.getTransform() != null) {
             transform.setText(jobEntry.getTransform());
         }
@@ -311,7 +314,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
     private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private Text runLocal
          */
-
+        jobEntry.setTransformName(transformName.getText());
         jobEntry.setTransform(transform.getText());
         jobEntry.setRecordset(recordset.getText());
         

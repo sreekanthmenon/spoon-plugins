@@ -34,10 +34,19 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
 
     private String recordset;
     private String condition;
+    private String transformName;
     private String transform;
     private String fieldlist;
     private String group;
     private Boolean runLocal;//optional
+
+    public String getTransformName() {
+        return transformName;
+    }
+
+    public void setTransformName(String transformName) {
+        this.transformName = transformName;
+    }
 
     public String getGroup() {
         return group;
@@ -176,6 +185,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
 
             this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
             this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
+            this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
             this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
             this.setFieldlist(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"fieldlist")));
             this.setGroup(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"group")));
@@ -194,6 +204,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
         
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <condition>"+this.condition+"</condition>"+Const.CR;
+        retval += "             <transformName>"+this.transformName+"</transformName>"+Const.CR;
         retval += "             <transform>"+this.transform+"</transform>"+Const.CR;
         retval += "             <fieldlist>"+this.fieldlist+"</fieldlist>"+Const.CR;
         retval += "             <group>"+this.group+"</group>"+Const.CR;
@@ -217,6 +228,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
 
             recordset = rep.getStepAttributeString(id_jobentry, "recordset");
             condition = rep.getStepAttributeString(id_jobentry, "condition");
+            transformName = rep.getStepAttributeString(id_jobentry, "transformName");
             transform = rep.getStepAttributeString(id_jobentry, "transform");
             fieldlist = rep.getStepAttributeString(id_jobentry, "fieldlist");
             group = rep.getStepAttributeString(id_jobentry, "group");            
@@ -235,6 +247,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
 
             rep.saveStepAttribute(id_job, getObjectId(), "recordset", recordset);
             rep.saveStepAttribute(id_job, getObjectId(), "condition", condition);
+            rep.saveStepAttribute(id_job, getObjectId(), "transformName", transformName);
             rep.saveStepAttribute(id_job, getObjectId(), "transform", transform);
             rep.saveStepAttribute(id_job, getObjectId(), "fieldlist", fieldlist);
             rep.saveStepAttribute(id_job, getObjectId(), "group", group);

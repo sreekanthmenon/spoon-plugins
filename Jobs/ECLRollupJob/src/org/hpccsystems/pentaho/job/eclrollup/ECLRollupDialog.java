@@ -48,6 +48,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     
     private Text recordset;
     private Text condition;
+    private Text transformName;
     private Text transform;
     private Text fieldlist;
     private Text group;
@@ -136,9 +137,11 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
                     
 
         
-        recordset = buildMultiText("Recordset", null, lsMod, middle, margin, iterateGroup);
+        recordset = buildText("Recordset", null, lsMod, middle, margin, iterateGroup);
         condition = buildText("Condtion", recordset, lsMod, middle, margin, iterateGroup);
-        transform = buildText("Transform", condition, lsMod, middle, margin, iterateGroup);
+        transformName = buildText("Transform Name", condition, lsMod, middle, margin, iterateGroup);
+        
+        transform = buildMultiText("Transform", transformName, lsMod, middle, margin, iterateGroup);
         fieldlist = buildMultiText("Fieldlist", transform, lsMod, middle, margin, iterateGroup);
         group = buildText("Transform", fieldlist, lsMod, middle, margin, iterateGroup);
         
@@ -212,6 +215,9 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         
         if (jobEntry.getTransform() != null) {
             transform.setText(jobEntry.getTransform());
+        }
+        if (jobEntry.getTransformName() != null) {
+            transformName.setText(jobEntry.getTransformName());
         }
         
         if (jobEntry.getFieldlist() != null) {
@@ -332,6 +338,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         
         jobEntry.setRecordset(recordset.getText());
         jobEntry.setCondition(condition.getText());
+        jobEntry.setTransformName(transformName.getText());
         jobEntry.setTransform(transform.getText());
         jobEntry.setFieldlist(fieldlist.getText());
         jobEntry.setGroup(group.getText());

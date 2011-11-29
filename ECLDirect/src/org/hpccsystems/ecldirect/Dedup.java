@@ -13,11 +13,11 @@ public class Dedup implements EclCommand {
     private String name;
     private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private String condition;
-    private boolean isAll;
-    private boolean isHash;
+    private Boolean isAll = false;
+    private Boolean isHash = false;
     private String keep;
     private String keeper;
-    private boolean runLocal;
+    private Boolean runLocal = false;
 
     public String getCondition() {
         return condition;
@@ -147,29 +147,29 @@ public class Dedup implements EclCommand {
         //DEDUP(recordset [, condition [, ALL[, HASH]] [, KEEP n ] [, keeper ] ] [, LOCAL])
         String ecl = name + ":=DEDUP(" + recordset;
         //add local if its set if not its optional
-        if (!condition.equals("")) {
+        if (condition != "" && !condition.equals("")) {
            ecl += "," + condition;
-           if(isAll){
+           if(isAll != null && isAll){
                ecl += ", ALL";
-               if(isHash){
+               if(isHash != null && isHash){
                    ecl += ", HASH";
                    
                }
            }
         }
         
-        if(!keep.equals("")){
+        if(keep != null && !keep.equals("")){
            ecl += ", KEEP " + keep;
            if(!keeper.equals("")){
                ecl += "," + keeper;
            }
         }
         
-        if(runLocal){
+        if(runLocal != null && runLocal){
            ecl += ", LOCAL";
         }
         //close out the ecl call
-        ecl += ")\r\n";
+        ecl += ");\r\n";
         
         return ecl;
     }

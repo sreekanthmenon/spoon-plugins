@@ -16,10 +16,10 @@ public class Table implements EclCommand {
     private String expression;
     
     private String size; //FEW,MANY
-    private Boolean isUnsorted;
-    private Boolean runLocal;
-    private Boolean isKeyed;
-    private Boolean isMerge;
+    private Boolean isUnsorted = false;
+    private Boolean runLocal = false;
+    private Boolean isKeyed = false;
+    private Boolean isMerge = false;
 
     public String getSize() {
         return size;
@@ -101,11 +101,18 @@ public class Table implements EclCommand {
     @Override
     public String ecl() {
         //TABLE(recordset, format [,expression [,FEW | MANY] [, UNSORTED]] [,LOCAL] [, KEYED ] [, MERGE ] )
-        String ecl = name + " := TABLE(" + recordset + "," + format;
+       
+        String formatECL = name+"Format := RECORD \r\n";
+        formatECL += format;
+        formatECL += "\r\n";
+        formatECL += "END; \r\n";
+        
+        
+        String ecl = formatECL + name + " := TABLE(" + recordset + "," + name+"Format";
         //add optional fields if its set
-        if (!expression.equals("")) {
+        if (expression != null && !expression.equals("")) {
            ecl += "," + expression;
-            if(!size.equals("")){
+            if(size != null && !size.equals("")){
                 ecl += "," + size;
             }
             if (isUnsorted) {
@@ -125,7 +132,7 @@ public class Table implements EclCommand {
             ecl += ", MERGE";
          }
         //close out the ecl call
-        ecl += ")\r\n";
+        ecl += ");\r\n";
         
         return ecl;
     }

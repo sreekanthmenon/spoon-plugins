@@ -31,8 +31,17 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
     //private String jobName;
     private String name;
     private String transform;
+    private String transformName;
     private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private Boolean runLocal = false;
+
+    public String getTransformName() {
+        return transformName;
+    }
+
+    public void setTransformName(String transformName) {
+        this.transformName = transformName;
+    }
 
 
     
@@ -108,6 +117,8 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
         List list = result.getRows();
         list.add(data);
         String eclCode = "";
+        
+          
         if (list == null) {
             list = new ArrayList();
         } else {
@@ -133,6 +144,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
         try {
             super.loadXML(node, list, list1);
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
+            this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
             this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
             
             this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
@@ -149,6 +161,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
         retval += super.getXML();
         //retval += "		<job_name>" + jobName + "</jobName>" + Const.CR;
         //retval += "		<name>" + name + "</name>" + Const.CR;
+        retval += "             <transformName>"+this.transformName+"</transformName>"+Const.CR;
         retval += "             <transform>"+this.transform+"</transform>"+Const.CR;
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <runLocal>"+this.getRunLocalString()+"</runLocal>"+Const.CR;
@@ -166,6 +179,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
             //jobName = rep.getStepAttributeString(id_jobentry, "jobName"); //$NON-NLS-1$
 
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
+            transformName = rep.getStepAttributeString(id_jobentry, "transformName");
             transform = rep.getStepAttributeString(id_jobentry, "transform");
             recordset = rep.getStepAttributeString(id_jobentry, "recordset");
             this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
@@ -180,6 +194,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
             //rep.saveStepAttribute(id_job, getObjectId(), "jobName", jobName); //$NON-NLS-1$
 
             //rep.saveStepAttribute(id_job, getObjectId(), "name", name); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "transformName", transformName);
             rep.saveStepAttribute(id_job, getObjectId(), "transform", transform);
             rep.saveStepAttribute(id_job, getObjectId(), "recordset", recordset);
             rep.saveStepAttribute(id_job, getObjectId(), "runLocal", this.getRunLocalString());

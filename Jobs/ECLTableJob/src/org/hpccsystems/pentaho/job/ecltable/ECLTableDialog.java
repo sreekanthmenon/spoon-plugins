@@ -52,10 +52,10 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
     private Text format;
     private Text expression;
     private Text size; //FEW,MANY
-    private Text isUnsorted;
-    private Text runLocal;
-    private Text isKeyed;
-    private Text isMerge;
+    private Combo isUnsorted;
+    private Combo runLocal;
+    private Combo isKeyed;
+    private Combo isMerge;
 
     
     
@@ -141,13 +141,13 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
         
         recordset = buildMultiText("Recordset", null, lsMod, middle, margin, tableGroup);
         expression = buildMultiText("Expression", recordset, lsMod, middle, margin, tableGroup);
-        format = buildText("Format", expression, lsMod, middle, margin, tableGroup);
+        format = buildMultiText("Format", expression, lsMod, middle, margin, tableGroup);
         size = buildText("Size", format, lsMod, middle, margin, tableGroup);
-        isUnsorted = buildText("Unsorted", size, lsMod, middle, margin, tableGroup);
-        isKeyed = buildText("Keyed", isUnsorted, lsMod, middle, margin, tableGroup);
-        isMerge = buildText("Merge", isKeyed, lsMod, middle, margin, tableGroup);
-        runLocal = buildText("RUNLOCAL", isMerge, lsMod, middle, margin, tableGroup);
-        
+        isUnsorted = buildCombo("Unsorted", size, lsMod, middle, margin, tableGroup, new String[]{"false", "true"});
+        isKeyed = buildCombo("Keyed", isUnsorted, lsMod, middle, margin, tableGroup, new String[]{"false", "true"});
+        isMerge = buildCombo("Merge", isKeyed, lsMod, middle, margin, tableGroup, new String[]{"false", "true"});
+        runLocal = buildCombo("RUNLOCAL", isMerge, lsMod, middle, margin, tableGroup, new String[]{"false", "true"});
+     
 
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");

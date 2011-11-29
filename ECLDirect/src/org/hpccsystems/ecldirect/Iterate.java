@@ -12,6 +12,7 @@ public class Iterate implements EclCommand {
 
     private String name;
     private String transform;
+    private String transformName;
     private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private Boolean runLocal;
 
@@ -21,6 +22,14 @@ public class Iterate implements EclCommand {
 
     public void setRunLocal(Boolean runLocal) {
         this.runLocal = runLocal;
+    }
+
+    public String getTransformName() {
+        return transformName;
+    }
+
+    public void setTransformName(String transformName) {
+        this.transformName = transformName;
     }
 
 
@@ -54,13 +63,18 @@ public class Iterate implements EclCommand {
     @Override
     public String ecl() {
         //ITERATE(recordset, transform [, LOCAL ] )
-        String ecl = name + ":=ITERATE(" + recordset + "," + transform;
+        
+         
+        String ecl = "";
+        ecl += transformName + ":= TRANSFORM \r\n" + transform + "\r\nEND;\r\n";
+     
+        ecl += name + ":=ITERATE(" + recordset + "," + transformName;
         //add local if its set if not its optional
-        if (runLocal) {
+        if (runLocal != null && runLocal) {
            ecl += ", local";
         }
         //close out the ecl call
-        ecl += ")\r\n";
+        ecl += ");\r\n";
         
         return ecl;
     }
