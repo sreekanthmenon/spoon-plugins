@@ -11,10 +11,47 @@ package org.hpccsystems.ecldirect;
 public class Iterate implements EclCommand {
 
     private String name;
+    private String record;
+    private String recordName;
     private String transform;
+    private String transformCall;
     private String transformName;
-    private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
+    private String recordsetName;
+    private String recordset;
     private Boolean runLocal;
+
+    public String getTransformCall() {
+        return transformCall;
+    }
+
+    public void setTransformCall(String transformCall) {
+        this.transformCall = transformCall;
+    }
+
+    
+    public String getRecordName() {
+        return recordName;
+    }
+
+    public void setRecordName(String recordName) {
+        this.recordName = recordName;
+    }
+
+    public String getRecordsetName() {
+        return recordsetName;
+    }
+
+    public void setRecordsetName(String recordsetName) {
+        this.recordsetName = recordsetName;
+    }
+
+    public String getRecord() {
+        return record;
+    }
+
+    public void setRecord(String record) {
+        this.record = record;
+    }
 
     public Boolean getRunLocal() {
         return runLocal;
@@ -66,15 +103,21 @@ public class Iterate implements EclCommand {
         
          
         String ecl = "";
-        ecl += transformName + ":= TRANSFORM \r\n" + transform + "\r\nEND;\r\n";
+        ecl += recordName + " := RECORD\r\n" + record + "\r\nEND; \r\n\r\n";
+        
+        if(recordset != null && !recordset.equals("")){
+            
+            ecl += recordsetName + " := DATASET(["+recordset+"],"+recordName+");\r\n";
+        }
+        ecl += transformName + ":= TRANSFORM \r\n" + transform + "\r\nEND;\r\n\r\n";
      
-        ecl += name + ":=ITERATE(" + recordset + "," + transformName;
+        ecl += name + " := ITERATE(" + recordsetName + "," + transformCall;
         //add local if its set if not its optional
         if (runLocal != null && runLocal) {
            ecl += ", local";
         }
         //close out the ecl call
-        ecl += ");\r\n";
+        ecl += ");\r\n\r\n";
         
         return ecl;
     }

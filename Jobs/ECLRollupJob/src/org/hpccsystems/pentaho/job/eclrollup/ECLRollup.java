@@ -36,9 +36,19 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
     private String condition;
     private String transformName;
     private String transform;
+    private String transformCall;
+
     private String fieldlist;
     private String group;
     private Boolean runLocal;//optional
+
+    public String getTransformCall() {
+        return transformCall;
+    }
+
+    public void setTransformCall(String transformCall) {
+        this.transformCall = transformCall;
+    }
 
     public String getTransformName() {
         return transformName;
@@ -123,6 +133,11 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
         
         Result result = prevResult;
         
+
+ 
+
+ 
+    
     
         Rollup rollup = new Rollup();
         rollup.setName(this.getName());
@@ -132,6 +147,10 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
         rollup.setCondition(this.getCondition());
         rollup.setFieldlist(this.getFieldlist());
         rollup.setGroup(this.getGroup());
+        
+        rollup.setTransformName(this.getTransformName());
+        rollup.setTransform(this.getTransform());
+        rollup.setTransformCall(this.getTransformCall());
         
         
         /*
@@ -187,6 +206,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
             this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
             this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
             this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
+            this.setTransformCall(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")));
             this.setFieldlist(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"fieldlist")));
             this.setGroup(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"group")));
             this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
@@ -206,6 +226,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
         retval += "             <condition>"+this.condition+"</condition>"+Const.CR;
         retval += "             <transformName>"+this.transformName+"</transformName>"+Const.CR;
         retval += "             <transform>"+this.transform+"</transform>"+Const.CR;
+        retval += "             <transformCall>"+this.transformCall+"</transformCall>"+Const.CR;
         retval += "             <fieldlist>"+this.fieldlist+"</fieldlist>"+Const.CR;
         retval += "             <group>"+this.group+"</group>"+Const.CR;
         retval += "             <runLocal>"+this.getRunLocalString()+"</runLocal>"+Const.CR;
@@ -230,6 +251,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
             condition = rep.getStepAttributeString(id_jobentry, "condition");
             transformName = rep.getStepAttributeString(id_jobentry, "transformName");
             transform = rep.getStepAttributeString(id_jobentry, "transform");
+            transformCall = rep.getStepAttributeString(id_jobentry, "transformCall");
             fieldlist = rep.getStepAttributeString(id_jobentry, "fieldlist");
             group = rep.getStepAttributeString(id_jobentry, "group");            
             this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
@@ -249,6 +271,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
             rep.saveStepAttribute(id_job, getObjectId(), "condition", condition);
             rep.saveStepAttribute(id_job, getObjectId(), "transformName", transformName);
             rep.saveStepAttribute(id_job, getObjectId(), "transform", transform);
+            rep.saveStepAttribute(id_job, getObjectId(), "transformCall", transformCall);
             rep.saveStepAttribute(id_job, getObjectId(), "fieldlist", fieldlist);
             rep.saveStepAttribute(id_job, getObjectId(), "group", group);
             rep.saveStepAttribute(id_job, getObjectId(), "runLocal", this.getRunLocalString());

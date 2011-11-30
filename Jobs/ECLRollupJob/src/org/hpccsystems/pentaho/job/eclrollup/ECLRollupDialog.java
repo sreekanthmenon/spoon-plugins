@@ -50,6 +50,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     private Text condition;
     private Text transformName;
     private Text transform;
+    private Text transformCall;
     private Text fieldlist;
     private Text group;
     private Combo runLocal;//optional
@@ -59,6 +60,118 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     private Button wOK, wCancel;
     private boolean backupChanged;
     private SelectionAdapter lsDef;
+
+    public boolean isBackupChanged() {
+        return backupChanged;
+    }
+
+    public void setBackupChanged(boolean backupChanged) {
+        this.backupChanged = backupChanged;
+    }
+
+    public Text getCondition() {
+        return condition;
+    }
+
+    public void setCondition(Text condition) {
+        this.condition = condition;
+    }
+
+    public Text getFieldlist() {
+        return fieldlist;
+    }
+
+    public void setFieldlist(Text fieldlist) {
+        this.fieldlist = fieldlist;
+    }
+
+    public Text getGroup() {
+        return group;
+    }
+
+    public void setGroup(Text group) {
+        this.group = group;
+    }
+
+    public ECLRollup getJobEntry() {
+        return jobEntry;
+    }
+
+    public void setJobEntry(ECLRollup jobEntry) {
+        this.jobEntry = jobEntry;
+    }
+
+    public Text getJobEntryName() {
+        return jobEntryName;
+    }
+
+    public void setJobEntryName(Text jobEntryName) {
+        this.jobEntryName = jobEntryName;
+    }
+
+    public SelectionAdapter getLsDef() {
+        return lsDef;
+    }
+
+    public void setLsDef(SelectionAdapter lsDef) {
+        this.lsDef = lsDef;
+    }
+
+    public Text getRecordset() {
+        return recordset;
+    }
+
+    public void setRecordset(Text recordset) {
+        this.recordset = recordset;
+    }
+
+    public Combo getRunLocal() {
+        return runLocal;
+    }
+
+    public void setRunLocal(Combo runLocal) {
+        this.runLocal = runLocal;
+    }
+
+    public Text getTransform() {
+        return transform;
+    }
+
+    public void setTransform(Text transform) {
+        this.transform = transform;
+    }
+
+    public Text getTransformCall() {
+        return transformCall;
+    }
+
+    public void setTransformCall(Text transformCall) {
+        this.transformCall = transformCall;
+    }
+
+    public Text getTransformName() {
+        return transformName;
+    }
+
+    public void setTransformName(Text transformName) {
+        this.transformName = transformName;
+    }
+
+    public Button getwCancel() {
+        return wCancel;
+    }
+
+    public void setwCancel(Button wCancel) {
+        this.wCancel = wCancel;
+    }
+
+    public Button getwOK() {
+        return wOK;
+    }
+
+    public void setwOK(Button wOK) {
+        this.wOK = wOK;
+    }
 
     public ECLRollupDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
@@ -143,9 +256,10 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         
         transform = buildMultiText("Transform", transformName, lsMod, middle, margin, iterateGroup);
         fieldlist = buildMultiText("Fieldlist", transform, lsMod, middle, margin, iterateGroup);
-        group = buildText("Transform", fieldlist, lsMod, middle, margin, iterateGroup);
+        group = buildText("Group", fieldlist, lsMod, middle, margin, iterateGroup);
         
-        runLocal = buildCombo("RUNLOCAL", group, lsMod, middle, margin, iterateGroup, new String[]{"false", "true"});
+        transformCall = buildMultiText("Transform Call", group, lsMod, middle, margin, iterateGroup);
+        runLocal = buildCombo("RUNLOCAL", transformCall, lsMod, middle, margin, iterateGroup, new String[]{"false", "true"});
      
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -215,6 +329,9 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         
         if (jobEntry.getTransform() != null) {
             transform.setText(jobEntry.getTransform());
+        }
+        if (jobEntry.getTransformCall() != null) {
+            transformCall.setText(jobEntry.getTransformCall());
         }
         if (jobEntry.getTransformName() != null) {
             transformName.setText(jobEntry.getTransformName());
@@ -340,6 +457,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         jobEntry.setCondition(condition.getText());
         jobEntry.setTransformName(transformName.getText());
         jobEntry.setTransform(transform.getText());
+        jobEntry.setTransformCall(transformCall.getText());
         jobEntry.setFieldlist(fieldlist.getText());
         jobEntry.setGroup(group.getText());
         jobEntry.setRunLocalString(runLocal.getText());

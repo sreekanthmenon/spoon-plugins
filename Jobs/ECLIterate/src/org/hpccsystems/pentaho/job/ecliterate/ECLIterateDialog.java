@@ -50,7 +50,11 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
     private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private Combo runLocal;
     
+    private Text record;
+    private Text recordName;
+    private Text recordsetName;
     
+    private Text transformCall;
     
     private Button wOK, wCancel;
     private boolean backupChanged;
@@ -114,26 +118,58 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         
         jobEntryName = buildText("Job Entry Name", null, lsMod, middle, margin, generalGroup);
 
+
+        
         //All other contols
         //Distribute Declaration
-        Group iterateGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(iterateGroup);
-        iterateGroup.setText("Distribute Details");
-        iterateGroup.setLayout(groupLayout);
-        FormData datasetGroupFormat = new FormData();
-        datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
-        datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 200;
-        datasetGroupFormat.left = new FormAttachment(middle, 0);
-        iterateGroup.setLayoutData(datasetGroupFormat);
+        Group transformGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(transformGroup);
+        transformGroup.setText("Transform Details");
+        transformGroup.setLayout(groupLayout);
+        FormData transformGroupFormat = new FormData();
+        transformGroupFormat.top = new FormAttachment(generalGroup, margin);
+        transformGroupFormat.width = 400;
+        transformGroupFormat.height = 125;
+        transformGroupFormat.left = new FormAttachment(middle, 0);
+        transformGroup.setLayoutData(transformGroupFormat);
+        
+        transformName = buildText("Transform Name", null, lsMod, middle, margin, transformGroup);
+        transform = buildMultiText("Transform", transformName, lsMod, middle, margin, transformGroup);
 
+
+        Group recordGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(recordGroup);
+        recordGroup.setText("Record Details");
+        recordGroup.setLayout(groupLayout);
+        FormData recordGroupFormat = new FormData();
+        recordGroupFormat.top = new FormAttachment(transformGroup, margin);
+        recordGroupFormat.width = 400;
+        recordGroupFormat.height = 200;
+        recordGroupFormat.left = new FormAttachment(middle, 0);
+        recordGroup.setLayoutData(recordGroupFormat);
+        
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
 
 
-        transformName = buildText("Transform Name", null, lsMod, middle, margin, iterateGroup);
-        transform = buildMultiText("Transform", transformName, lsMod, middle, margin, iterateGroup);
-        recordset = buildMultiText("Recordset", transform, lsMod, middle, margin, iterateGroup);
-        runLocal = buildCombo("RUNLOCAL", recordset, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
+        recordName = buildText("Record Name", null, lsMod, middle, margin, recordGroup);
+        record = buildMultiText("Record", recordName, lsMod, middle, margin, recordGroup);
+
+        recordsetName = buildText("Recordset Name", record, lsMod, middle, margin, recordGroup);
+        recordset = buildMultiText("Recordset", recordsetName, lsMod, middle, margin, recordGroup);
+        
+        Group iterateGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(iterateGroup);
+        iterateGroup.setText("Iterate Details");
+        iterateGroup.setLayout(groupLayout);
+        FormData iterateGroupFormat = new FormData();
+        iterateGroupFormat.top = new FormAttachment(recordGroup, margin);
+        iterateGroupFormat.width = 400;
+        iterateGroupFormat.height = 125;
+        iterateGroupFormat.left = new FormAttachment(middle, 0);
+        iterateGroup.setLayoutData(iterateGroupFormat);
+        
+        transformCall = buildText("Transform Call", null, lsMod, middle, margin, iterateGroup);
+        runLocal = buildCombo("RUNLOCAL", transformCall, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
      
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -185,11 +221,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
             jobEntryName.setText(jobEntry.getName());
         }
         
-               /*
-         *     private Text transform;
-    private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
-    private Text runLocal
-         */
+
         
 
         if (jobEntry.getTransformName() != null) {
@@ -201,10 +233,22 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         if (jobEntry.getRecordset() != null) {
             recordset.setText(jobEntry.getRecordset());
         }
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
+        }
+        if (jobEntry.getRecord() != null) {
+            record.setText(jobEntry.getRecord());
+        }
+        if (jobEntry.getRecordName() != null) {
+            recordName.setText(jobEntry.getRecordName());
+        }
         
        // if (jobEntry.getRunLocalString() != null) {
             runLocal.setText(jobEntry.getRunLocalString());
         //}
+        if (jobEntry.getTransformCall() != null) {
+            transformCall.setText(jobEntry.getTransformCall());
+        }
          
 
 
@@ -309,16 +353,19 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
     */
         //jobEntry.setJobName(jobEntryName.getText());
         jobEntry.setName(jobEntryName.getText());
-               /*
-         *     private Text transform;
-    private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
-    private Text runLocal
-         */
+        /*
+    private Text record;
+    private Text recordName;
+    private Text recordsetName;
+    */
         jobEntry.setTransformName(transformName.getText());
         jobEntry.setTransform(transform.getText());
         jobEntry.setRecordset(recordset.getText());
-        
+        jobEntry.setRecordsetName(recordsetName.getText());
+        jobEntry.setRecord(record.getText());
+        jobEntry.setRecordName(recordName.getText());
         jobEntry.setRunLocalString(runLocal.getText());
+        jobEntry.setTransformCall(transformCall.getText());
 
         dispose();
     }
