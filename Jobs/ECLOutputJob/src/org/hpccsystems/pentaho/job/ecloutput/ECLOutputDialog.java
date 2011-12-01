@@ -4,6 +4,7 @@
  */
 package org.hpccsystems.pentaho.job.ecloutput;
 
+import java.util.ArrayList;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -40,6 +41,20 @@ import org.eclipse.swt.widgets.Shell;
 
 
 
+
+
+import org.pentaho.di.repository.ObjectId;
+import org.pentaho.di.job.JobHopMeta;
+
+import org.pentaho.di.job.entry.JobEntryCopy;
+import org.hpccsystems.eclguifeatures.*;
+//JobEntry
+
+
+
+
+
+
 import java.util.HashMap;
 
 /**
@@ -55,7 +70,7 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
     private boolean backupChanged;
     private SelectionAdapter lsDef;
    
-    private Text attributeName;
+    private Combo attributeName;
     private Text fileName;
     private Text serverAddress;
     
@@ -71,12 +86,79 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
     }
 
     
-    
-    
 
     
     public JobEntryInterface open() {
+        System.out.println(" ------------ open ------------- ");
+        String datasets[] = null;
         
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
+        /*
+         * 
+         * ArrayList<String> adDS = new ArrayList<String>();
+        try{
+            //rep.getStepAttributeString(id_jobentry, "attributeName"); //$NON-NLS-1$
+            
+            //this.rep.getJobId(this.jobEntryName;, null)
+            Object[] jobHops = this.jobMeta.getJobhops().toArray();
+            
+            
+            for(int i = 0; i<jobHops.length; i++){
+                System.out.println(((JobHopMeta)jobHops[i]).getXML());
+            }
+            
+            
+            Object[] jec = this.jobMeta.getJobCopies().toArray();
+            //JobEntryCopy
+            System.out.println("Number of nodes: " + jobHops.length);
+                    
+            datasets = new String[jec.length];
+            int k = 0;
+
+            for(int j = 0; j<jec.length; j++){
+                System.out.println("Node(i): " + j + " | " +((JobEntryCopy)jec[j]).getName());
+                
+                if(!((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("START") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("OUTPUT") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("SUCCESS")){
+                    System.out.println("Node(k): " + k);
+                    datasets[k] = ((JobEntryCopy)jec[j]).getName();
+                    adDS.add((String)((JobEntryCopy)jec[j]).getName());
+                    k++;
+                }
+                
+                System.out.println(((JobEntryCopy)jec[j]).getXML());
+                
+            }
+            //saving the loop code using arraylists
+            datasets = adDS.toArray(new String[k]);
+            
+            for(int a = 0; a<datasets.length; a++){
+                System.out.println("datasets[" + a + "] = " + datasets[a]);
+            }
+            
+           // Repository rep = this.jobMeta.getRepository();
+           // ObjectId[] allIDs = rep.getPartitionSchemaIDs(false);
+            
+           // System.out.println("ObjectID length: " + allIDs.length);
+           // for(int i = 0; i<allIDs.length; i++){
+                //logBasic("ObjectID["+i+"] = " + allIDs[i]);
+           //     System.out.println("ObjectID["+i+"] = " + allIDs[i]);
+           // }
+        }catch (Exception e){
+            System.out.println("ObjectID loop error");
+            System.out.println(e);
+        }
+         * 
+         * 
+         */
         Shell parentShell = getParent();
         Display display = parentShell.getDisplay();
 
@@ -174,7 +256,10 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         outputGroup.setLayoutData(datasetGroupFormat);
 
-        this.attributeName = buildText("Attribute Name", fileGroup, lsMod, middle, margin, outputGroup);
+
+        this.attributeName = buildCombo("Attribute Name", fileGroup, lsMod, middle, margin, outputGroup,datasets);
+     
+        
         controls.put("attributeName", attributeName);
         
         //fOpen = new Button(shell, SWT.PUSH);

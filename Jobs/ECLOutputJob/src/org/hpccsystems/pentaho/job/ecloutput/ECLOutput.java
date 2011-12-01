@@ -193,6 +193,7 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
     @Override
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {
         try {
+             System.out.println(" ------------ loadXML ------------- ");
             super.loadXML(node, list, list1);
 
             setAttributeName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "attribute_name")));
@@ -208,7 +209,7 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
 
     public String getXML() {
         String retval = "";
-        
+         System.out.println(" ------------ getXML ------------- ");
         retval += super.getXML();
 
         retval += "		<attribute_name>" + attributeName + "</attribute_name>" + Const.CR;
@@ -221,7 +222,14 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
 
     public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
+        System.out.println(" ------------ loadRep " + id_jobentry + "------------- ");
         try {
+            
+            ObjectId[] allIDs = rep.getPartitionSchemaIDs(true);
+            for(int i = 0; i<allIDs.length; i++){
+                logBasic("ObjectID["+i+"] = " + allIDs[i]);
+                System.out.println("ObjectID["+i+"] = " + allIDs[i]);
+            }
           
             attributeName = rep.getStepAttributeString(id_jobentry, "attributeName"); //$NON-NLS-1$
             serverAddress = rep.getStepAttributeString(id_jobentry, "serverAddress"); //$NON-NLS-1$
@@ -229,12 +237,19 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
+            
         }
     }
 
     public void saveRep(Repository rep, ObjectId id_job) throws KettleException {
+        System.out.println(" ------------ saveRep " + id_job + " ------------- ");
         try {
-       
+             
+            ObjectId[] allIDs = rep.getPartitionSchemaIDs(true);
+            for(int i = 0; i<allIDs.length; i++){
+                logBasic("ObjectID["+i+"] = " + allIDs[i]);
+                System.out.println("ObjectID["+i+"] = " + allIDs[i]);
+            }
             rep.saveStepAttribute(id_job, getObjectId(), "attributeName", attributeName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "serverAddress", serverAddress); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "fileName", fileName); //$NON-NLS-1$

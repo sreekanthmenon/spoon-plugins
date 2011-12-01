@@ -245,7 +245,7 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
             //jobName = rep.getStepAttributeString(id_jobentry, "jobName"); //$NON-NLS-1$
 
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
-            
+
 
             recordset = rep.getStepAttributeString(id_jobentry, "recordset");
             condition = rep.getStepAttributeString(id_jobentry, "condition");
