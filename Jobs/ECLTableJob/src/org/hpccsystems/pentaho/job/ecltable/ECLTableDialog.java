@@ -45,7 +45,7 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
     
     private Text jobEntryName;
 
-
+    private Text recordsetName;
     private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     
 
@@ -138,8 +138,9 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
 
         
+        recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, tableGroup);
         
-        recordset = buildMultiText("Recordset", null, lsMod, middle, margin, tableGroup);
+        recordset = buildMultiText("Recordset", recordsetName, lsMod, middle, margin, tableGroup);
         expression = buildMultiText("Expression", recordset, lsMod, middle, margin, tableGroup);
         format = buildMultiText("Format", expression, lsMod, middle, margin, tableGroup);
         size = buildText("Size", format, lsMod, middle, margin, tableGroup);
@@ -230,7 +231,9 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
         if (jobEntry.getRecordset() != null) {
             recordset.setText(jobEntry.getRecordset());
         }
-
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
+        }
          
 
 
@@ -346,7 +349,7 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
         
 
         jobEntry.setRecordset(recordset.getText());
-        
+        jobEntry.setRecordsetName(recordsetName.getText());
         jobEntry.setRunLocalString(runLocal.getText());
 
         dispose();

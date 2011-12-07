@@ -47,6 +47,7 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
     
     
   //  private Text name;
+    private Text recordsetName;
     private Text datasetName;
     private Text expression;
     private Text index;
@@ -130,7 +131,9 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
         distributeGroup.setLayoutData(datasetGroupFormat);
 
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
-        datasetName = buildText("Dataset Name", null, lsMod, middle, margin, distributeGroup);
+        recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, distributeGroup);
+        
+        datasetName = buildText("Dataset Name", recordsetName, lsMod, middle, margin, distributeGroup);
         expression = buildMultiText("Expression", datasetName, lsMod, middle, margin, distributeGroup);
         index = buildText("Index", expression, lsMod, middle, margin, distributeGroup);
         joinCondition = buildText("Join Condition", index, lsMod, middle, margin, distributeGroup);
@@ -184,6 +187,9 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
         //}
         if (jobEntry.getName() != null) {
             jobEntryName.setText(jobEntry.getName());
+        }
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
         }
         if (jobEntry.getDatasetName() != null) {
             datasetName.setText(jobEntry.getDatasetName());
@@ -304,6 +310,7 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
     */
         //jobEntry.setJobName(jobEntryName.getText());
         jobEntry.setName(jobEntryName.getText());
+        jobEntry.setRecordsetName(recordsetName.getText());
         jobEntry.setDatasetName(datasetName.getText());
         jobEntry.setExpression(expression.getText());
         

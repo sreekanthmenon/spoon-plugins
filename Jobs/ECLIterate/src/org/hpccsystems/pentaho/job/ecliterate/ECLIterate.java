@@ -39,10 +39,20 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
     private String recordName;
     private String recordsetName;
     
+    private String recordsetNameIterate;
+    
     private String transformCall;
 
     public String getTransformCall() {
         return transformCall;
+    }
+
+    public String getRecordsetNameIterate() {
+        return recordsetNameIterate;
+    }
+
+    public void setRecordsetNameIterate(String recordsetNameIterate) {
+        this.recordsetNameIterate = recordsetNameIterate;
     }
 
     public void setTransformCall(String transformCall) {
@@ -141,7 +151,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
     
     
         Iterate iterate = new Iterate();
-        iterate.setName(this.getName());
+        iterate.setName(this.getRecordsetNameIterate());
         iterate.setRecordset(this.getRecordset());
         iterate.setRunLocal(this.getRunLocal());
         
@@ -198,6 +208,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
             this.setRecord(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record")));
             this.setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordName")));
             this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordsetName")));
+           this.setRecordsetNameIterate(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name_iterate")));
            
            this.setTransformCall(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")));
            
@@ -226,6 +237,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
         retval += "             <record>"+this.record+"</record>"+Const.CR;
         retval += "             <recordName>"+this.recordName+"</recordName>"+Const.CR;
         retval += "             <recordsetName>"+this.recordsetName+"</recordsetName>"+Const.CR;
+        retval += "             <recordset_name_iterate>"+this.recordsetNameIterate+"</recordset_name_iterate>"+Const.CR;
         
         
         retval += "             <transformName>"+this.transformName+"</transformName>"+Const.CR;
@@ -251,6 +263,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
             record = rep.getStepAttributeString(id_jobentry, "record");
             recordName = rep.getStepAttributeString(id_jobentry, "recordName");
             recordsetName = rep.getStepAttributeString(id_jobentry, "recordsetName");
+            recordsetNameIterate = rep.getStepAttributeString(id_jobentry, "recordset_name_iterate");
             
             
             transformName = rep.getStepAttributeString(id_jobentry, "transformName");
@@ -271,6 +284,7 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
             rep.saveStepAttribute(id_job, getObjectId(), "record", record);
             rep.saveStepAttribute(id_job, getObjectId(), "recordName", recordName);
             rep.saveStepAttribute(id_job, getObjectId(), "recordsetName", recordsetName);
+            rep.saveStepAttribute(id_job, getObjectId(), "recordset_name_iterate", recordsetNameIterate);
             
             
             //rep.saveStepAttribute(id_job, getObjectId(), "name", name); //$NON-NLS-1$

@@ -45,7 +45,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     
     private Text jobEntryName;
 
-    
+    private Text recordsetName;
     private Text recordset;
     private Text condition;
     private Text transformName;
@@ -240,7 +240,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 300;
+        datasetGroupFormat.height = 350;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         iterateGroup.setLayoutData(datasetGroupFormat);
 
@@ -249,8 +249,9 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
 
                     
 
-        
-        recordset = buildText("Recordset", null, lsMod, middle, margin, iterateGroup);
+        recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, iterateGroup);
+       
+        recordset = buildText("Recordset", recordsetName, lsMod, middle, margin, iterateGroup);
         condition = buildText("Condtion", recordset, lsMod, middle, margin, iterateGroup);
         transformName = buildText("Transform Name", condition, lsMod, middle, margin, iterateGroup);
         
@@ -320,6 +321,9 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
 
         if (jobEntry.getRecordset() != null) {
             recordset.setText(jobEntry.getRecordset());
+        }
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
         }
         
         if (jobEntry.getCondition() != null) {
@@ -452,6 +456,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
                 private String GROUP;
                 private Boolean runLocal;
              */
+        jobEntry.setRecordsetName(recordsetName.getText());
         
         jobEntry.setRecordset(recordset.getText());
         jobEntry.setCondition(condition.getText());

@@ -31,7 +31,7 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
     //private String logicalFileName;
     private String datasetName;
     private String fields;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
-    private String sortName;
+    private String recordsetName;
 
     public String getDatasetName() {
         return datasetName;
@@ -57,12 +57,12 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
         this.fields = fields;
     }
     
-    public String getSortName() {
-        return sortName;
+    public String getRecordsetName() {
+        return recordsetName;
     }
 
-    public void setSortName(String sortName) {
-        this.sortName = sortName;
+    public void setRecordsetName(String recordsetName) {
+        this.recordsetName = recordsetName;
     }
 
     
@@ -76,7 +76,7 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
         Sort sort = new Sort();
         sort.setFields(getFields());
         sort.setDatasetName(getDatasetName());
-        sort.setName(getSortName());
+        sort.setName(getRecordsetName());
         logBasic("{Sort Job} Execute = " + sort.ecl());
         
         logBasic("{Sort Job} Previous =" + result.getLogText());
@@ -118,7 +118,7 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
             setFields(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fields")));
             //setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")));
             setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
-            setSortName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "sort_name")));
+            setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
            
         } catch (Exception e) {
             throw new KettleXMLException("ECL Sort Job Plugin Unable to read step info from XML node", e);
@@ -134,7 +134,7 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
         //retval += "		<record_name>" + recordName + "</record_name>" + Const.CR;
         retval += "		<dataset_name>" + datasetName + "</dataset_name>" + Const.CR;
         retval += "		<fields>" + fields + "</fields>" + Const.CR;
-        retval += "		<sort_name>" + sortName + "</sort_name>" + Const.CR;
+        retval += "		<recordset_name>" + recordsetName + "</recordset_name>" + Const.CR;
 
         return retval;
 
@@ -145,7 +145,7 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
         try {
             fields = rep.getStepAttributeString(id_jobentry, "fields"); //$NON-NLS-1$
             datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
-            sortName = rep.getStepAttributeString(id_jobentry, "sortName"); //$NON-NLS-1$
+            recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name"); //$NON-NLS-1$
             //recordName = rep.getStepAttributeString(id_jobentry, "recordName"); //$NON-NLS-1$
             //recordDef = rep.getStepAttributeString(id_jobentry, "recordDef"); //$NON-NLS-1$
         
@@ -158,7 +158,7 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
         try {
             rep.saveStepAttribute(id_job, getObjectId(), "fields", fields); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "datasetName", datasetName); //$NON-NLS-1$
-            rep.saveStepAttribute(id_job, getObjectId(), "sortName", sortName); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "recordset_name", recordsetName); //$NON-NLS-1$
            // rep.saveStepAttribute(id_job, getObjectId(), "recordName", recordName); //$NON-NLS-1$
            // rep.saveStepAttribute(id_job, getObjectId(), "recordDef", recordDef); //$NON-NLS-1$
         } catch (Exception e) {

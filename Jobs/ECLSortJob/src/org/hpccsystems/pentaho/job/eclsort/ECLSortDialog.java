@@ -45,7 +45,7 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
     private Text jobEntryName;
     
    
-    private Text sortName;
+    private Text recordsetName;
     private Text datasetName;
     private Text fields;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     
@@ -127,9 +127,9 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         datasetGroup.setLayoutData(datasetGroupFormat);
         
         
-        sortName = buildText("Sort Dataset Name", null, lsMod, middle, margin, datasetGroup);
+        recordsetName = buildText("Sort Dataset Name", null, lsMod, middle, margin, datasetGroup);
         
-        datasetName = buildText("Dataset Name", sortName, lsMod, middle, margin, datasetGroup);
+        datasetName = buildText("Dataset Name", recordsetName, lsMod, middle, margin, datasetGroup);
         fields = buildText("Fields \ncomma seperated, \nprefix - for descending order", datasetName, lsMod, middle, margin, datasetGroup);
 
        
@@ -183,8 +183,8 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         if (jobEntry.getDatasetName() != null) {
             datasetName.setText(jobEntry.getDatasetName());
         }
-        if (jobEntry.getSortName() != null) {
-            sortName.setText(jobEntry.getSortName());
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
         }
 
 
@@ -282,7 +282,7 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         jobEntry.setName(jobEntryName.getText());
         jobEntry.setFields(fields.getText());
         jobEntry.setDatasetName(datasetName.getText());
-        jobEntry.setSortName(sortName.getText());
+        jobEntry.setRecordsetName(recordsetName.getText());
         
         dispose();
     }

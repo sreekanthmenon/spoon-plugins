@@ -45,7 +45,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
     
     private Text jobEntryName;
     
-    
+    private Text recordsetName;
   //  private inputs;
     private Combo declareCounter;
     private Text inRecordName;
@@ -133,9 +133,10 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
 
        
        
+        recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, distributeGroup);
         
         
-        declareCounter = buildCombo("Declare Counter", null, lsMod, middle, margin, distributeGroup, new String[]{"no", "yes"});
+        declareCounter = buildCombo("Declare Counter", recordsetName, lsMod, middle, margin, distributeGroup, new String[]{"no", "yes"});
         inRecordName = buildText("In Record Name", declareCounter, lsMod, middle, margin, distributeGroup);
         outRecordName = buildText("Out Record Name", inRecordName, lsMod, middle, margin, distributeGroup);
         outRecordFormat = buildMultiText("Out Record Format", outRecordName, lsMod, middle, margin, distributeGroup);
@@ -200,6 +201,9 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         }
         if (jobEntry.getInRecordName() != null) {
             inRecordName.setText(jobEntry.getInRecordName());
+        }
+         if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
         }
         if (jobEntry.getOutRecordName() != null) {
             outRecordName.setText(jobEntry.getOutRecordName());
@@ -313,6 +317,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
 
         jobEntry.setName(jobEntryName.getText());
         jobEntry.setDeclareCounter(declareCounter.getText());
+        jobEntry.setRecordsetName(recordsetName.getText()); 
         jobEntry.setInRecordName(inRecordName.getText()); 
         jobEntry.setOutRecordName(outRecordName.getText());
         jobEntry.setOutRecordFormat(outRecordFormat.getText());

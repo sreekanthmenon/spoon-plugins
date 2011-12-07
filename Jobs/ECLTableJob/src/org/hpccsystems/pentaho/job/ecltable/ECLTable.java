@@ -30,7 +30,8 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
     
     //private String jobName;
     private String name;
-
+    
+    private String recordsetName;
     private String recordset;
     private String format;
     private String expression;
@@ -40,6 +41,14 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
     private Boolean runLocal;
     private Boolean isKeyed;
     private Boolean isMerge;
+
+    public String getRecordsetName() {
+        return recordsetName;
+    }
+
+    public void setRecordsetName(String recordsetName) {
+        this.recordsetName = recordsetName;
+    }
 
     public String getSize() {
         return size;
@@ -186,7 +195,7 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
 
         
         Table table = new Table();
-        table.setName(this.getName());
+        table.setName(this.getRecordsetName());
         table.setRecordset(this.getRecordset());
         table.setFormat(this.getFormat());
         table.setExpression(this.getExpression());
@@ -234,7 +243,8 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {
         try {
             super.loadXML(node, list, list1);
-
+            this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
+            
             this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
             this.setFormat(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"format")));
             this.setExpression(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"expression")));
@@ -255,7 +265,9 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
         String retval = "";
         
         retval += super.getXML();
-
+        
+        retval += "             <recordset_name>"+this.recordsetName+"</recordset_name>"+Const.CR;
+        
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <format>"+this.format+"</format>"+Const.CR;
         retval += "             <expression>" + this.expression + "</expression>"+Const.CR;
@@ -280,7 +292,8 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
             //jobName = rep.getStepAttributeString(id_jobentry, "jobName"); //$NON-NLS-1$
 
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
-
+            recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
+            
             recordset = rep.getStepAttributeString(id_jobentry, "recordset");
             format = rep.getStepAttributeString(id_jobentry, "format");
             expression = rep.getStepAttributeString(id_jobentry, "expression");
@@ -299,6 +312,7 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
         try {
 
             
+            rep.saveStepAttribute(id_job, getObjectId(), "recordset_name", recordsetName);
             rep.saveStepAttribute(id_job, getObjectId(), "recordset", recordset);
             rep.saveStepAttribute(id_job, getObjectId(), "format", format);
             rep.saveStepAttribute(id_job, getObjectId(), "expression", expression);

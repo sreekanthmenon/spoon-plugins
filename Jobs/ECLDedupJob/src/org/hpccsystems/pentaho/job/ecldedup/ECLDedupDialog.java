@@ -45,7 +45,7 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
     
     private Text jobEntryName;
 
-    
+    private Text recordsetName;
     private Text recordset;
     private Text condition;
     private Combo runLocal;//optional
@@ -137,8 +137,8 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
 
                     
 
-        
-        recordset = buildMultiText("Recordset", null, lsMod, middle, margin, iterateGroup);
+        recordsetName = buildText("Result Recordset", null, lsMod, middle, margin, iterateGroup);
+        recordset = buildText("Recordset", recordsetName, lsMod, middle, margin, iterateGroup);
         condition = buildText("Condtion", recordset, lsMod, middle, margin, iterateGroup);
         
     /*private Text isAll;
@@ -211,6 +211,10 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
     private Text group;
     private Text runLocal;*/
 
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
+        }
+        
         if (jobEntry.getRecordset() != null) {
             recordset.setText(jobEntry.getRecordset());
         }
@@ -348,7 +352,7 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
                 private String GROUP;
                 private Boolean runLocal;
              */
-        
+        jobEntry.setRecordsetName(recordsetName.getText());
         jobEntry.setRecordset(recordset.getText());
         jobEntry.setCondition(condition.getText());
         

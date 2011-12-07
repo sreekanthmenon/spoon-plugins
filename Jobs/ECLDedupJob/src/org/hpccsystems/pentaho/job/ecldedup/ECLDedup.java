@@ -31,6 +31,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
     //private String jobName;
     private String name;
     
+    private String RecordsetName;
     private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private String condition;
     private Boolean isAll;
@@ -38,6 +39,14 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
     private String keep;
     private String keeper;
     private Boolean runLocal;
+
+    public String getRecordsetName() {
+        return RecordsetName;
+    }
+
+    public void setRecordsetName(String recordsetName) {
+        this.RecordsetName = recordsetName;
+    }
 
     public String getCondition() {
         return condition;
@@ -162,7 +171,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
       
 
         Dedup dedup = new Dedup();
-        dedup.setName(this.getName());
+        dedup.setName(this.getRecordsetName());
         dedup.setRecordset(this.getRecordset());
         dedup.setRunLocal(this.getRunLocal());
         dedup.setCondition(this.getCondition());
@@ -172,9 +181,9 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
         dedup.setKeeper(this.getKeeper());
         
 
-        logBasic("{Iterate Job} Execute = " + dedup.ecl());
+        logBasic("{Dedup Job} Execute = " + dedup.ecl());
         
-        logBasic("{Iterate Job} Previous =" + result.getLogText());
+        logBasic("{Dedup Job} Previous =" + result.getLogText());
         
         result.setResult(true);
         
@@ -196,7 +205,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
                     eclCode += code;
                 }
             }
-            logBasic("{Iterate Job} ECL Code =" + eclCode);
+            logBasic("{Dedup Job} ECL Code =" + eclCode);
         }
         
         result.setRows(list);
@@ -211,6 +220,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
             super.loadXML(node, list, list1);
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
 
+            this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
             this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
             this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
             this.setIsAllString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isAll")));
@@ -233,7 +243,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
         retval += super.getXML();
                     
 
-        
+        retval += "             <recordset_name>"+this.RecordsetName+"</recordset_name>"+Const.CR;
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <condition>"+this.condition+"</condition>"+Const.CR;
         retval += "             <runLocal>"+this.getRunLocalString()+"</runLocal>"+Const.CR;
@@ -258,7 +268,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
             
  
-            
+            RecordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
             recordset = rep.getStepAttributeString(id_jobentry, "recordset");
             condition = rep.getStepAttributeString(id_jobentry, "condition");
             this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
@@ -289,7 +299,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
     private String keeper;
     private Boolean runLocal;
     */
-            
+            rep.saveStepAttribute(id_job, getObjectId(), "recordset_name", RecordsetName);
             rep.saveStepAttribute(id_job, getObjectId(), "recordset", recordset);
             rep.saveStepAttribute(id_job, getObjectId(), "condition", condition);
             rep.saveStepAttribute(id_job, getObjectId(), "runLocal", this.getRunLocalString());

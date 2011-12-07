@@ -30,11 +30,20 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
     
     //private String jobName;
     private String name;
+    private String recordsetName;
     private String datasetName;
     private String expression;
     private String index;
     private String joinCondition;
     private String skew;
+
+    public String getRecordsetName() {
+        return recordsetName;
+    }
+
+    public void setRecordsetName(String recordsetName) {
+        this.recordsetName = recordsetName;
+    }
     
    // public String getJobName(){
    //     return jobName;
@@ -97,7 +106,7 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
         Result result = prevResult;
         
         Distribute distribute = new Distribute();
-        distribute.setName(this.getName());
+        distribute.setName(this.getRecordsetName());
         distribute.setDatasetName(this.getDatasetName());
         distribute.setExpression(this.getExpression());
         distribute.setIndex(this.getIndex());
@@ -145,6 +154,8 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
             //setJobName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "jobName")));
            
             setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
+            
+            setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
             setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
             setExpression(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "expression")));
             setIndex(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "index")));
@@ -163,6 +174,7 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
         retval += super.getXML();
         //retval += "		<job_name>" + jobName + "</jobName>" + Const.CR;
         retval += "		<name>" + name + "</name>" + Const.CR;
+        retval += "		<recordset_name>" + recordsetName + "</recordset_name>" + Const.CR;
         retval += "		<dataset_name>" + datasetName + "</dataset_name>" + Const.CR;
         retval += "		<expression>" + expression + "</expression>" + Const.CR;
         retval += "		<index>" + index + "</index>" + Const.CR;
@@ -183,6 +195,7 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
             //jobName = rep.getStepAttributeString(id_jobentry, "jobName"); //$NON-NLS-1$
             
             name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
+            recordsetName = rep.getStepAttributeString(id_jobentry, "recordsetName"); //$NON-NLS-1$
             datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
             expression = rep.getStepAttributeString(id_jobentry, "expression"); //$NON-NLS-1$
             index = rep.getStepAttributeString(id_jobentry, "index"); //$NON-NLS-1$
@@ -199,6 +212,7 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
             //rep.saveStepAttribute(id_job, getObjectId(), "jobName", jobName); //$NON-NLS-1$
            
             rep.saveStepAttribute(id_job, getObjectId(), "name", name); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "recordsetName", recordsetName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "datasetName", datasetName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "expression", expression); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "index", index); //$NON-NLS-1$

@@ -133,7 +133,7 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
         this.joinCondition = buildText("Join Condition", this.rightRecordSet, lsMod, middle, margin, joinGroup);
         this.joinType = buildCombo("Join Type", this.joinCondition, lsMod, middle, margin, joinGroup, new String[]{"left", "right", "inner"});
         
-        this.joinRecordSet = buildText("Join Recordset Name", this.joinType, lsMod, middle, margin, joinGroup);
+        this.joinRecordSet = buildText("Resulting Recordset", this.joinType, lsMod, middle, margin, joinGroup);
         
 
        

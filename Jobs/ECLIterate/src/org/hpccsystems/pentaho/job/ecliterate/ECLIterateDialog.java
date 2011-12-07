@@ -53,6 +53,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
     private Text record;
     private Text recordName;
     private Text recordsetName;
+    private Text recordsetNameIterate;
     
     private Text transformCall;
     
@@ -168,7 +169,8 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         iterateGroupFormat.left = new FormAttachment(middle, 0);
         iterateGroup.setLayoutData(iterateGroupFormat);
         
-        transformCall = buildText("Transform Call", null, lsMod, middle, margin, iterateGroup);
+        recordsetNameIterate = buildText("Resulting Recordset", null, lsMod, middle, margin, iterateGroup);
+        transformCall = buildText("Transform Call", recordsetName, lsMod, middle, margin, iterateGroup);
         runLocal = buildCombo("RUNLOCAL", transformCall, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
      
         wOK = new Button(shell, SWT.PUSH);
@@ -232,6 +234,9 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         }
         if (jobEntry.getRecordset() != null) {
             recordset.setText(jobEntry.getRecordset());
+        }
+        if (jobEntry.getRecordsetNameIterate() != null) {
+            recordsetNameIterate.setText(jobEntry.getRecordsetNameIterate());
         }
         if (jobEntry.getRecordsetName() != null) {
             recordsetName.setText(jobEntry.getRecordsetName());
@@ -358,6 +363,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
     private Text recordName;
     private Text recordsetName;
     */
+        jobEntry.setRecordsetNameIterate(recordsetNameIterate.getText());
         jobEntry.setTransformName(transformName.getText());
         jobEntry.setTransform(transform.getText());
         jobEntry.setRecordset(recordset.getText());
