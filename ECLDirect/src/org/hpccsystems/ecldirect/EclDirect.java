@@ -28,8 +28,13 @@ public class EclDirect {
     private final String urlString;
     private final String clusterName;
 
-    public EclDirect(String clusterAddress, String clusterName) {
-      urlString = "http://" + clusterAddress + ":8008/EclDirect/RunEcl";
+    public EclDirect(String clusterAddress, String clusterName, String clusterPort) {
+      if(clusterPort.equals("")){
+          clusterPort = "8008";
+      }
+      urlString = "http://" + clusterAddress + ":"+ clusterPort+"/EclDirect/RunEcl";
+      
+      System.out.println("URLString: " + urlString);
       this.clusterName = clusterName;
     }
     

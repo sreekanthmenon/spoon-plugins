@@ -35,6 +35,8 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
@@ -46,7 +48,7 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
     
    
     private Text recordsetName;
-    private Text datasetName;
+    private Combo datasetName;
     private Text fields;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     
     
@@ -71,6 +73,18 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
 
         props.setLook(shell);
         JobDialog.setShellImage(shell, jobEntry);
+        
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
 
         ModifyListener lsMod = new ModifyListener() {
 
@@ -127,9 +141,9 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         datasetGroup.setLayoutData(datasetGroupFormat);
         
         
-        recordsetName = buildText("Sort Dataset Name", null, lsMod, middle, margin, datasetGroup);
+        recordsetName = buildText("Resulting Dataset Name", null, lsMod, middle, margin, datasetGroup);
         
-        datasetName = buildText("Dataset Name", recordsetName, lsMod, middle, margin, datasetGroup);
+        datasetName = buildCombo("Dataset to be Sorted", recordsetName, lsMod, middle, margin, datasetGroup, datasets);
         fields = buildText("Fields \ncomma seperated, \nprefix - for descending order", datasetName, lsMod, middle, margin, datasetGroup);
 
        
@@ -238,14 +252,14 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;

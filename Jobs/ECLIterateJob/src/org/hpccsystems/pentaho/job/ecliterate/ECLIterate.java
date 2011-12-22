@@ -29,19 +29,19 @@ import org.w3c.dom.Node;
 public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInterface {
     
     //private String jobName;
-    private String name;
-    private String transform;
-    private String transformName;
-    private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
+    private String name = "";
+    private String transform = "";
+    private String transformName = "";
+    private String recordset = "";//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
     private Boolean runLocal = false;
     
-    private String record;
-    private String recordName;
-    private String recordsetName;
+    private String record = "";
+    private String recordName = "";
+    private String recordsetName = "";
     
-    private String recordsetNameIterate;
+    private String recordsetNameIterate = "";
     
-    private String transformCall;
+    private String transformCall = "";
 
     public String getTransformCall() {
         return transformCall;
@@ -202,15 +202,20 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
         try {
             super.loadXML(node, list, list1);
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
-            this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
-            this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
-
-            this.setRecord(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record")));
-            this.setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordName")));
-            this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordsetName")));
-           this.setRecordsetNameIterate(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name_iterate")));
-           
-           this.setTransformCall(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")) != null)
+                this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")) != null)
+                this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record")) != null)
+                this.setRecord(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordName")) != null)
+                this.setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordName")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordsetName")) != null)
+                this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordsetName")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name_iterate")) != null)
+                this.setRecordsetNameIterate(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name_iterate")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")) != null)
+                this.setTransformCall(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")));
            
             
             
@@ -259,18 +264,26 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
             //jobName = rep.getStepAttributeString(id_jobentry, "jobName"); //$NON-NLS-1$
 
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
-
-            record = rep.getStepAttributeString(id_jobentry, "record");
-            recordName = rep.getStepAttributeString(id_jobentry, "recordName");
-            recordsetName = rep.getStepAttributeString(id_jobentry, "recordsetName");
-            recordsetNameIterate = rep.getStepAttributeString(id_jobentry, "recordset_name_iterate");
             
+            if(rep.getStepAttributeString(id_jobentry, "record") != null)
+                record = rep.getStepAttributeString(id_jobentry, "record");
+            if(rep.getStepAttributeString(id_jobentry, "recordName") != null)
+                recordName = rep.getStepAttributeString(id_jobentry, "recordName");
+            if(rep.getStepAttributeString(id_jobentry, "recordsetName") != null)
+                recordsetName = rep.getStepAttributeString(id_jobentry, "recordsetName");
+            if(rep.getStepAttributeString(id_jobentry, "recordset_name_iterate") != null)
+                recordsetNameIterate = rep.getStepAttributeString(id_jobentry, "recordset_name_iterate");
             
-            transformName = rep.getStepAttributeString(id_jobentry, "transformName");
-            transform = rep.getStepAttributeString(id_jobentry, "transform");
-            transformCall = rep.getStepAttributeString(id_jobentry, "transformCall");
-            recordset = rep.getStepAttributeString(id_jobentry, "recordset");
-            this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
+            if(rep.getStepAttributeString(id_jobentry, "transformName") != null)
+                transformName = rep.getStepAttributeString(id_jobentry, "transformName");
+            if(rep.getStepAttributeString(id_jobentry, "transform") != null)
+                transform = rep.getStepAttributeString(id_jobentry, "transform");
+            if(rep.getStepAttributeString(id_jobentry, "transformCall") != null)
+                transformCall = rep.getStepAttributeString(id_jobentry, "transformCall");
+            if(rep.getStepAttributeString(id_jobentry, "recordset") != null)
+                recordset = rep.getStepAttributeString(id_jobentry, "recordset");
+            if(rep.getStepAttributeString(id_jobentry, "runLocal") != null)
+                this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
 
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);

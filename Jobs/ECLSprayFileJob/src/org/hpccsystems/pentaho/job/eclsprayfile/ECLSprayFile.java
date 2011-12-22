@@ -23,21 +23,24 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 
+import org.pentaho.di.job.JobMeta;
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
  */
 public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInterface {
     
-    private String outputField;
-    private String ipAddress;
-    private String filePath;
-    private String logicalFileName;
-    private String fileType;
-    private String csvSeperator;
-    private String csvTerminator;
-    private String csvQuote;
-    private String fixedRecordSize;
+    private String outputField = "";
+    //private String ipAddress = "";
+    private String filePath = "";
+    private String logicalFileName = "";
+    private String fileType = "";
+    private String csvSeperator = "";
+    private String csvTerminator = "";
+    private String csvQuote = "";
+    private String fixedRecordSize = "";
 
     
     
@@ -105,23 +108,36 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
         this.fixedRecordSize = fixedRecordSize;
     }
 
-    public String getIpAddress() {
-        return ipAddress;
-    }
 
-    public void setIpAddress(String ipAddress) {
-        this.ipAddress = ipAddress;
-    }
 
     @Override
     public Result execute(Result prevResult, int i) throws KettleException {
+        JobMeta jobMeta = super.parentJob.getJobMeta();
+        String serverHost = "";
+        String serverPort = "";
+        String landingZone = "";
+        AutoPopulate ap = new AutoPopulate();
+            try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+                
+                serverHost = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_ip");
+                serverPort = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_port");
+                landingZone = ap.getGlobalVariable(jobMeta.getJobCopies(),"landing_zone");
+            }catch (Exception e){
+                System.out.println("Error Parsing existing Global Variables ");
+                System.out.println(e.toString());
+                
+            }
+            
+
+        
         
         Result result = prevResult;
         
         Spray spray = new Spray();
         spray.setClusterName("mythor");
-        spray.setFilePath(getFilePath());
-        spray.setIpAddress(getIpAddress());
+        spray.setFilePath(landingZone + getFilePath());
+        spray.setIpAddress(serverHost);
         spray.setLogicalFileName(getLogicalFileName());
         spray.setFileType(getFileType());
         spray.setCsvQuote(getCsvQuote());
@@ -139,7 +155,7 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
 
         logBasic("{Spray Job} Called IP = " + (String)spray.getIpAddress());
         
-        EclDirect eclDirect = new EclDirect(((String)spray.getIpAddress()).trim(), "thor");
+        EclDirect eclDirect = new EclDirect(((String)spray.getIpAddress()).trim(), "thor", serverPort);
         ArrayList dsList = eclDirect.execute(spray.ecl());
        
         RowMetaAndData data = new RowMetaAndData();
@@ -162,15 +178,24 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
         try {
             super.loadXML(node, list, list1);
             
-            setOutputField(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")));
-            setIpAddress(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "ip_address")));
-            setFilePath(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_path")));
-            setLogicalFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")));
-            setFileType(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_type")));
-            setCsvSeperator(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_seperator")));
-            setCsvTerminator(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_terminator")));
-            setCsvQuote(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_quote")));
-            setFixedRecordSize(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fixed_record_size")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")) != null)
+                setOutputField(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")));
+           // if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "ip_address")) != null)
+               // setIpAddress(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "ip_address")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_path")) != null)
+                setFilePath(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_path")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")) != null)
+                setLogicalFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_type")) != null)
+                setFileType(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_type")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_seperator")) != null)
+                setCsvSeperator(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_seperator")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_terminator")) != null)
+                setCsvTerminator(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_terminator")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_quote")) != null)
+                setCsvQuote(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_quote")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fixed_record_size")) != null)
+                setFixedRecordSize(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fixed_record_size")));
 
         } catch (Exception e) {
             throw new KettleXMLException("ECL Spray Plugin Unable to read step info from XML node", e);
@@ -184,7 +209,7 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
         retval += super.getXML();
         
         retval += "		<outputfield>" + outputField + "</outputfield>" + Const.CR;
-        retval += "		<ip_address>" + ipAddress + "</ip_address>" + Const.CR;
+        //retval += "		<ip_address>" + ipAddress + "</ip_address>" + Const.CR;
         retval += "		<file_path>" + filePath + "</file_path>" + Const.CR;
         retval += "		<file_type>" + fileType + "</file_type>" + Const.CR;
         retval += "		<csv_seperator>" + csvSeperator + "</csv_seperator>" + Const.CR;
@@ -201,15 +226,24 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
     public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
         try {
-            outputField = rep.getStepAttributeString(id_jobentry, "otuputField"); //$NON-NLS-1$
-            ipAddress = rep.getStepAttributeString(id_jobentry, "ipAddress"); //$NON-NLS-1$
-            filePath = rep.getStepAttributeString(id_jobentry, "filePath"); //$NON-NLS-1$
-            fileType = rep.getStepAttributeString(id_jobentry, "fileType"); //$NON-NLS-1$
-            csvSeperator = rep.getStepAttributeString(id_jobentry, "csvSeperator"); //$NON-NLS-1$
-            csvTerminator = rep.getStepAttributeString(id_jobentry, "csvTerminator"); //$NON-NLS-1$
-            csvQuote = rep.getStepAttributeString(id_jobentry, "csvQuote"); //$NON-NLS-1$
-            fixedRecordSize = rep.getStepAttributeString(id_jobentry, "fixedRecordSize"); //$NON-NLS-1$
-            logicalFileName = rep.getStepAttributeString(id_jobentry, "logicalFileName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "otuputField") != null)
+                outputField = rep.getStepAttributeString(id_jobentry, "otuputField"); //$NON-NLS-1$
+           // if(rep.getStepAttributeString(id_jobentry, "ipAddress") != null)
+               // ipAddress = rep.getStepAttributeString(id_jobentry, "ipAddress"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "filePath") != null)
+                filePath = rep.getStepAttributeString(id_jobentry, "filePath"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "fileType") != null)
+                fileType = rep.getStepAttributeString(id_jobentry, "fileType"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "csvSeperator") != null)
+                csvSeperator = rep.getStepAttributeString(id_jobentry, "csvSeperator"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "csvTerminator") != null)
+                csvTerminator = rep.getStepAttributeString(id_jobentry, "csvTerminator"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "csvQuote") != null)
+                csvQuote = rep.getStepAttributeString(id_jobentry, "csvQuote"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "fixedRecordSize") != null)
+                fixedRecordSize = rep.getStepAttributeString(id_jobentry, "fixedRecordSize"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "logicalFileName") != null)
+                logicalFileName = rep.getStepAttributeString(id_jobentry, "logicalFileName"); //$NON-NLS-1$
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
         }
@@ -218,7 +252,7 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
     public void saveRep(Repository rep, ObjectId id_job) throws KettleException {
         try {
             rep.saveStepAttribute(id_job, getObjectId(), "outputField", outputField); //$NON-NLS-1$
-            rep.saveStepAttribute(id_job, getObjectId(), "ipAddress", ipAddress); //$NON-NLS-1$
+           // rep.saveStepAttribute(id_job, getObjectId(), "ipAddress", ipAddress); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "filePath", filePath); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "fileType", fileType); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "csvSeperator", csvSeperator); //$NON-NLS-1$

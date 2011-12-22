@@ -29,9 +29,9 @@ import org.w3c.dom.Node;
 public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterface {
     
     //private String logicalFileName;
-    private String datasetName;
-    private String fields;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
-    private String recordsetName;
+    private String datasetName = "";
+    private String fields = "";//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
+    private String recordsetName = "";
 
     public String getDatasetName() {
         return datasetName;
@@ -115,10 +115,13 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
         try {
             super.loadXML(node, list, list1);
             
-            setFields(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fields")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fields")) != null)
+                setFields(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fields")));
             //setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")));
-            setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
-            setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")) != null)
+                setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")) != null)
+                setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
            
         } catch (Exception e) {
             throw new KettleXMLException("ECL Sort Job Plugin Unable to read step info from XML node", e);
@@ -143,9 +146,12 @@ public class ECLSort extends JobEntryBase implements Cloneable, JobEntryInterfac
     public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
         try {
-            fields = rep.getStepAttributeString(id_jobentry, "fields"); //$NON-NLS-1$
-            datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
-            recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "fields") != null)
+                fields = rep.getStepAttributeString(id_jobentry, "fields"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "datasetName") != null)
+                datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "recordset_name") != null)
+                recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name"); //$NON-NLS-1$
             //recordName = rep.getStepAttributeString(id_jobentry, "recordName"); //$NON-NLS-1$
             //recordDef = rep.getStepAttributeString(id_jobentry, "recordDef"); //$NON-NLS-1$
         

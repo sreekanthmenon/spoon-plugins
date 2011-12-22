@@ -35,6 +35,8 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
@@ -48,7 +50,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
     private Text recordsetName;
   //  private inputs;
     private Combo declareCounter;
-    private Text inRecordName;
+    private Combo inRecordName;
     private Text outRecordName;
     private Text outRecordFormat;
     private Text transformName;
@@ -76,6 +78,19 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
 
         props.setLook(shell);
         JobDialog.setShellImage(shell, jobEntry);
+        
+        
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
 
         ModifyListener lsMod = new ModifyListener() {
 
@@ -127,7 +142,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 300;
+        datasetGroupFormat.height = 400;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         distributeGroup.setLayoutData(datasetGroupFormat);
 
@@ -137,7 +152,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         
         
         declareCounter = buildCombo("Declare Counter", recordsetName, lsMod, middle, margin, distributeGroup, new String[]{"no", "yes"});
-        inRecordName = buildText("In Record Name", declareCounter, lsMod, middle, margin, distributeGroup);
+        inRecordName = buildCombo("In Record Name", declareCounter, lsMod, middle, margin, distributeGroup,datasets);
         outRecordName = buildText("Out Record Name", inRecordName, lsMod, middle, margin, distributeGroup);
         outRecordFormat = buildMultiText("Out Record Format", outRecordName, lsMod, middle, margin, distributeGroup);
         transformName = buildText("Transform Name", outRecordFormat, lsMod, middle, margin, distributeGroup);
@@ -196,8 +211,8 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         }
         
 
-        if (jobEntry.getDeclareCounter(true) != null) {
-            declareCounter.setText(jobEntry.getDeclareCounter(true));
+        if (jobEntry.getDeclareCounterString() != null) {
+            declareCounter.setText(jobEntry.getDeclareCounterString());
         }
         if (jobEntry.getInRecordName() != null) {
             inRecordName.setText(jobEntry.getInRecordName());
@@ -273,14 +288,14 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;
@@ -316,7 +331,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
     private void ok() {
 
         jobEntry.setName(jobEntryName.getText());
-        jobEntry.setDeclareCounter(declareCounter.getText());
+        jobEntry.setDeclareCounterString(declareCounter.getText());
         jobEntry.setRecordsetName(recordsetName.getText()); 
         jobEntry.setInRecordName(inRecordName.getText()); 
         jobEntry.setOutRecordName(outRecordName.getText());

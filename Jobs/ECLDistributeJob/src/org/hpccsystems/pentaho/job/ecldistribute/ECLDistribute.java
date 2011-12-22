@@ -29,13 +29,13 @@ import org.w3c.dom.Node;
 public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryInterface {
     
     //private String jobName;
-    private String name;
-    private String recordsetName;
-    private String datasetName;
-    private String expression;
-    private String index;
-    private String joinCondition;
-    private String skew;
+    private String name = "";
+    private String recordsetName = "";
+    private String datasetName = "";
+    private String expression = "";
+    private String index = "";
+    private String joinCondition = "";
+    private String skew = "";
 
     public String getRecordsetName() {
         return recordsetName;
@@ -153,14 +153,20 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
             super.loadXML(node, list, list1);
             //setJobName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "jobName")));
            
-            setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
-            
-            setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
-            setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
-            setExpression(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "expression")));
-            setIndex(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "index")));
-            setJoinCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_condition")));
-            setSkew(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "skew")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")) != null)
+                setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")) != null)
+                setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")) != null)
+                setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "expression")) != null)
+                setExpression(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "expression")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "index")) != null)
+                setIndex(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "index")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_condition")) != null)
+                setJoinCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_condition")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "skew")) != null)
+                setSkew(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "skew")));
             
         } catch (Exception e) {
             throw new KettleXMLException("ECL Distribute Job Plugin Unable to read step info from XML node", e);
@@ -193,14 +199,20 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
             throws KettleException {
         try {
             //jobName = rep.getStepAttributeString(id_jobentry, "jobName"); //$NON-NLS-1$
-            
-            name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
-            recordsetName = rep.getStepAttributeString(id_jobentry, "recordsetName"); //$NON-NLS-1$
-            datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
-            expression = rep.getStepAttributeString(id_jobentry, "expression"); //$NON-NLS-1$
-            index = rep.getStepAttributeString(id_jobentry, "index"); //$NON-NLS-1$
-            joinCondition = rep.getStepAttributeString(id_jobentry, "joinCondition"); //$NON-NLS-1$
-            skew = rep.getStepAttributeString(id_jobentry, "skew"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "name") != null)
+                name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "recordsetName") != null)
+                recordsetName = rep.getStepAttributeString(id_jobentry, "recordsetName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "datasetName") != null)
+                datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "expression") != null)
+                expression = rep.getStepAttributeString(id_jobentry, "expression"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "index") != null)
+                index = rep.getStepAttributeString(id_jobentry, "index"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "joinCondition") != null)
+                joinCondition = rep.getStepAttributeString(id_jobentry, "joinCondition"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "skew") != null)
+                skew = rep.getStepAttributeString(id_jobentry, "skew"); //$NON-NLS-1$
             
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);

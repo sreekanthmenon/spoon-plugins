@@ -286,14 +286,14 @@ private String buildFileDialog() {
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;

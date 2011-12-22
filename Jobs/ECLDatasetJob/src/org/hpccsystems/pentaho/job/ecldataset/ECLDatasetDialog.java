@@ -132,7 +132,7 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
         recordGroup.setLayout(groupLayout);
         FormData recordGroupFormat = new FormData();
         recordGroupFormat.top = new FormAttachment(datasetGroup, margin);
-        recordGroupFormat.height = 100;
+        recordGroupFormat.height = 200;
         recordGroupFormat.width = 400;
         recordGroupFormat.left = new FormAttachment(middle, 0);
         recordGroup.setLayoutData(recordGroupFormat);
@@ -248,14 +248,14 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;

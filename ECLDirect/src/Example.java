@@ -73,7 +73,7 @@ public class Example {
         System.out.println(ecl);
         
         
-        EclDirect eclDirect = new EclDirect("192.168.59.129", "thor");
+        EclDirect eclDirect = new EclDirect("192.168.59.129", "thor", "");
         ArrayList dsList = eclDirect.execute(ecl);
         for (int i = 0; i < dsList.size(); i++) {
             

@@ -35,6 +35,9 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.eclguifeatures.*;
+import org.eclipse.swt.events.*;
+
 /**
  *
  * @author ChalaAX
@@ -46,10 +49,12 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
 
     private Text joinCondition;
     private Combo joinType;
-    private Text leftRecordSet;
-    private Text rightRecordSet;
+    private Combo leftRecordSet;
+    private Combo rightRecordSet;
     private Text joinRecordSet;
     
+    private Combo leftJoinCondition;
+    private Combo rightJoinCondition;
     
     private Button wOK, wCancel;
     private boolean backupChanged;
@@ -66,7 +71,18 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
     public JobEntryInterface open() {
         Shell parentShell = getParent();
         Display display = parentShell.getDisplay();
-
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
+        
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
 
         props.setLook(shell);
@@ -122,16 +138,19 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
         FormData joinGroupFormat = new FormData();
         joinGroupFormat.top = new FormAttachment(generalGroup, margin);
         joinGroupFormat.width = 400;
-        joinGroupFormat.height = 175;
+        joinGroupFormat.height = 185;
         joinGroupFormat.left = new FormAttachment(middle, 0);
         joinGroup.setLayoutData(joinGroupFormat);
 
         
-        this.leftRecordSet = buildText("Left Recordset Name", null, lsMod, middle, margin, joinGroup);
-        this.rightRecordSet = buildText("Right Recordset Name", this.leftRecordSet, lsMod, middle, margin, joinGroup);
+        this.leftRecordSet = buildCombo("Left Recordset Name", null, lsMod, middle, margin, joinGroup,datasets);
+        this.rightRecordSet = buildCombo("Right Recordset Name", this.leftRecordSet, lsMod, middle, margin, joinGroup,datasets);
+       // this.joinCondition = buildText("Join Condition", this.rightRecordSet, lsMod, middle, margin, joinGroup);
         
-        this.joinCondition = buildText("Join Condition", this.rightRecordSet, lsMod, middle, margin, joinGroup);
-        this.joinType = buildCombo("Join Type", this.joinCondition, lsMod, middle, margin, joinGroup, new String[]{"left", "right", "inner"});
+        this.leftJoinCondition = buildCombo("Left Join Condition", this.rightRecordSet, lsMod, middle, margin, joinGroup, new String[]{""});
+        this.rightJoinCondition = buildCombo("Right Join Condition", this.leftJoinCondition, lsMod, middle, margin, joinGroup, new String[]{""});
+        
+        this.joinType = buildCombo("Join Type", this.rightJoinCondition, lsMod, middle, margin, joinGroup, new String[]{"INNER","LEFT OUTER", "RIGHT OUTER", "FULL OUTER", "LEFT ONLY", "RIGHT ONLY","FULL ONLY"});
         
         this.joinRecordSet = buildText("Resulting Recordset", this.joinType, lsMod, middle, margin, joinGroup);
         
@@ -144,6 +163,51 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
 
         BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, joinGroup);
 
+        
+        leftRecordSet.addModifyListener(new ModifyListener(){
+            public void modifyText(ModifyEvent e){
+                System.out.println("left RS changed");
+                AutoPopulate ap = new AutoPopulate();
+                try{
+                    System.out.println("Load items for select");
+                    String[] items = ap.fieldsByDataset( leftRecordSet.getText(),jobMeta.getJobCopies());
+                    System.out.println("++++++"+items.length+"+++++");
+                    leftJoinCondition.setItems(items);
+                    System.out.println("itemsSet");
+                    leftJoinCondition.redraw();
+                    System.out.println("new Join condition vals loaded");
+                }catch (Exception ex){
+                    System.out.println("failed to load record definitions");
+                    System.out.println(ex.toString());
+                    ex.printStackTrace();
+                }
+               // leftJoinCondition.setItems(items);
+            }
+        });
+        
+        rightRecordSet.addModifyListener(new ModifyListener(){
+            public void modifyText(ModifyEvent e){
+                System.out.println("left RS changed");
+                AutoPopulate ap = new AutoPopulate();
+                try{
+                    System.out.println("Load items for select");
+                    String[] items = ap.fieldsByDataset( rightRecordSet.getText(),jobMeta.getJobCopies());
+                    System.out.println("++++++"+items.length+"+++++");
+                    rightJoinCondition.setItems(items);
+                    System.out.println("itemsSet");
+                    rightJoinCondition.redraw();
+                    System.out.println("new Join condition vals loaded");
+                }catch (Exception ex){
+                    System.out.println("failed to load record definitions");
+                    System.out.println(ex.toString());
+                    ex.printStackTrace();
+                }
+               // leftJoinCondition.setItems(items);
+            }
+        });
+        //this.leftRecordSet.addListener(SWT.Selection, leftRecordSetListener);
+        //this.leftRecordSet.addModifyListener(leftRecordSetListener);
+      
         // Add listeners
         Listener cancelListener = new Listener() {
 
@@ -182,9 +246,9 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
             jobEntryName.setText(jobEntry.getName());
         }
        
-        if (jobEntry.getJoinCondition() != null) {
-            this.joinCondition.setText(jobEntry.getJoinCondition());
-        }
+        //if (jobEntry.getJoinCondition() != null) {
+            //this.joinCondition.setText(jobEntry.getJoinCondition());
+        //}
         if (jobEntry.getJoinType() != null) {
             this.joinType.setText(jobEntry.getJoinType());
         }
@@ -196,6 +260,13 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
         }
         if (jobEntry.getJoinRecordSet() != null) {
             this.joinRecordSet.setText(jobEntry.getJoinRecordSet());
+        }
+        
+        if (jobEntry.getLeftJoinCondition() != null) {
+            this.leftJoinCondition.setText(jobEntry.getLeftJoinCondition());
+        }
+        if (jobEntry.getRightJoinCondition() != null) {
+            this.rightJoinCondition.setText(jobEntry.getRightJoinCondition());
         }
 
 
@@ -249,14 +320,14 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;
@@ -297,7 +368,9 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
                 private Text rightRecordSet;
          */
         jobEntry.setName(jobEntryName.getText());
-        jobEntry.setJoinCondition(this.joinCondition.getText());
+        //jobEntry.setJoinCondition(this.joinCondition.getText());
+        jobEntry.setLeftJoinCondition(this.leftJoinCondition.getText());
+        jobEntry.setRightJoinCondition(this.rightJoinCondition.getText());
         jobEntry.setJoinType(this.joinType.getText());
         jobEntry.setLeftRecordSet(this.leftRecordSet.getText());
         jobEntry.setRightRecordSet(this.rightRecordSet.getText());

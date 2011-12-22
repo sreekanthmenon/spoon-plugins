@@ -29,18 +29,18 @@ import org.w3c.dom.Node;
 public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterface {
     
     //private String jobName;
-    private String name;
+    private String name = "";
     
-    private String recordsetName;
-    private String recordset;
-    private String format;
-    private String expression;
+    private String recordsetName = "";
+    private String recordset = "";
+    private String format = "";
+    private String expression = "";
     
-    private String size; //FEW,MANY
-    private Boolean isUnsorted;
-    private Boolean runLocal;
-    private Boolean isKeyed;
-    private Boolean isMerge;
+    private String size = ""; //FEW,MANY
+    private Boolean isUnsorted = false;
+    private Boolean runLocal = false;
+    private Boolean isKeyed = false;
+    private Boolean isMerge = false;
 
     public String getRecordsetName() {
         return recordsetName;
@@ -243,16 +243,25 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {
         try {
             super.loadXML(node, list, list1);
-            this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")) != null)
+                this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
             
-            this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
-            this.setFormat(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"format")));
-            this.setExpression(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"expression")));
-            this.setSize(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"size")));
-            this.setIsUnsortedString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isUnsorted")));
-            this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
-            this.setIsKeyedString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isKeyed")));
-            this.setIsMergeString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isMerge")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")) != null)
+                this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"format")) != null)
+                this.setFormat(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"format")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"expression")) != null)
+                this.setExpression(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"expression")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"size")) != null)
+                this.setSize(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"size")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isUnsorted")) != null)
+                this.setIsUnsortedString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isUnsorted")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")) != null)
+                this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isKeyed")) != null)
+                this.setIsKeyedString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isKeyed")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isMerge")) != null)
+                this.setIsMergeString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isMerge")));
             
             
         } catch (Exception e) {

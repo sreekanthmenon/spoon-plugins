@@ -43,7 +43,7 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
 
     private ECLSprayFile jobEntry;
     private Text jobEntryName;
-    private Text ipAddress;
+    //private Text ipAddress;
     private Text filePath;
     private Text logicalFileName;
     private Combo fileType;
@@ -125,8 +125,8 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         sourceGroupFormat.left = new FormAttachment(middle, 0);
         sourceGroup.setLayoutData(sourceGroupFormat);
 
-        ipAddress = buildText("IP Address", jobEntryName, lsMod, middle, margin, sourceGroup);
-        filePath = buildText("File Path", ipAddress, lsMod, middle, margin, sourceGroup);
+        //ipAddress = buildText("IP Address", jobEntryName, lsMod, middle, margin, sourceGroup);
+        filePath = buildText("File Name", jobEntryName, lsMod, middle, margin, sourceGroup);
         logicalFileName = buildText("Logical File Name", filePath, lsMod, middle, margin, sourceGroup);
         fileType = buildCombo("fileType", logicalFileName, lsMod, middle, margin, sourceGroup, new String[]{"Fixed", "Variable"});
 
@@ -204,9 +204,9 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         if (jobEntry.getName() != null) {
             jobEntryName.setText(jobEntry.getName());
         }
-        if (jobEntry.getIpAddress() != null) {
-            ipAddress.setText(jobEntry.getIpAddress());
-        }
+        //if (jobEntry.getIpAddress() != null) {
+         //   ipAddress.setText(jobEntry.getIpAddress());
+        //}
         if (jobEntry.getFilePath() != null) {
             filePath.setText(jobEntry.getFilePath());
         }
@@ -280,14 +280,14 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;
@@ -322,7 +322,7 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
 
     private void ok() {
         jobEntry.setName(jobEntryName.getText());
-        jobEntry.setIpAddress(ipAddress.getText());
+       // jobEntry.setIpAddress(ipAddress.getText());
         jobEntry.setFilePath(filePath.getText());
         jobEntry.setLogicalFileName(logicalFileName.getText());
         jobEntry.setFileType(fileType.getText());

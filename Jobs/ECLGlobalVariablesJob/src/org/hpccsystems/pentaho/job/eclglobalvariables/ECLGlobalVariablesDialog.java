@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.ecliterate;
+package org.hpccsystems.pentaho.job.eclglobalvariables;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -35,37 +35,34 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
  */
-public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogInterface {
+public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntryDialogInterface {
 
-    private ECLIterate jobEntry;
+    private ECLGlobalVariables jobEntry;
     
     private Text jobEntryName;
 
-    private Text transform;
-     private Text transformName;
-    private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
-    private Combo runLocal;
+    private Text serverIP;
+    private Text serverPort;
+    private Text landingZone;
+
     
-    private Text record;
-    private Text recordName;
-    private Text recordsetName;
-    private Text recordsetNameIterate;
     
-    private Text transformCall;
     
     private Button wOK, wCancel;
     private boolean backupChanged;
     private SelectionAdapter lsDef;
 
-    public ECLIterateDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+    public ECLGlobalVariablesDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (ECLIterate) jobEntryInt;
+        jobEntry = (ECLGlobalVariables) jobEntryInt;
         if (this.jobEntry.getName() == null) {
-            this.jobEntry.setName("Iterate");
+            this.jobEntry.setName("Global Variables");
         }
     }
 
@@ -84,6 +81,18 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
                 jobEntry.setChanged();
             }
         };
+        
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
 
         backupChanged = jobEntry.hasChanged();
 
@@ -93,13 +102,13 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
 
 
         shell.setLayout(formLayout);
-        shell.setText("Iterate");
+        shell.setText("Global Variables");
 
         int middle = props.getMiddlePct();
         int margin = Const.MARGIN;
 
         shell.setLayout(formLayout);
-        shell.setText("Define an ECL Iterate");
+        shell.setText("Define an ECL Variables");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -119,66 +128,33 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         
         jobEntryName = buildText("Job Entry Name", null, lsMod, middle, margin, generalGroup);
 
-
-        
         //All other contols
         //Distribute Declaration
-        Group transformGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(transformGroup);
-        transformGroup.setText("Transform Details");
-        transformGroup.setLayout(groupLayout);
-        FormData transformGroupFormat = new FormData();
-        transformGroupFormat.top = new FormAttachment(generalGroup, margin);
-        transformGroupFormat.width = 400;
-        transformGroupFormat.height = 125;
-        transformGroupFormat.left = new FormAttachment(middle, 0);
-        transformGroup.setLayoutData(transformGroupFormat);
-        
-        transformName = buildText("Transform Name", null, lsMod, middle, margin, transformGroup);
-        transform = buildMultiText("Transform", transformName, lsMod, middle, margin, transformGroup);
+        Group varGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(varGroup);
+        varGroup.setText("Server Details");
+        varGroup.setLayout(groupLayout);
+        FormData datasetGroupFormat = new FormData();
+        datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
+        datasetGroupFormat.width = 400;
+        datasetGroupFormat.height = 200;
+        datasetGroupFormat.left = new FormAttachment(middle, 0);
+        varGroup.setLayoutData(datasetGroupFormat);
 
-
-        Group recordGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(recordGroup);
-        recordGroup.setText("Record Details");
-        recordGroup.setLayout(groupLayout);
-        FormData recordGroupFormat = new FormData();
-        recordGroupFormat.top = new FormAttachment(transformGroup, margin);
-        recordGroupFormat.width = 400;
-        recordGroupFormat.height = 200;
-        recordGroupFormat.left = new FormAttachment(middle, 0);
-        recordGroup.setLayoutData(recordGroupFormat);
-        
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
 
-
-        recordName = buildText("Record Name", null, lsMod, middle, margin, recordGroup);
-        record = buildMultiText("Record", recordName, lsMod, middle, margin, recordGroup);
-
-        recordsetName = buildText("Recordset Name", record, lsMod, middle, margin, recordGroup);
-        recordset = buildMultiText("Recordset", recordsetName, lsMod, middle, margin, recordGroup);
         
-        Group iterateGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(iterateGroup);
-        iterateGroup.setText("Iterate Details");
-        iterateGroup.setLayout(groupLayout);
-        FormData iterateGroupFormat = new FormData();
-        iterateGroupFormat.top = new FormAttachment(recordGroup, margin);
-        iterateGroupFormat.width = 400;
-        iterateGroupFormat.height = 125;
-        iterateGroupFormat.left = new FormAttachment(middle, 0);
-        iterateGroup.setLayoutData(iterateGroupFormat);
-        
-        recordsetNameIterate = buildText("Resulting Recordset", null, lsMod, middle, margin, iterateGroup);
-        transformCall = buildText("Transform Call", recordsetName, lsMod, middle, margin, iterateGroup);
-        runLocal = buildCombo("RUNLOCAL", transformCall, lsMod, middle, margin, iterateGroup,new String[]{"false", "true"});
-     
+        serverIP = buildText("Server Host", null, lsMod, middle, margin, varGroup);
+        serverPort = buildText("Server Port", serverIP, lsMod, middle, margin, varGroup);
+        landingZone = buildText("Landing Zone Dir", serverPort, lsMod, middle, margin, varGroup);
+             
+
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
         wCancel = new Button(shell, SWT.PUSH);
         wCancel.setText("Cancel");
 
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, iterateGroup);
+        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, varGroup);
 
         // Add listeners
         Listener cancelListener = new Listener() {
@@ -216,44 +192,26 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         
 
 
+     
+        
         //if (jobEntry.getJobName() != null) {
         //    jobEntryName.setText(jobEntry.getJobName());
         //}
         if (jobEntry.getName() != null) {
             jobEntryName.setText(jobEntry.getName());
         }
+        if (jobEntry.getServerIP() != null) {
+            serverIP.setText(jobEntry.getServerIP());
+        }
+        if (jobEntry.getServerPort() != null) {
+            serverPort.setText(jobEntry.getServerPort());
+        }
         
+        if (jobEntry.getLandingZone() != null) {
+            landingZone.setText(jobEntry.getLandingZone());
+        }
 
-        
 
-        if (jobEntry.getTransformName() != null) {
-            transformName.setText(jobEntry.getTransformName());
-        }
-        if (jobEntry.getTransform() != null) {
-            transform.setText(jobEntry.getTransform());
-        }
-        if (jobEntry.getRecordset() != null) {
-            recordset.setText(jobEntry.getRecordset());
-        }
-        if (jobEntry.getRecordsetNameIterate() != null) {
-            recordsetNameIterate.setText(jobEntry.getRecordsetNameIterate());
-        }
-        if (jobEntry.getRecordsetName() != null) {
-            recordsetName.setText(jobEntry.getRecordsetName());
-        }
-        if (jobEntry.getRecord() != null) {
-            record.setText(jobEntry.getRecord());
-        }
-        if (jobEntry.getRecordName() != null) {
-            recordName.setText(jobEntry.getRecordName());
-        }
-        
-       // if (jobEntry.getRunLocalString() != null) {
-            runLocal.setText(jobEntry.getRunLocalString());
-        //}
-        if (jobEntry.getTransformCall() != null) {
-            transformCall.setText(jobEntry.getTransformCall());
-        }
          
 
 
@@ -348,30 +306,14 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
     }
 
     private void ok() {
-                    /*
-     * private Text name;
-    private Text datasetName;
-    private Text expression;
-    private Text index;
-    private Text joinCondition;
-    private Text skew;
-    */
+
         //jobEntry.setJobName(jobEntryName.getText());
         jobEntry.setName(jobEntryName.getText());
-        /*
-    private Text record;
-    private Text recordName;
-    private Text recordsetName;
-    */
-        jobEntry.setRecordsetNameIterate(recordsetNameIterate.getText());
-        jobEntry.setTransformName(transformName.getText());
-        jobEntry.setTransform(transform.getText());
-        jobEntry.setRecordset(recordset.getText());
-        jobEntry.setRecordsetName(recordsetName.getText());
-        jobEntry.setRecord(record.getText());
-        jobEntry.setRecordName(recordName.getText());
-        jobEntry.setRunLocalString(runLocal.getText());
-        jobEntry.setTransformCall(transformCall.getText());
+        
+        jobEntry.setServerIP(serverIP.getText());
+        jobEntry.setServerPort(serverPort.getText());
+        jobEntry.setLandingZone(landingZone.getText());
+
 
         dispose();
     }

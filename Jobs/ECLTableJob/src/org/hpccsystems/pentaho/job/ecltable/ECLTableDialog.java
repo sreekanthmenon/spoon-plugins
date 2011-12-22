@@ -35,6 +35,8 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
@@ -46,7 +48,7 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
     private Text jobEntryName;
 
     private Text recordsetName;
-    private Text recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
+    private Combo recordset;
     
 
     private Text format;
@@ -87,6 +89,18 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
                 jobEntry.setChanged();
             }
         };
+        
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
 
         backupChanged = jobEntry.hasChanged();
 
@@ -131,7 +145,7 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 350;
+        datasetGroupFormat.height = 450;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         tableGroup.setLayoutData(datasetGroupFormat);
 
@@ -140,7 +154,7 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
         
         recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, tableGroup);
         
-        recordset = buildMultiText("Recordset", recordsetName, lsMod, middle, margin, tableGroup);
+        recordset = buildCombo("Recordset", recordsetName, lsMod, middle, margin, tableGroup, datasets);
         expression = buildMultiText("Expression", recordset, lsMod, middle, margin, tableGroup);
         format = buildMultiText("Format", expression, lsMod, middle, margin, tableGroup);
         size = buildText("Size", format, lsMod, middle, margin, tableGroup);
@@ -287,14 +301,14 @@ public class ECLTableDialog extends JobEntryDialog implements JobEntryDialogInte
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;

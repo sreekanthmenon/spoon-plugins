@@ -35,6 +35,8 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
@@ -46,7 +48,7 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
     private Text jobEntryName;
 
     private Text recordsetName;
-    private Text recordset;
+    private Combo recordset;
     private Text condition;
     private Combo runLocal;//optional
     
@@ -84,6 +86,19 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
                 jobEntry.setChanged();
             }
         };
+        
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
+        
 
         backupChanged = jobEntry.hasChanged();
 
@@ -138,7 +153,7 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
                     
 
         recordsetName = buildText("Result Recordset", null, lsMod, middle, margin, iterateGroup);
-        recordset = buildText("Recordset", recordsetName, lsMod, middle, margin, iterateGroup);
+        recordset = buildCombo("Recordset", recordsetName, lsMod, middle, margin, iterateGroup,datasets);
         condition = buildText("Condtion", recordset, lsMod, middle, margin, iterateGroup);
         
     /*private Text isAll;
@@ -300,14 +315,14 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;

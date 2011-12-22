@@ -72,7 +72,7 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
    
     private Combo attributeName;
     private Text fileName;
-    private Text serverAddress;
+    //private Text serverAddress;
     
     
     private HashMap controls = new HashMap();
@@ -83,6 +83,8 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
         if (this.jobEntry.getName() == null) {
             this.jobEntry.setName("Output");
         }
+        
+        
     }
 
     
@@ -102,63 +104,7 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
             System.out.println(e.toString());
             datasets = new String[]{""};
         }
-        /*
-         * 
-         * ArrayList<String> adDS = new ArrayList<String>();
-        try{
-            //rep.getStepAttributeString(id_jobentry, "attributeName"); //$NON-NLS-1$
-            
-            //this.rep.getJobId(this.jobEntryName;, null)
-            Object[] jobHops = this.jobMeta.getJobhops().toArray();
-            
-            
-            for(int i = 0; i<jobHops.length; i++){
-                System.out.println(((JobHopMeta)jobHops[i]).getXML());
-            }
-            
-            
-            Object[] jec = this.jobMeta.getJobCopies().toArray();
-            //JobEntryCopy
-            System.out.println("Number of nodes: " + jobHops.length);
-                    
-            datasets = new String[jec.length];
-            int k = 0;
-
-            for(int j = 0; j<jec.length; j++){
-                System.out.println("Node(i): " + j + " | " +((JobEntryCopy)jec[j]).getName());
-                
-                if(!((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("START") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("OUTPUT") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("SUCCESS")){
-                    System.out.println("Node(k): " + k);
-                    datasets[k] = ((JobEntryCopy)jec[j]).getName();
-                    adDS.add((String)((JobEntryCopy)jec[j]).getName());
-                    k++;
-                }
-                
-                System.out.println(((JobEntryCopy)jec[j]).getXML());
-                
-            }
-            //saving the loop code using arraylists
-            datasets = adDS.toArray(new String[k]);
-            
-            for(int a = 0; a<datasets.length; a++){
-                System.out.println("datasets[" + a + "] = " + datasets[a]);
-            }
-            
-           // Repository rep = this.jobMeta.getRepository();
-           // ObjectId[] allIDs = rep.getPartitionSchemaIDs(false);
-            
-           // System.out.println("ObjectID length: " + allIDs.length);
-           // for(int i = 0; i<allIDs.length; i++){
-                //logBasic("ObjectID["+i+"] = " + allIDs[i]);
-           //     System.out.println("ObjectID["+i+"] = " + allIDs[i]);
-           // }
-        }catch (Exception e){
-            System.out.println("ObjectID loop error");
-            System.out.println(e);
-        }
-         * 
-         * 
-         */
+    
         Shell parentShell = getParent();
         Display display = parentShell.getDisplay();
 
@@ -223,10 +169,10 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
         fileGroup.setLayoutData(fileGroupFormat);
         
         
-        this.serverAddress = buildText("Server Address", fileGroup, lsMod, middle, margin, fileGroup);
-        controls.put("serverAddress", serverAddress);
+        //this.serverAddress = buildText("Server Address", fileGroup, lsMod, middle, margin, fileGroup);
+        //controls.put("serverAddress", serverAddress);
         
-        this.fileName = buildText("Output File Name", serverAddress, lsMod, middle, margin, fileGroup);
+        this.fileName = buildText("Output File Name", fileGroup, lsMod, middle, margin, fileGroup);
         controls.put("fileName", fileName);
         
         this.fileOpenButton = buildButton("Choose File", fileName, lsMod, middle, margin, fileGroup);
@@ -316,9 +262,9 @@ public class ECLOutputDialog extends JobEntryDialog implements JobEntryDialogInt
         if (jobEntry.getAttributeName() != null) {
             this.attributeName.setText(jobEntry.getAttributeName());
         }
-        if (jobEntry.getServerAddress() != null) {
-            this.serverAddress.setText(jobEntry.getServerAddress());
-        }
+        //if (jobEntry.getServerAddress() != null) {
+        //    this.serverAddress.setText(jobEntry.getServerAddress());
+        //}
         if (jobEntry.getFileName() != null) {
             this.fileName.setText(jobEntry.getFileName());
         }
@@ -412,14 +358,14 @@ private String buildFileDialog() {
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;
@@ -454,9 +400,27 @@ private String buildFileDialog() {
 
     private void ok() {
         jobEntry.setName(jobEntryName.getText());
+        AutoPopulate ap = new AutoPopulate();
+        String serverHost = "";
+        String serverPort = "";
+            try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+                
+                serverHost = ap.getGlobalVariable(this.jobMeta.getJobCopies(),"server_ip");
+                serverPort = ap.getGlobalVariable(this.jobMeta.getJobCopies(),"server_port");
+            }catch (Exception e){
+                System.out.println("Error Parsing existing Global Variables ");
+                System.out.println(e.toString());
+                
+            }
+            
+        jobEntry.setServerAddress(serverHost);
+        jobEntry.setServerPort(serverPort);
         
         jobEntry.setAttributeName(this.attributeName.getText());
-        jobEntry.setServerAddress(this.serverAddress.getText());
+        //jobEntry.setServerAddress(this.serverAddress.getText());
+        
+        
         jobEntry.setFileName(this.fileName.getText());
         
         dispose();

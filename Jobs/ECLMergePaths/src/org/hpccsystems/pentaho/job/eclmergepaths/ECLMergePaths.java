@@ -33,10 +33,10 @@ import java.io.*;
 public class ECLMergePaths extends JobEntryBase implements Cloneable, JobEntryInterface {
     
 
-    private String numberOfPaths;
+    private String numberOfPaths = "1";
     private static boolean isFirst = true; 
-    private static int numberOfPathsStat;
-    private static int numberOfPathsRemaining;
+    private static int numberOfPathsStat = 0;
+    private static int numberOfPathsRemaining = 0;
     private static Result globalResult;
     
     public static boolean isReady = false;

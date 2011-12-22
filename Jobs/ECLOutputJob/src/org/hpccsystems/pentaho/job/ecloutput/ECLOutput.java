@@ -29,6 +29,10 @@ import org.pentaho.di.core.*;
 import org.pentaho.di.core.gui.SpoonFactory;
 
 import org.pentaho.di.plugins.perspectives.eclresults.*;
+
+import org.hpccsystems.eclguifeatures.*;
+import org.pentaho.di.job.JobMeta;
+
 /**
  *
  * @author ChalaAX
@@ -36,9 +40,10 @@ import org.pentaho.di.plugins.perspectives.eclresults.*;
 public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterface {
     
 
-    private String attributeName;
-    private String fileName;
-    private String serverAddress;
+    private String attributeName = "";
+    private String fileName = "";
+    private String serverAddress = "";
+    private String serverPort = "";
     
     public static boolean isReady = false;
 
@@ -67,13 +72,48 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
         this.serverAddress = serverAddress;
     }
 
+    public static boolean isIsReady() {
+        return isReady;
+    }
+
+    public static void setIsReady(boolean isReady) {
+        ECLOutput.isReady = isReady;
+    }
+
+    public String getServerPort() {
+        return serverPort;
+    }
+
+    public void setServerPort(String serverPort) {
+        this.serverPort = serverPort;
+    }
+
     
     
     
 
     @Override
     public Result execute(Result prevResult, int k) throws KettleException {
-       
+        JobMeta jobMeta = super.parentJob.getJobMeta();
+                
+        String serverHost = "";
+        String serverPort = "";
+        AutoPopulate ap = new AutoPopulate();
+            try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+                
+                serverHost = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_ip");
+                serverPort = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_port");
+            }catch (Exception e){
+                System.out.println("Error Parsing existing Global Variables ");
+                System.out.println(e.toString());
+                
+            }
+            
+        this.setServerAddress(serverHost);
+        this.setServerPort(serverPort);
+        
+        
         Result result = prevResult;
         if(result.isStopped()){
             logBasic("{Output Job is Stopped}");
@@ -122,8 +162,12 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
                 logBasic("{Output Job} Output Code =" + eclCode);
             }
 
+            //String serverHost = "";
+            //String serverPort = "";
+            
+            
 
-            EclDirect eclDirect = new EclDirect(this.serverAddress, "thor");
+            EclDirect eclDirect = new EclDirect(this.serverAddress, "thor", this.serverPort);
             ArrayList dsList;
             String outStr = "";
             try{
@@ -196,9 +240,12 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
              System.out.println(" ------------ loadXML ------------- ");
             super.loadXML(node, list, list1);
 
-            setAttributeName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "attribute_name")));
-            setServerAddress(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "server_address")));
-            setFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "attribute_name")) != null)
+                setAttributeName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "attribute_name")));
+            //if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "server_address")) != null)
+                //setServerAddress(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "server_address")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_name")) != null)
+                setFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "file_name")));
 
 
         } catch (Exception e) {
@@ -213,9 +260,10 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
         retval += super.getXML();
 
         retval += "		<attribute_name>" + attributeName + "</attribute_name>" + Const.CR;
-        retval += "		<server_address>" + serverAddress + "</server_address>" + Const.CR;
+       // retval += "		<server_address>" + serverAddress + "</server_address>" + Const.CR;
         retval += "		<file_name>" + fileName + "</file_name>" + Const.CR;
   
+        System.out.println(" end getXML ");
         return retval;
 
     }
@@ -225,15 +273,18 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
         System.out.println(" ------------ loadRep " + id_jobentry + "------------- ");
         try {
             
-            ObjectId[] allIDs = rep.getPartitionSchemaIDs(true);
-            for(int i = 0; i<allIDs.length; i++){
-                logBasic("ObjectID["+i+"] = " + allIDs[i]);
-                System.out.println("ObjectID["+i+"] = " + allIDs[i]);
-            }
+            //ObjectId[] allIDs = rep.getPartitionSchemaIDs(true);
+            //for(int i = 0; i<allIDs.length; i++){
+            //    logBasic("ObjectID["+i+"] = " + allIDs[i]);
+            //    System.out.println("ObjectID["+i+"] = " + allIDs[i]);
+            //}
           
-            attributeName = rep.getStepAttributeString(id_jobentry, "attributeName"); //$NON-NLS-1$
-            serverAddress = rep.getStepAttributeString(id_jobentry, "serverAddress"); //$NON-NLS-1$
-            fileName = rep.getStepAttributeString(id_jobentry, "fileName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "attributeName") != null)
+                attributeName = rep.getStepAttributeString(id_jobentry, "attributeName"); //$NON-NLS-1$
+            //if(rep.getStepAttributeString(id_jobentry, "serverAddress") != null)
+            //    serverAddress = rep.getStepAttributeString(id_jobentry, "serverAddress"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "fileName") != null)
+                fileName = rep.getStepAttributeString(id_jobentry, "fileName"); //$NON-NLS-1$
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -251,7 +302,7 @@ public class ECLOutput extends JobEntryBase implements Cloneable, JobEntryInterf
                 System.out.println("ObjectID["+i+"] = " + allIDs[i]);
             }
             rep.saveStepAttribute(id_job, getObjectId(), "attributeName", attributeName); //$NON-NLS-1$
-            rep.saveStepAttribute(id_job, getObjectId(), "serverAddress", serverAddress); //$NON-NLS-1$
+            //rep.saveStepAttribute(id_job, getObjectId(), "serverAddress", serverAddress); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "fileName", fileName); //$NON-NLS-1$
            
         } catch (Exception e) {

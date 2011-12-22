@@ -29,16 +29,16 @@ import org.w3c.dom.Node;
 public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterface {
     
     //private String jobName;
-    private String name;
+    private String name = "";
     
-    private String RecordsetName;
-    private String recordset;//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
-    private String condition;
-    private Boolean isAll;
-    private Boolean isHash;
-    private String keep;
-    private String keeper;
-    private Boolean runLocal;
+    private String RecordsetName = "";
+    private String recordset = "";//Comma seperated list of fieldNames. a "-" prefix to the field name will indicate descending order
+    private String condition = "";
+    private Boolean isAll = false;
+    private Boolean isHash = false;
+    private String keep = "";
+    private String keeper = "";
+    private Boolean runLocal = false;
 
     public String getRecordsetName() {
         return RecordsetName;
@@ -219,14 +219,21 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
         try {
             super.loadXML(node, list, list1);
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
-
-            this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
-            this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
-            this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
-            this.setIsAllString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isAll")));
-            this.setIsHashString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isHash")));
-            this.setKeep(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keep")));
-            this.setKeeper(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keeper")));
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")) != null)
+                this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")) != null)
+                this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")) != null)
+                this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isAll")) != null)
+                this.setIsAllString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isAll")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isHash")) != null)
+                this.setIsHashString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isHash")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keep")) != null)
+                this.setKeep(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keep")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keeper")) != null)
+                this.setKeeper(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"keeper")));
             
             
             this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
@@ -267,15 +274,22 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
 
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
             
- 
-            RecordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
-            recordset = rep.getStepAttributeString(id_jobentry, "recordset");
-            condition = rep.getStepAttributeString(id_jobentry, "condition");
-            this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
-            this.setIsAllString(rep.getStepAttributeString(id_jobentry, "isAll"));
-            this.setIsHashString(rep.getStepAttributeString(id_jobentry, "isHash"));
-            keep = rep.getStepAttributeString(id_jobentry, "keep");
-            keeper = rep.getStepAttributeString(id_jobentry, "keeper");
+            if(rep.getStepAttributeString(id_jobentry, "recordset_name") != null)
+                RecordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
+            if(rep.getStepAttributeString(id_jobentry, "recordset") != null)
+                recordset = rep.getStepAttributeString(id_jobentry, "recordset");
+            if(rep.getStepAttributeString(id_jobentry, "condition") != null)
+                condition = rep.getStepAttributeString(id_jobentry, "condition");
+            if(rep.getStepAttributeString(id_jobentry, "runLocal") != null)
+                this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
+            if(rep.getStepAttributeString(id_jobentry, "isAll") != null)
+                this.setIsAllString(rep.getStepAttributeString(id_jobentry, "isAll"));
+            if(rep.getStepAttributeString(id_jobentry, "isHash") != null)
+                this.setIsHashString(rep.getStepAttributeString(id_jobentry, "isHash"));
+            if(rep.getStepAttributeString(id_jobentry, "keep") != null)
+                keep = rep.getStepAttributeString(id_jobentry, "keep");
+            if(rep.getStepAttributeString(id_jobentry, "keeper") != null)
+                keeper = rep.getStepAttributeString(id_jobentry, "keeper");
             
             
             

@@ -28,10 +28,10 @@ import org.w3c.dom.Node;
  */
 public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInterface {
     
-    private String logicalFileName;
-    private String datasetName;
-    private String recordName;
-    private String recordDef;
+    private String logicalFileName = "";
+    private String datasetName = "";
+    private String recordName = "";
+    private String recordDef = "";
 
     public String getDatasetName() {
         return datasetName;
@@ -107,7 +107,7 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
         }
         
         result.setRows(list);
-        
+        result.setLogText("ECLDataset executed, ECL code added");
         
         return result;
     }
@@ -117,10 +117,14 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
         try {
             super.loadXML(node, list, list1);
             
-            setLogicalFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")));
-            setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")));
-            setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
-            setRecordDef(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_def")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")) != null)
+                setLogicalFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")) != null)
+                setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")) != null)
+                setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_def")) != null)
+                setRecordDef(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_def")));
 
         } catch (Exception e) {
             throw new KettleXMLException("ECL Dataset Job Plugin Unable to read step info from XML node", e);
@@ -145,10 +149,14 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
     public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
         try {
-            logicalFileName = rep.getStepAttributeString(id_jobentry, "logicalFileName"); //$NON-NLS-1$
-            datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
-            recordName = rep.getStepAttributeString(id_jobentry, "recordName"); //$NON-NLS-1$
-            recordDef = rep.getStepAttributeString(id_jobentry, "recordDef"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "logicalFileName") != null)
+                logicalFileName = rep.getStepAttributeString(id_jobentry, "logicalFileName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "datasetName") != null)
+                datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "recordName") != null)
+                recordName = rep.getStepAttributeString(id_jobentry, "recordName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "recordDef") != null)
+                recordDef = rep.getStepAttributeString(id_jobentry, "recordDef"); //$NON-NLS-1$
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);

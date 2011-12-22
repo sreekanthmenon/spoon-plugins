@@ -35,6 +35,8 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
@@ -48,7 +50,7 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
     
   //  private Text name;
     private Text recordsetName;
-    private Text datasetName;
+    private Combo datasetName;
     private Text expression;
     private Text index;
     private Text joinCondition;
@@ -82,6 +84,18 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
                 jobEntry.setChanged();
             }
         };
+        
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
 
         backupChanged = jobEntry.hasChanged();
 
@@ -126,14 +140,14 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 200;
+        datasetGroupFormat.height = 300;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         distributeGroup.setLayoutData(datasetGroupFormat);
 
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
         recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, distributeGroup);
         
-        datasetName = buildText("Dataset Name", recordsetName, lsMod, middle, margin, distributeGroup);
+        datasetName = buildCombo("Dataset Name", recordsetName, lsMod, middle, margin, distributeGroup,datasets);
         expression = buildMultiText("Expression", datasetName, lsMod, middle, margin, distributeGroup);
         index = buildText("Index", expression, lsMod, middle, margin, distributeGroup);
         joinCondition = buildText("Join Condition", index, lsMod, middle, margin, distributeGroup);
@@ -259,14 +273,14 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;

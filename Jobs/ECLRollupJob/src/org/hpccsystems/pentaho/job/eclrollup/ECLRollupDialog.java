@@ -35,6 +35,9 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+
+import org.hpccsystems.eclguifeatures.*;
+
 /**
  *
  * @author ChalaAX
@@ -46,7 +49,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     private Text jobEntryName;
 
     private Text recordsetName;
-    private Text recordset;
+    private Combo recordset;
     private Text condition;
     private Text transformName;
     private Text transform;
@@ -117,11 +120,11 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         this.lsDef = lsDef;
     }
 
-    public Text getRecordset() {
+    public Combo getRecordset() {
         return recordset;
     }
 
-    public void setRecordset(Text recordset) {
+    public void setRecordset(Combo recordset) {
         this.recordset = recordset;
     }
 
@@ -196,6 +199,19 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
                 jobEntry.setChanged();
             }
         };
+        
+        String datasets[] = null;
+        AutoPopulate ap = new AutoPopulate();
+        try{
+            //Object[] jec = this.jobMeta.getJobCopies().toArray();
+            
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+        }catch (Exception e){
+            System.out.println("Error Parsing existing Datasets");
+            System.out.println(e.toString());
+            datasets = new String[]{""};
+        }
+        
 
         backupChanged = jobEntry.hasChanged();
 
@@ -240,7 +256,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 350;
+        datasetGroupFormat.height = 500;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         iterateGroup.setLayoutData(datasetGroupFormat);
 
@@ -251,7 +267,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
 
         recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, iterateGroup);
        
-        recordset = buildText("Recordset", recordsetName, lsMod, middle, margin, iterateGroup);
+        recordset = buildCombo("Recordset", recordsetName, lsMod, middle, margin, iterateGroup,datasets);
         condition = buildText("Condtion", recordset, lsMod, middle, margin, iterateGroup);
         transformName = buildText("Transform Name", condition, lsMod, middle, margin, iterateGroup);
         
@@ -404,14 +420,14 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         fmt.setLayoutData(labelFormat);
 
         // text field
-        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER);
+        Text text = new Text(groupBox, SWT.MULTI | SWT.LEFT | SWT.BORDER | SWT.V_SCROLL);
         props.setLook(text);
         text.addModifyListener(lsMod);
         FormData fieldFormat = new FormData();
         fieldFormat.left = new FormAttachment(middle, 0);
         fieldFormat.top = new FormAttachment(prevControl, margin);
         fieldFormat.right = new FormAttachment(100, 0);
-        fieldFormat.height = 50;
+        fieldFormat.height = 100;
         text.setLayoutData(fieldFormat);
 
         return text;

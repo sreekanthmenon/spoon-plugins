@@ -29,18 +29,18 @@ import org.w3c.dom.Node;
 public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterface {
     
     //private String jobName;
-    private String name;
+    private String name = "";
 
-    private String recordsetName;
-    private String recordset;
-    private String condition;
-    private String transformName;
-    private String transform;
-    private String transformCall;
+    private String recordsetName = "";
+    private String recordset = "";
+    private String condition = "";
+    private String transformName = "";
+    private String transform = "";
+    private String transformCall = "";
 
-    private String fieldlist;
-    private String group;
-    private Boolean runLocal;//optional
+    private String fieldlist = "";
+    private String group = "";
+    private Boolean runLocal = false;//optional
 
     public String getRecordsetName() {
         return recordsetName;
@@ -209,16 +209,25 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
             super.loadXML(node, list, list1);
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
             
-            this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")) != null)
+                this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
             
-            this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
-            this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
-            this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
-            this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
-            this.setTransformCall(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")));
-            this.setFieldlist(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"fieldlist")));
-            this.setGroup(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"group")));
-            this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")) != null)
+                this.setRecordset(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")) != null)
+                this.setCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"condition")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")) != null)
+                this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")) != null)
+                this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")) != null)
+                this.setTransformCall(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"fieldlist")) != null)
+                this.setFieldlist(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"fieldlist")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"group")) != null)
+                this.setGroup(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"group")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")) != null)
+                this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
 
         } catch (Exception e) {
             throw new KettleXMLException("ECL Distribute Job Plugin Unable to read step info from XML node", e);
@@ -257,15 +266,24 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
             //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
 
 
-            recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
-            recordset = rep.getStepAttributeString(id_jobentry, "recordset");
-            condition = rep.getStepAttributeString(id_jobentry, "condition");
-            transformName = rep.getStepAttributeString(id_jobentry, "transformName");
-            transform = rep.getStepAttributeString(id_jobentry, "transform");
-            transformCall = rep.getStepAttributeString(id_jobentry, "transformCall");
-            fieldlist = rep.getStepAttributeString(id_jobentry, "fieldlist");
-            group = rep.getStepAttributeString(id_jobentry, "group");            
-            this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
+            if(rep.getStepAttributeString(id_jobentry, "recordset_name") != null)
+                recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
+            if(rep.getStepAttributeString(id_jobentry, "recordset") != null)
+                recordset = rep.getStepAttributeString(id_jobentry, "recordset");
+            if(rep.getStepAttributeString(id_jobentry, "condition") != null)
+                condition = rep.getStepAttributeString(id_jobentry, "condition");
+            if(rep.getStepAttributeString(id_jobentry, "transformName") != null)
+                transformName = rep.getStepAttributeString(id_jobentry, "transformName");
+            if(rep.getStepAttributeString(id_jobentry, "transform") != null)
+                transform = rep.getStepAttributeString(id_jobentry, "transform");
+            if(rep.getStepAttributeString(id_jobentry, "transformCall") != null)
+                transformCall = rep.getStepAttributeString(id_jobentry, "transformCall");
+            if(rep.getStepAttributeString(id_jobentry, "fieldlist") != null)
+                fieldlist = rep.getStepAttributeString(id_jobentry, "fieldlist");
+            if(rep.getStepAttributeString(id_jobentry, "group") != null)
+                group = rep.getStepAttributeString(id_jobentry, "group");            
+            if(rep.getStepAttributeString(id_jobentry, "runLocal") != null)
+                this.setRunLocalString(rep.getStepAttributeString(id_jobentry, "runLocal"));
 
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);

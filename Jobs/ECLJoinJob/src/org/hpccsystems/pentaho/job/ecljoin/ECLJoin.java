@@ -28,12 +28,38 @@ import org.w3c.dom.Node;
  */
 public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterface {
     
-    private String joinName;
-    private String joinCondition;
-    private String joinType;
-    private String leftRecordSet;
-    private String rightRecordSet;
-    private String joinRecordSet;
+    private String joinName = "";
+    private String joinCondition = "";
+    private String leftJoinCondition = "";
+    private String rightJoinCondition = "";
+    private String joinType = "";
+    private String leftRecordSet = "";
+    private String rightRecordSet = "";
+    private String joinRecordSet = "";
+
+    public String getJoinName() {
+        return joinName;
+    }
+
+    public void setJoinName(String joinName) {
+        this.joinName = joinName;
+    }
+
+    public String getLeftJoinCondition() {
+        return leftJoinCondition;
+    }
+
+    public void setLeftJoinCondition(String leftJoinCondition) {
+        this.leftJoinCondition = leftJoinCondition;
+    }
+
+    public String getRightJoinCondition() {
+        return rightJoinCondition;
+    }
+
+    public void setRightJoinCondition(String rightJoinCondition) {
+        this.rightJoinCondition = rightJoinCondition;
+    }
 
     public String getName() {
         return this.joinName;
@@ -97,7 +123,7 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
         
             Join join = new Join();
             join.setName(this.joinRecordSet);
-            join.setJoinCondition(this.joinCondition);
+            join.setJoinCondition("left."+this.leftJoinCondition+" = "+"right."+this.rightJoinCondition);
             join.setJoinType(this.joinType);
             join.setLeftRecordSet(this.leftRecordSet);
             join.setRightRecordSet(this.rightRecordSet);
@@ -141,12 +167,22 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
         try {
             super.loadXML(node, list, list1);
             
-            setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_name")));
-            setJoinCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_condition")));
-            setJoinType(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_type")));
-            setLeftRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "left_recordset")));
-            setRightRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "right_recordset")));
-            setJoinRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_recordset")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_name")) != null)
+                setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_condition")) != null)
+                setJoinCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_condition")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "left_join_condition")) != null)
+                setLeftJoinCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "left_join_condition")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "right_join_condition")) != null)
+                setRightJoinCondition(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "right_join_condition")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_type")) != null)
+                setJoinType(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "join_type")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "left_recordset")) != null)
+                setLeftRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "left_recordset")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "right_recordset")) != null)
+                setRightRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "right_recordset")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")) != null)
+                setJoinRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")));
 
         } catch (Exception e) {
             throw new KettleXMLException("ECL Join Job Plugin Unable to read step info from XML node", e);
@@ -161,10 +197,12 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
         
         retval += "		<join_name>" + this.joinName + "</join_name>" + Const.CR;
         retval += "		<join_condition>" + this.joinCondition + "</join_condition>" + Const.CR;
+        retval += "		<left_join_condition>" + this.leftJoinCondition + "</left_join_condition>" + Const.CR;
+        retval += "		<right_join_condition>" + this.rightJoinCondition + "</right_join_condition>" + Const.CR;
         retval += "		<join_type>" + this.joinType + "</join_type>" + Const.CR;
         retval += "		<left_recordset>" + this.leftRecordSet + "</left_recordset>" + Const.CR;
         retval += "		<right_recordset>" + this.rightRecordSet + "</right_recordset>" + Const.CR;
-        retval += "		<join_recordset>" + this.joinRecordSet + "</join_recordset>" + Const.CR;
+        retval += "		<record_name>" + this.joinRecordSet + "</record_name>" + Const.CR;
   
         return retval;
 
@@ -173,12 +211,22 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
     public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
         try {
-            this.joinName = rep.getStepAttributeString(id_jobentry, "joinName"); //$NON-NLS-1$
-            this.joinCondition = rep.getStepAttributeString(id_jobentry, "joinCondition"); //$NON-NLS-1$
-            this.joinType = rep.getStepAttributeString(id_jobentry, "joinType"); //$NON-NLS-1$
-            this.leftRecordSet = rep.getStepAttributeString(id_jobentry, "leftRecordSet"); //$NON-NLS-1$
-            this.rightRecordSet = rep.getStepAttributeString(id_jobentry, "rightRecordSet"); //$NON-NLS-1$
-            this.joinRecordSet = rep.getStepAttributeString(id_jobentry, "joinRecordSet"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "joinName") != null)
+                this.joinName = rep.getStepAttributeString(id_jobentry, "joinName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "joinCondition") != null)
+                this.joinCondition = rep.getStepAttributeString(id_jobentry, "joinCondition"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "leftJoinCondition") != null)
+                this.leftJoinCondition = rep.getStepAttributeString(id_jobentry, "leftJoinCondition"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "rightJoinCondition") != null)
+                this.rightJoinCondition = rep.getStepAttributeString(id_jobentry, "rightJoinCondition"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "joinType") != null)
+                this.joinType = rep.getStepAttributeString(id_jobentry, "joinType"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "leftRecordSet") != null)
+                this.leftRecordSet = rep.getStepAttributeString(id_jobentry, "leftRecordSet"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "rightRecordSet") != null)
+                this.rightRecordSet = rep.getStepAttributeString(id_jobentry, "rightRecordSet"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "record_name") != null)
+                this.joinRecordSet = rep.getStepAttributeString(id_jobentry, "record_name"); //$NON-NLS-1$
                 
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -189,10 +237,12 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
         try {
             rep.saveStepAttribute(id_job, getObjectId(), "joinName", joinName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "joinCondition", joinCondition); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "leftJoinCondition", leftJoinCondition); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "rightJoinCondition", rightJoinCondition); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "joinType", joinType); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "leftRecordSet", leftRecordSet); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "rightRecordSet", rightRecordSet); //$NON-NLS-1$
-            rep.saveStepAttribute(id_job, getObjectId(), "joinRecordSet", joinRecordSet); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "record_name", joinRecordSet); //$NON-NLS-1$
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }
