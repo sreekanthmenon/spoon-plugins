@@ -4,6 +4,8 @@
  */
 package org.hpccsystems.ecldirect;
 
+import java.io.*;
+
 /**
  *
  * @author ChalaAX
@@ -97,8 +99,85 @@ public class ML implements EclCommand {
     }
 
 
-
+    public String mlLibrary(){
+        String ecl = "";
+        String $dir = "C:\\Program Files\\data-integration\\plugins\\jobentries\\ECLMLJob\\ecl\\";
+        ecl += openFile($dir + "Associate.ecl");
+        ecl += openFile($dir + "Classify.ecl");
+        
+        ecl += openFile($dir + "Cluster.ecl");
+        ecl += openFile($dir + "Config.ecl");
+        ecl += openFile($dir + "Correlate.ecl");
+        ecl += openFile($dir + "Discretize.ecl");
+        ecl += openFile($dir + "Distribution.ecl");
+        ecl += openFile($dir + "FieldAggregates.ecl");
+        ecl += openFile($dir + "FromField.ecl");
+        ecl += openFile($dir + "Generate.ecl");
+        ecl += openFile($dir + "Regression.ecl");
+        ecl += openFile($dir + "ToField.ecl");
+        ecl += openFile($dir + "Types.ecl");
+        ecl += openFile($dir + "Utils.ecl");
+        System.out.println("load mlLibrary");
+        System.out.println(ecl);
+        return ecl;
+    }
     
+    private static String openFile(String filePath){
+        StringBuffer fileData = new StringBuffer(1000);
+        System.out.println("++++++++++++++++ Open File: " + filePath);
+         try{
+        
+        BufferedReader reader = new BufferedReader(
+                new FileReader(filePath));
+        char[] buf = new char[1024];
+        int numRead=0;
+        while((numRead=reader.read(buf)) != -1){
+            String readData = String.valueOf(buf, 0, numRead);
+            fileData.append(readData);
+            buf = new char[1024];
+        }
+        reader.close();
+         }catch (Exception e){//Catch exception if any
+        System.err.println("Error: " + e.getMessage());
+     }
+        return fileData.toString();
+    }
+    
+    private String openFile1(String fileName){
+      String outStr = "";
+      String strLine = "";
+      try{
+          System.out.println("++++++++++++++++ Open File: " + fileName);
+          // Open the file that is the first 
+          // command line parameter
+          FileInputStream fstream = new FileInputStream(fileName);
+          // Get the object of DataInputStream
+          DataInputStream in = new DataInputStream(fstream);
+          BufferedReader br = new BufferedReader(new InputStreamReader(in));
+          
+
+          boolean first = true;
+          //Read File Line By Line
+          
+          while ((strLine += br.readLine()) != null)   {
+              // we may want to filter out comments
+              outStr += strLine;
+              System.out.println(strLine);
+          }
+          
+          //Close the input stream
+          in.close();
+          
+          
+          
+          
+    }catch (Exception e){//Catch exception if any
+        System.err.println("Error: " + e.getMessage());
+     }
+  
+      return outStr;
+      
+  }
 
     @Override
     public String ecl() {
@@ -106,8 +185,9 @@ public class ML implements EclCommand {
         
          
         String ecl = "";
-        ecl += "IMPORT * FROM ML.Cluster;\r\n\r\n";
-        ecl += "IMPORT * FROM ML.Types;\r\n\r\n";
+        ecl += mlLibrary();
+       // ecl += "IMPORT * FROM ML.Cluster;\r\n\r\n";
+        //ecl += "IMPORT * FROM ML.Types;\r\n\r\n";
 
         ecl += recordName + " := DATASET([\r\n" + record + "]," + fieldType + ");\r\n\r\n";
         ecl += record2Name + " := DATASET([\r\n" + record2 + "]," + fieldType2 + ");\r\n\r\n";

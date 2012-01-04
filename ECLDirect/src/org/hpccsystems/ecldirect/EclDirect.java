@@ -42,6 +42,9 @@ public class EclDirect {
     public ArrayList execute(String eclCode) {
        try {  
             // Construct data
+           System.out.println("-------------------------START ECL CODE------------------------------");
+           System.out.println(eclCode);
+           System.out.println("-------------------------END ECL CODE------------------------------");
             String data = URLEncoder.encode("eclText", "UTF-8") + "=" + URLEncoder.encode(eclCode, "UTF-8");
             data += "&" + URLEncoder.encode("cluster", "UTF-8") + "=" + URLEncoder.encode(clusterName, "UTF-8");
 
@@ -49,6 +52,15 @@ public class EclDirect {
             URL url = new URL(urlString);
             URLConnection conn = url.openConnection();
             conn.setDoOutput(true);
+            
+           /*
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Connection", "Keep-Alive");
+            conn.setRequestProperty("Charset", "UTF-8");
+            conn.setRequestProperty("Content-Type", "multipart/form-data;boundary=" + boundary);
+            conn.setRequestProperty("Transfer-Encoding", "chunked");
+            */
+
             OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
             wr.write(data);
             wr.flush();
