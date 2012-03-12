@@ -30,17 +30,18 @@ import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 
 import java.util.HashMap;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
+import org.eclipse.swt.custom.SashForm;
 
-/**
- * User: nbaker
- * Date: 1/6/11
- */
+
 public class ECLResultsSwtPerspective implements SpoonPerspective {
   private Composite comp;
   private static ECLResultsSwtPerspective instance = new ECLResultsSwtPerspective();
   
   private String dataIn;
   private String fileName;
+  private int fileCount;
 
   
 
@@ -50,6 +51,8 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
   private Label lbl;
   private Shell parentShell;
   private Table table;
+  
+  private CTabFolder folder;
   
   private boolean isActive;
 
@@ -76,6 +79,7 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
    // System.out.println("fileName" + fileName);
     
     parentShell = ((Spoon) SpoonFactory.getInstance()).getShell();
+    
     Display display = parentShell.getDisplay();
    
     comp = new Composite(((Spoon) SpoonFactory.getInstance()).getShell(), SWT.BORDER);
@@ -102,14 +106,38 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
             String newFile = buildFileDialog();
             if(newFile != ""){
                 fileName = newFile;
-                openFile(fileName);
+                //TODO: create new tab for file
+                //openFile(fileName);
+                buildTab(fileName);
+                
+                //int len = folder.getChildren().length;
+                int len = folder.getItemCount();
+                System.out.println("Number of tabs: " + len);
+                folder.setSelection(len-1);
             }
         }
     };
      
   fileButton.addListener(SWT.Selection, fileOpenListener);
-        
-  table = new Table (comp, SWT.VIRTUAL | SWT.BORDER);
+  
+  
+  //folder = new TabFolder(comp, SWT.CLOSE);
+  
+  folder = new CTabFolder(comp, SWT.CLOSE);
+  folder.setSimple(false);
+  folder.setBorderVisible(true);
+  folder.setLayoutData(new GridData(GridData.FILL_BOTH));
+  //folder.addCTabFolder2Listener(null);
+   //for(int i = 0; i<5; i++){
+ 
+	    //Tab 2
+//	   buildTab("tab"+i);
+       
+          // openFile(fileName);     
+  //}         
+            
+   /*     
+  table = new Table (group, SWT.VIRTUAL | SWT.BORDER);
   table.setLinesVisible (true);
   table.setHeaderVisible (true);
   table.clearAll();
@@ -121,8 +149,28 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
        
    openFile(fileName);     
         
- 
+ */
      
+  }
+  
+  
+  public void buildTab(String filename){
+            
+    //TabItem tab2 = new TabItem(folder, SWT.NONE);
+    CTabItem tab2 = new CTabItem(folder, SWT.NONE);
+    tab2.setText(filename);
+    
+    Table table = new Table (folder, SWT.VIRTUAL | SWT.BORDER);
+    table.setLinesVisible (true);
+    table.setHeaderVisible (true);
+    table.clearAll();
+    GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
+    data.heightHint = 200;
+    table.setLayoutData(data);
+    
+    openFile(fileName,table);
+    
+    tab2.setControl(table);
   }
 
   public static ECLResultsSwtPerspective getInstance(){
@@ -136,8 +184,34 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
       if(b){
          if(!this.isActive){
             System.out.println("create eclResults setActive");
-            fileName =  System.getProperties().getProperty("fileName");
-            openFile(fileName);
+            
+            //openFile(fileName);
+            
+            //rebuild Tabs
+            try{
+                fileCount =  Integer.parseInt(System.getProperties().getProperty("fileCount"));
+                System.setProperty("fileCount", "0");
+            }catch (Exception e){
+                fileCount = 0;
+            }
+            for(int i = 0; i<fileCount; i++){
+                try{
+                    fileName =  System.getProperties().getProperty("fileName"+i);
+                    buildTab(fileName);
+                    
+                    //remove name from memory
+                   
+                    
+                }catch (Exception e){
+                    System.out.println("Failed to find and open file fileName" + i );
+                }
+            }
+            //folder.setSelection(0);
+            //int len = folder.getChildren().length;
+            int len = folder.getItemCount();
+            //System.out.println("Number of items: " + folder.getItemCount());
+            System.out.println("Number of tabs: " + len);
+            folder.setSelection(len-1);
             System.out.println("fileName" + fileName);
             System.out.println("setActive -- isactive = true");
             this.isActive = true;
@@ -195,7 +269,7 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
     return null;
   }
   
-  private void openFile(String fileName){
+  private void openFile(String fileName, Table table){
       String outStr;
       try{
           // Open the file that is the first 
@@ -217,37 +291,66 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
           while ((strLine = br.readLine()) != null)   {
           // Print the content on the console
               outStr = strLine;
-              TableItem item = new TableItem (table, SWT.NONE);
-              item.setText(0,strLine);
+              TableItem item = null;
+              
+              
+              //item.setText(0,strLine);
+              
               //StringTokenizer st = new StringTokenizer(strLine,",");
               //length = st.countTokens();
               String[] strLineArr = strLine.split("\\,");
-              length = strLineArr.length;
               if(first){
+                  length = strLineArr.length;
+              }else{
+                   item = new TableItem (table, SWT.NONE);
+              }
+              
+              /*
+               * if(first){
                 for (int i=0; i<length; i++) {
                     TableColumn column = new TableColumn (table, SWT.NONE);
                     column.setText (i + " col");
                 }
+              }else{
+                  
+              }*/
+              int thisLen = strLineArr.length;
+              if(thisLen<=length){
+                  //String[] line = new String[length];
+                  for(int i =0; i<thisLen; i++){
+                      //line[i] = st.nextToken();
+                      //item.setText (i, st.nextToken());
+                      if(first){
+                          TableColumn column = new TableColumn (table, SWT.NONE);
+                          column.setText(strLineArr[i]);
+                           //System.out.println("*");
+                                    //System.out.println("**");
+                                    //System.out.println("***");
+                                    //System.out.println("****");
+                                    //System.out.println("*****");
+                                   // System.out.println(strLineArr[i]);
+                      }else{
+                         
+                          System.out.println("-- "+i+" -- " + strLineArr[i]);
+                          item.setText(i,strLineArr[i]);
+                      }
+                  }
               }
               first = false;
-              //String[] line = new String[length];
-              for(int i =0; i<length; i++){
-                  //line[i] = st.nextToken();
-                  //item.setText (i, st.nextToken());
-                  item.setText(i,strLineArr[i]);
-              }
               
           }
           
-          
+          System.out.println("Finisehd file");
          
           for (int i=0; i<length; i++) {
 		table.getColumn (i).pack ();
-	}
+	  }
+          System.out.println("finished packing");
           //Close the input stream
           in.close();
     }catch (Exception e){//Catch exception if any
         System.err.println("Error: " + e.getMessage());
+        e.printStackTrace();
      }
   
       

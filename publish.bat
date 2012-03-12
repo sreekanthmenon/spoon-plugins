@@ -94,12 +94,6 @@ copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plu
 copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
 copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
 
-set varDir=ECLMLJob
-set varJar=%varDir%
-
-copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
-copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
-copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
 
 set varDir=ECLGenericJob
 set varJar=%varDir%
@@ -109,4 +103,68 @@ copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugin
 copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
 
 
+
+
+
+set varDir=ECLML_KmeansJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+set varDir=ECLML_AssociateJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+
+set varDir=ECLML_ToFieldJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+set varDir=ECLML_FromFieldJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+set varDir=ECLML_ClassificationJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+set varDir=ECLML_BuildNaiveBayesJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+
+set varDir=ECLExecuteJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+set varDir=ECLGroupJob
+set varJar=%varDir%
+
+copy /Y "Jobs\%varDir%\dist\%varJar%.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\%varJar%.jar"
+copy /Y "ECLDirect\dist\ECLDirect.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLDirect.jar"
+copy /Y "ECLGUIFeatures\dist\ECLGUIFeatures.jar" "C:\Program Files\data-integration\plugins\jobentries\%varDir%\lib\ECLGUIFeatures.jar"
+
+
+
 @echo on
+

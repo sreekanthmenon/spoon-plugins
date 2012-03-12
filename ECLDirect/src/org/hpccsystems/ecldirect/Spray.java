@@ -19,6 +19,10 @@ public class Spray implements EclCommand {
     private String csvQuote;
     private String recordSize;
     private String clusterName;
+    
+   
+    
+    
 
     public String getCsvQuote() {
         return csvQuote;
@@ -106,6 +110,16 @@ public class Spray implements EclCommand {
                 outputField.append("'http://").append(ipAddress).append(":8010/FileSpray'" + ",,true);");
             } else {
                 //todo: Need to be developed
+                
+                outputField.append("STD.File.SprayFixed('");
+                outputField.append(ipAddress).append("',");
+                outputField.append("'").append(filePath).append("',");
+                outputField.append(this.recordSize).append(",");
+                outputField.append("group").append(",");
+                
+                outputField.append("'").append(logicalFileName).append("',-1,");
+                outputField.append("'http://").append(ipAddress).append(":8010/FileSpray'" + ",,true);");
+                
             }
         } else {
             throw new RuntimeException("Uninitialized File Type");

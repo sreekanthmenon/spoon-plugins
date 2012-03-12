@@ -125,7 +125,7 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 100;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
@@ -140,7 +140,7 @@ public class ECLDistributeDialog extends JobEntryDialog implements JobEntryDialo
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 300;
+        datasetGroupFormat.height = 250;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         distributeGroup.setLayoutData(datasetGroupFormat);
 

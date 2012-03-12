@@ -17,6 +17,26 @@ public class Dataset implements EclCommand {
     private String fileType;
     private ArrayList recordFormatList;
     private String recordFormatString;
+    
+    private String recstruct;
+    private String recordSet;
+
+    public String getRecordSet() {
+        return recordSet;
+    }
+
+    public void setRecordSet(String recordSet) {
+        this.recordSet = recordSet;
+    }
+
+    public String getRecstruct() {
+        return recstruct;
+    }
+
+    public void setRecstruct(String recstruct) {
+        this.recstruct = recstruct;
+    }
+    
 
     public String getLogicalFileName() {
         return logicalFileName;
@@ -71,6 +91,47 @@ public class Dataset implements EclCommand {
     
     @Override
     public String ecl() {
+        String recordFmt = "";
+        String recordDef = "";
+        String datasetDef = "";
+        if (recordFormatString != null && recordFormatString.length() > 0)  {
+            recordFmt = recordFormatString;
+        } else if (recordFormatList != null && recordFormatList.size() > 0) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < recordFormatList.size(); i++) {
+                sb.append(recordFormatList.get(i)).append(";");
+            }
+            recordFmt =  sb.toString();             
+        }
+        // attr := DATASET( file, struct, filetype );
+        //attr := DATASET( dataset, file, filetype );
+        //attr := DATASET( WORKUNIT( [ wuid , ] namedoutput ), struct );
+        //[ attr := ] DATASET( recordset [, recstruct ] );
+        
+        //this one is for file inputs
+        if(logicalFileName != null && logicalFileName.length() > 0){
+            System.out.println("regular dataset |" + logicalFileName +"|");
+            recordDef = recordName + ":= record \r\n" + recordFmt + "\r\nend; \r\n";
+        
+            datasetDef = name + ":= dataset('" + logicalFileName + "'," + recordName + "," +  fileType + "); \r\n";
+        }else{
+            System.out.println("ml dataset");
+            //this is for recordset (in-line inputs
+            
+            if(recordFmt != null && recordFmt.length() > 0){
+                recordDef = recordName + ":= record \r\n" + recordFmt + "\r\nend; \r\n";
+                datasetDef = name + ":= dataset([" + recordSet + "]," + recordName + "); \r\n";
+            }else{
+                datasetDef = name + ":= dataset([" + recordSet + "]," + recordName + "); \r\n";
+            }
+            
+        }
+        return recordDef + datasetDef;
+    }
+    
+    
+   /*
+    public String ecl2() {
         String recordFmt;
         if (recordFormatString != null && recordFormatString.length() > 0)  {
             recordFmt = recordFormatString;
@@ -86,7 +147,8 @@ public class Dataset implements EclCommand {
         String datasetDef = name + ":= dataset('" + logicalFileName + "'," + recordName + "," +  fileType + "); \r\n";
         return recordDef + datasetDef;
     }
-
+     * 
+     */
     @Override
     public CheckResult check() {
         throw new UnsupportedOperationException("Not supported yet.");

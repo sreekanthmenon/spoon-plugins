@@ -121,7 +121,7 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 100;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
@@ -136,7 +136,7 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 100;
+        datasetGroupFormat.height = 130;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         datasetGroup.setLayoutData(datasetGroupFormat);
         
@@ -144,8 +144,10 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         recordsetName = buildText("Resulting Dataset Name", null, lsMod, middle, margin, datasetGroup);
         
         datasetName = buildCombo("Dataset to be Sorted", recordsetName, lsMod, middle, margin, datasetGroup, datasets);
-        fields = buildText("Fields \ncomma seperated, \nprefix - for descending order", datasetName, lsMod, middle, margin, datasetGroup);
+        fields = buildText("Fields", datasetName, lsMod, middle, margin, datasetGroup);
+        Label lb = buildLabel("comma seperated, prefix field with - for descending order", fields, lsMod, middle, margin, datasetGroup);
 
+        
        
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -212,6 +214,23 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
 
         return jobEntry;
 
+    }
+    
+    private Label buildLabel(String strLabel, Control prevControl,
+        ModifyListener lsMod, int middle, int margin, Composite groupBox){
+        Label fmt = new Label(groupBox, SWT.RIGHT);
+        fmt.setText(strLabel);
+        props.setLook(fmt);
+        FormData labelFormat = new FormData();
+        //labelFormat.left = new FormAttachment(0, 0);
+        //labelFormat.top = new FormAttachment(prevControl, margin);
+       // labelFormat.right = new FormAttachment(middle, -margin);
+        
+        labelFormat.left = new FormAttachment(middle, 0);
+        labelFormat.top = new FormAttachment(prevControl, margin);
+        labelFormat.right = new FormAttachment(100, 0);
+        fmt.setLayoutData(labelFormat);
+        return fmt;
     }
 
     private Text buildText(String strLabel, Control prevControl,

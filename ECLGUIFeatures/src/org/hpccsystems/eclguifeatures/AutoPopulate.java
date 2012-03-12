@@ -471,6 +471,40 @@ public class AutoPopulate {
                                     XMLHandler.getSubNode(nNode, "landing_zone")
                                 );
                           }
+                          
+                          if(ofType.equalsIgnoreCase("cluster")){
+                                out = XMLHandler.getNodeValue(
+                                    XMLHandler.getSubNode(nNode, "cluster")
+                                );
+                          }
+                          
+                          if(ofType.equalsIgnoreCase("jobName")){
+                                out = XMLHandler.getNodeValue(
+                                    XMLHandler.getSubNode(nNode, "jobName")
+                                );
+                          }
+                          
+                          if(ofType.equalsIgnoreCase("eclccInstallDir")){
+                                out = XMLHandler.getNodeValue(
+                                    XMLHandler.getSubNode(nNode, "eclccInstallDir")
+                                );
+                          }
+                          
+                          if(ofType.equalsIgnoreCase("mlPath")){
+                                out = XMLHandler.getNodeValue(
+                                    XMLHandler.getSubNode(nNode, "mlPath")
+                                );
+                          }
+                          
+                          if(ofType.equalsIgnoreCase("includeML")){
+                                out = XMLHandler.getNodeValue(
+                                    XMLHandler.getSubNode(nNode, "includeML")
+                                );
+                          }
+                          
+                          
+                                  
+
                        }
                       
                        

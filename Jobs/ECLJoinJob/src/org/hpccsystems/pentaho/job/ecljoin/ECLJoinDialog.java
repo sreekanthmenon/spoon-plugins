@@ -123,7 +123,7 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 75;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
@@ -138,7 +138,7 @@ public class ECLJoinDialog extends JobEntryDialog implements JobEntryDialogInter
         FormData joinGroupFormat = new FormData();
         joinGroupFormat.top = new FormAttachment(generalGroup, margin);
         joinGroupFormat.width = 400;
-        joinGroupFormat.height = 185;
+        joinGroupFormat.height = 180;
         joinGroupFormat.left = new FormAttachment(middle, 0);
         joinGroup.setLayoutData(joinGroupFormat);
 

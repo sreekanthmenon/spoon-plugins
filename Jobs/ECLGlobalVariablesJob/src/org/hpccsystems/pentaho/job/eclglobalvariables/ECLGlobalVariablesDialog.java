@@ -50,7 +50,20 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
     private Text serverIP;
     private Text serverPort;
     private Text landingZone;
-
+    
+    private Text cluster;
+    private Text jobName;
+    private Text eclccInstallDir;
+    private Text mlPath;
+    private Combo includeML;
+ /*
+             *  private String mlPath = "ecl-ml";
+    private String eclccInstallDir = "C:\\Program Files\\HPCC Systems\\HPCC\\bin\\ver_3_0\\";
+    private String jobName = "Spoon-job";
+    private String cluster = "hthor";
+    private boolean includeML = true;
+             */
+                 
     
     
     
@@ -122,7 +135,7 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 100;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
@@ -137,7 +150,7 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 200;
+        datasetGroupFormat.height = 220;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         varGroup.setLayoutData(datasetGroupFormat);
 
@@ -147,7 +160,18 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         serverIP = buildText("Server Host", null, lsMod, middle, margin, varGroup);
         serverPort = buildText("Server Port", serverIP, lsMod, middle, margin, varGroup);
         landingZone = buildText("Landing Zone Dir", serverPort, lsMod, middle, margin, varGroup);
-             
+        
+        //move thes to Job Information
+        cluster = buildText("Cluster", landingZone, lsMod, middle, margin, varGroup);
+        jobName = buildText("Job Name", cluster, lsMod, middle, margin, varGroup);
+        
+        //move these to Library(s)
+        
+        eclccInstallDir = buildText("eclcc Install Dir", jobName, lsMod, middle, margin, varGroup);
+        mlPath = buildText("Path to ML Library", eclccInstallDir, lsMod, middle, margin, varGroup);
+        includeML = buildCombo("Include ML Library?", mlPath, lsMod, middle, margin, varGroup, new String[]{"true", "false"});
+        
+        
 
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -211,8 +235,25 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
             landingZone.setText(jobEntry.getLandingZone());
         }
 
+        
+        if (jobEntry.getCluster() != null) {
+            cluster.setText(jobEntry.getCluster());
+        }
+        
+        if (jobEntry.getJobName() != null) {
+            jobName.setText(jobEntry.getJobName());
+        }
+        if (jobEntry.getEclccInstallDir() != null) {
+            eclccInstallDir.setText(jobEntry.getEclccInstallDir());
+        }
+        if (jobEntry.getMlPath() != null) {
+            mlPath.setText(jobEntry.getMlPath());
+        }
+        if (jobEntry.getIncludeML() != null) {
+            includeML.setText(jobEntry.getIncludeML());
+        }
 
-         
+      
 
 
         shell.pack();
@@ -313,6 +354,14 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         jobEntry.setServerIP(serverIP.getText());
         jobEntry.setServerPort(serverPort.getText());
         jobEntry.setLandingZone(landingZone.getText());
+        
+        jobEntry.setCluster(cluster.getText());
+        jobEntry.setJobName(jobName.getText());
+        
+        jobEntry.setEclccInstallDir(eclccInstallDir.getText());
+        jobEntry.setMlPath(mlPath.getText());
+        jobEntry.setIncludeML(includeML.getText());
+
 
 
         dispose();

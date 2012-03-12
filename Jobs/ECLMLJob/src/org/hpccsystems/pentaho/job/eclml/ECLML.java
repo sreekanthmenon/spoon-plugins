@@ -6,7 +6,7 @@ package org.hpccsystems.pentaho.job.eclml;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.hpccsystems.ecldirect.ML;
+import org.hpccsystems.ecldirect.ML_kmeans;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -116,10 +116,10 @@ public class ECLML extends JobEntryBase implements Cloneable, JobEntryInterface 
         
         Result result = prevResult;
         
-
+        
     
     
-        ML ml = new ML();
+        ML_kmeans ml = new ML_kmeans();
         ml.setName(this.getRecordsetName());
 
         

@@ -128,7 +128,7 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 100;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
@@ -143,7 +143,7 @@ public class ECLDedupDialog extends JobEntryDialog implements JobEntryDialogInte
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 300;
+        datasetGroupFormat.height = 225;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         iterateGroup.setLayoutData(datasetGroupFormat);
 

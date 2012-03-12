@@ -4,7 +4,10 @@
  */
 package org.hpccsystems.pentaho.job.eclsprayfile;
 
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.hpccsystems.ecldirect.Spray;
 import org.hpccsystems.ecldirect.EclDirect;
@@ -41,6 +44,18 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
     private String csvTerminator = "";
     private String csvQuote = "";
     private String fixedRecordSize = "";
+    
+    //private RecordList recordList = new RecordList();
+
+   /* public RecordList getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(RecordList recordList) {
+        this.recordList = recordList;
+    }*/
+    
+    
 
     
     
@@ -116,6 +131,13 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
         String serverHost = "";
         String serverPort = "";
         String landingZone = "";
+        
+        String cluster = "";
+        String jobName = "";
+        String eclccInstallDir = "";
+        String mlPath = "";
+        String includeML = "";
+        
         AutoPopulate ap = new AutoPopulate();
             try{
             //Object[] jec = this.jobMeta.getJobCopies().toArray();
@@ -123,6 +145,14 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
                 serverHost = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_ip");
                 serverPort = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_port");
                 landingZone = ap.getGlobalVariable(jobMeta.getJobCopies(),"landing_zone");
+                
+                cluster = ap.getGlobalVariable(jobMeta.getJobCopies(),"cluster");
+                jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
+                
+                eclccInstallDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"eclccInstallDir");
+                mlPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"mlPath");
+                includeML = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeML");
+                
             }catch (Exception e){
                 System.out.println("Error Parsing existing Global Variables ");
                 System.out.println(e.toString());
@@ -155,7 +185,12 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
 
         logBasic("{Spray Job} Called IP = " + (String)spray.getIpAddress());
         
-        EclDirect eclDirect = new EclDirect(((String)spray.getIpAddress()).trim(), "thor", serverPort);
+        EclDirect eclDirect = new EclDirect(((String)spray.getIpAddress()).trim(), cluster, serverPort);
+        eclDirect.setEclccInstallDir(eclccInstallDir);
+        eclDirect.setIncludeML(includeML);
+        eclDirect.setJobName(jobName);
+        eclDirect.setMlPath(mlPath);
+        eclDirect.setOutputName(this.getName());
         ArrayList dsList = eclDirect.execute(spray.ecl());
        
         RowMetaAndData data = new RowMetaAndData();
@@ -172,6 +207,39 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
         
         return result;
     }
+  /*
+    public String saveRecordList(){
+        String out = "";
+        ArrayList list = recordList.getRecords();
+        Iterator<RecordBO> itr = list.iterator();
+        boolean isFirst = true;
+        while(itr.hasNext()){
+            if(!isFirst){out+="|";}
+            
+            out += itr.next().toCSV();
+            isFirst = false;
+        }
+        return out;
+    }
+    
+  
+    public void openRecordList(String in){
+        String[] strLine = in.split("[|]");
+        
+        int len = strLine.length;
+        if(len>0){
+            recordList = new RecordList();
+            System.out.println("Open Record List");
+            for(int i =0; i<len; i++){
+                System.out.println("++++++++++++" + strLine[i]);
+                //this.recordDef.addRecord(new RecordBO(strLine[i]));
+                RecordBO rb = new RecordBO(strLine[i]);
+                System.out.println(rb.getColumnName());
+                recordList.addRecordBO(rb);
+            }
+        }
+    }
+     * */
 
     @Override
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {
@@ -195,7 +263,9 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_quote")) != null)
                 setCsvQuote(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "csv_quote")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fixed_record_size")) != null)
-                setFixedRecordSize(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fixed_record_size")));
+                setFixedRecordSize(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fixed_record_size")));     
+          //  if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")) != null)
+           //     openRecordList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")));
 
         } catch (Exception e) {
             throw new KettleXMLException("ECL Spray Plugin Unable to read step info from XML node", e);
@@ -218,7 +288,8 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
         retval += "		<csv_quote>" + csvQuote + "</csv_quote>" + Const.CR;
         retval += "		<fixed_record_size>" + fixedRecordSize + "</fixed_record_size>" + Const.CR;
         retval += "		<logical_file_name>" + logicalFileName + "</logical_file_name>" + Const.CR;
-
+        
+       // retval += "		<recordList>" + this.saveRecordList() + "</recordList>" + Const.CR;
         return retval;
 
     }
@@ -244,6 +315,10 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
                 fixedRecordSize = rep.getStepAttributeString(id_jobentry, "fixedRecordSize"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_jobentry, "logicalFileName") != null)
                 logicalFileName = rep.getStepAttributeString(id_jobentry, "logicalFileName"); //$NON-NLS-1$
+            
+          //  if(rep.getStepAttributeString(id_jobentry, "recordList") != null)
+          //      this.openRecordList(rep.getStepAttributeString(id_jobentry, "recordList")); //$NON-NLS-1$
+            
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
         }
@@ -260,6 +335,8 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
             rep.saveStepAttribute(id_job, getObjectId(), "csvQuote", csvQuote); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "fixedRecordSize", fixedRecordSize); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "logicalFileName", logicalFileName); //$NON-NLS-1$
+            
+          //  rep.saveStepAttribute(id_job, getObjectId(), "recordList", this.saveRecordList()); //$NON-NLS-1$
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

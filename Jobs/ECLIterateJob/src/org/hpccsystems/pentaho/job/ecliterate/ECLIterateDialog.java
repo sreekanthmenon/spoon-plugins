@@ -113,7 +113,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 100;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
@@ -130,7 +130,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         FormData transformGroupFormat = new FormData();
         transformGroupFormat.top = new FormAttachment(generalGroup, margin);
         transformGroupFormat.width = 400;
-        transformGroupFormat.height = 225;
+        transformGroupFormat.height = 175;
         transformGroupFormat.left = new FormAttachment(middle, 0);
         transformGroup.setLayoutData(transformGroupFormat);
         
@@ -165,7 +165,7 @@ public class ECLIterateDialog extends JobEntryDialog implements JobEntryDialogIn
         FormData iterateGroupFormat = new FormData();
         iterateGroupFormat.top = new FormAttachment(recordGroup, margin);
         iterateGroupFormat.width = 400;
-        iterateGroupFormat.height = 125;
+        iterateGroupFormat.height = 85;
         iterateGroupFormat.left = new FormAttachment(middle, 0);
         iterateGroup.setLayoutData(iterateGroupFormat);
         

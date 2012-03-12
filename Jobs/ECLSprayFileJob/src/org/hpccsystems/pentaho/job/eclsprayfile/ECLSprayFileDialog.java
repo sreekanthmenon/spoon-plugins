@@ -4,16 +4,29 @@
  */
 package org.hpccsystems.pentaho.job.eclsprayfile;
 
+
+
+import java.util.Iterator;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Label;
+
+import org.eclipse.jface.viewers.TableViewer;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+//import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -24,7 +37,11 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.TabFolder;
+import org.eclipse.swt.widgets.TabItem;
+import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
+import org.hpccsystems.eclguifeatures.RecordList;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.job.entry.JobEntryDialogInterface;
@@ -34,6 +51,11 @@ import org.pentaho.di.ui.core.gui.WindowProperty;
 import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
+
+
+import org.hpccsystems.eclguifeatures.CreateTable;
+import org.hpccsystems.eclguifeatures.RecordBO;
+
 
 /**
  *
@@ -54,6 +76,24 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
     private Button wOK, wCancel;
     private boolean backupChanged;
     private SelectionAdapter lsDef;
+    
+    
+    private Table table;
+    private TableViewer tableViewer;
+
+    // Create a RecordList and assign it to an instance variable
+    private RecordList recordList = new RecordList();
+    private CreateTable ct = null;
+
+
+    // Set the table column property names
+    private final String CHECKED_COLUMN 		= "checked";
+    private final String NAME_COLUMN 			= "column_name";
+    private final String TYPE_COLUMN 			= "column_type";
+    private final String WIDTH_COLUMN 			= "column_width";
+
+    // Set column names
+    private String[] columnNames = new String[] { CHECKED_COLUMN, NAME_COLUMN, TYPE_COLUMN, WIDTH_COLUMN };
 
     public ECLSprayFileDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
@@ -65,10 +105,36 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
 
     public JobEntryInterface open() {
         Shell parentShell = getParent();
+        
         Display display = parentShell.getDisplay();
 
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
+        
+       
+       // ct = new CreateTable(shell);
+       
+        
+        
+      //  TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
+       // FormData data = new FormData();
+        
+       // data.height = 440;
+        //data.width = 600;
+        //tabFolder.setLayoutData(data);
+        
+      //  Composite compForGrp = new Composite(shell, SWT.NONE);
+	//compForGrp.setLayout(new FillLayout(SWT.VERTICAL));
+                
+        
+        //TabItem item1 = new TabItem(tabFolder, SWT.NULL);
+        
+       // item1.setText ("General");
 
+       // Group grp = new Group(tabFolder, SWT.NONE );
+       // grp.setLayoutData(new GridData(GridData.FILL_BOTH));
+	//grp.setText("Test Group");
+        
+         
         props.setLook(shell);
         JobDialog.setShellImage(shell, jobEntry);
 
@@ -86,9 +152,6 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         formLayout.marginHeight = Const.FORM_MARGIN;
 
 
-        shell.setLayout(formLayout);
-        shell.setText("Dataset");
-
         int middle = props.getMiddlePct();
         int margin = Const.MARGIN;
 
@@ -98,7 +161,10 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
         groupLayout.marginHeight = 10;
+        
+        
 
+        
         Group generalGroup = new Group(shell, SWT.SHADOW_NONE);
         props.setLook(generalGroup);
         generalGroup.setText("General Details");
@@ -106,7 +172,7 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 100;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
 
@@ -121,25 +187,43 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         FormData sourceGroupFormat = new FormData();
         sourceGroupFormat.top = new FormAttachment(generalGroup, margin);
         sourceGroupFormat.width = 400;
-        sourceGroupFormat.height = 150;
+        sourceGroupFormat.height = 100;
         sourceGroupFormat.left = new FormAttachment(middle, 0);
         sourceGroup.setLayoutData(sourceGroupFormat);
-
+       
         //ipAddress = buildText("IP Address", jobEntryName, lsMod, middle, margin, sourceGroup);
         filePath = buildText("File Name", jobEntryName, lsMod, middle, margin, sourceGroup);
         logicalFileName = buildText("Logical File Name", filePath, lsMod, middle, margin, sourceGroup);
         fileType = buildCombo("fileType", logicalFileName, lsMod, middle, margin, sourceGroup, new String[]{"Fixed", "Variable"});
 
+        
+        Group defGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(defGroup);
+        defGroup.setText("File Definition");
+        defGroup.setLayout(groupLayout);
+        FormData defGroupFormat = new FormData();
+        defGroupFormat.top = new FormAttachment(sourceGroup, margin);
+        defGroupFormat.width = 400;
+        defGroupFormat.height = 150;
+        defGroupFormat.left = new FormAttachment(middle, 0);
+        defGroup.setLayoutData(defGroupFormat);
+        
+        Composite defComp = new Composite(defGroup, SWT.NONE);
+        FormLayout defLayout = new FormLayout();
+        defLayout.marginTop = 0;
+        defLayout.marginHeight = 0;
+	defComp.setLayout(defLayout);
+        
         //CSV  Definition
-        Group csvGroup = new Group(shell, SWT.SHADOW_NONE);
+        final Group csvGroup = new Group(defComp, SWT.SHADOW_NONE);
         props.setLook(csvGroup);
-        csvGroup.setText("CSV Definition");
+        csvGroup.setText("CSV");
         csvGroup.setLayout(groupLayout);
-        FormData csvGroupFormat = new FormData();
-        csvGroupFormat.top = new FormAttachment(sourceGroup, margin);
-        csvGroupFormat.width = 400;
+        final FormData csvGroupFormat = new FormData();
+        csvGroupFormat.top = new FormAttachment(0, 0);
+        csvGroupFormat.width = 380;
         csvGroupFormat.height = 100;
-        csvGroupFormat.left = new FormAttachment(middle, 0);
+        csvGroupFormat.left = new FormAttachment(0, 0);
         csvGroup.setLayoutData(csvGroupFormat);
 
         csvSeperator = buildText("CSV Seperator", null, lsMod, middle, margin, csvGroup);
@@ -147,26 +231,56 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         csvQuote = buildText("CSV Quote", csvTerminator, lsMod, middle, margin, csvGroup);
 
         //Fixed  Definition
-        Group fixedGroup = new Group(shell, SWT.SHADOW_NONE);
+        final Group fixedGroup = new Group(defComp, SWT.SHADOW_NONE);
         props.setLook(fixedGroup);
-        fixedGroup.setText("Fixed File Definition");
+        fixedGroup.setText("Fixed Width");
         fixedGroup.setLayout(groupLayout);
         FormData fixedGroupFormat = new FormData();
-        fixedGroupFormat.top = new FormAttachment(csvGroup, margin);
-        fixedGroupFormat.width = 400;
+        fixedGroupFormat.top = new FormAttachment(0, 0);
+        fixedGroupFormat.width = 380;
         fixedGroupFormat.height = 100;
-        fixedGroupFormat.left = new FormAttachment(middle, 0);
+        fixedGroupFormat.left = new FormAttachment(0, 0);
         fixedGroup.setLayoutData(fixedGroupFormat);
 
         fixedRecordSize = buildText("Fixed Record Size", null, lsMod, middle, margin, fixedGroup);
+        
+       
+        
+        
+        
+        //item1.setControl(csvGroup);
+        //item1.setControl(compForGrp);
+        
+        
+       // TabItem item2 = ct.buildDefTab("Fields", tabFolder);
+        
+       /* if(jobEntry.getRecordList() != null){
+            recordList = jobEntry.getRecordList();
+            ct.setRecordList(jobEntry.getRecordList());
+            
+            if(recordList.getRecords() != null && recordList.getRecords().size() > 0) {
+                    System.out.println("Size: "+recordList.getRecords().size());
+                    for (Iterator<RecordBO> iterator = recordList.getRecords().iterator(); iterator.hasNext();) {
+                            RecordBO obj = (RecordBO) iterator.next();
+                            System.out.println("*******************");
+                            System.out.println("Column Name: "+obj.getColumnName());
+                            System.out.println("Column Type: "+obj.getColumnType());
+                            if(obj.getColumnWidth() > 0)
+                                    System.out.println("Height: "+obj.getColumnWidth());
+                            System.out.println("*******************");
 
+                    }
+            }
+        }
+       
+        */
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
         wCancel = new Button(shell, SWT.PUSH);
         wCancel.setText("Cancel");
 
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, fixedGroup);
-
+        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, defGroup);
+        
         // Add listeners
         Listener cancelListener = new Listener() {
 
@@ -228,8 +342,42 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         if (jobEntry.getFixedRecordSize() != null) {
             fixedRecordSize.setText(jobEntry.getFixedRecordSize());
         }
+        
+        fileType.addSelectionListener(new SelectionAdapter() {
+			public void widgetSelected(SelectionEvent e) {
+				System.out.println("Item selected: "+fileType.getText());
+				if(fileType.getText().equals("Variable")) {
+					//ct.redrawTable(false);
+                                        //fixedRecordSize.setVisible(false);
+                                        fixedGroup.setVisible(false);
+                                        csvGroup.setVisible(true);
+                                        csvGroup.setLayoutData(csvGroupFormat);
+                                        
+                                        
+				} else {
+					//ct.redrawTable(true);
+                                        fixedGroup.setVisible(true);
+                                        csvGroup.setVisible(false);
+                                        fixedGroup.setLayoutData(csvGroupFormat);
+				}
+				
+			};
+		});
 
 
+        if(fileType.getText().equals("Variable")) {
+                //ct.redrawTable(false);
+                //fixedRecordSize.setVisible(false);
+                fixedGroup.setVisible(false);
+                csvGroup.setVisible(true);
+                csvGroup.setLayoutData(csvGroupFormat);
+
+        } else {
+               // ct.redrawTable(true);
+                fixedGroup.setVisible(true);
+                csvGroup.setVisible(false);
+                fixedGroup.setLayoutData(csvGroupFormat);
+        }
         shell.pack();
         shell.open();
         while (!shell.isDisposed()) {
@@ -330,6 +478,7 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         jobEntry.setCsvQuote(csvQuote.getText());
         jobEntry.setCsvTerminator(csvTerminator.getText());
         jobEntry.setFixedRecordSize(fixedRecordSize.getText());
+        //jobEntry.setRecordList(ct.getRecordList());
         dispose();
     }
 

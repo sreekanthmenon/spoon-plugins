@@ -5,8 +5,11 @@
 package org.hpccsystems.pentaho.job.ecldataset;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.hpccsystems.ecldirect.Dataset;
+import org.hpccsystems.eclguifeatures.RecordBO;
+import org.hpccsystems.eclguifeatures.RecordList;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -32,6 +35,25 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
     private String datasetName = "";
     private String recordName = "";
     private String recordDef = "";
+    private String recordSet = "";
+    
+    private RecordList recordList = new RecordList();
+
+    public RecordList getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(RecordList recordList) {
+        this.recordList = recordList;
+    }
+
+    public String getRecordSet() {
+        return recordSet;
+    }
+
+    public void setRecordSet(String recordSet) {
+        this.recordSet = recordSet;
+    }
 
     public String getDatasetName() {
         return datasetName;
@@ -66,6 +88,22 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
     }
     
     
+    public String resultListToString(){
+        String out = "";
+        
+        if(recordList != null){
+            if(recordList.getRecords() != null && recordList.getRecords().size() > 0) {
+                    System.out.println("Size: "+recordList.getRecords().size());
+                    for (Iterator<RecordBO> iterator = recordList.getRecords().iterator(); iterator.hasNext();) {
+                            RecordBO record = (RecordBO) iterator.next();
+                            
+                            out += record.getColumnType() + " " + record.getColumnName() + ";\r\n";
+                    }
+            }
+        }
+        
+        return out;
+    }
 
     @Override
     public Result execute(Result prevResult, int k) throws KettleException {
@@ -75,9 +113,11 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
         Dataset dataset = new Dataset();
         dataset.setLogicalFileName(getLogicalFileName());
         dataset.setName(getDatasetName());
-        dataset.setRecordFormatString(getRecordDef());
+       // dataset.setRecordFormatString(getRecordDef());
+        dataset.setRecordFormatString(resultListToString());
         dataset.setRecordName(getRecordName());
         dataset.setFileType("CSV");
+        dataset.setRecordSet(getRecordSet());
 
         logBasic("{Dataset Job} Execute = " + dataset.ecl());
         
@@ -111,7 +151,36 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
         
         return result;
     }
-
+ public String saveRecordList(){
+        String out = "";
+        ArrayList list = recordList.getRecords();
+        Iterator<RecordBO> itr = list.iterator();
+        boolean isFirst = true;
+        while(itr.hasNext()){
+            if(!isFirst){out+="|";}
+            
+            out += itr.next().toCSV();
+            isFirst = false;
+        }
+        return out;
+    }
+    
+    public void openRecordList(String in){
+        String[] strLine = in.split("[|]");
+        
+        int len = strLine.length;
+        if(len>0){
+            recordList = new RecordList();
+            System.out.println("Open Record List");
+            for(int i =0; i<len; i++){
+                System.out.println("++++++++++++" + strLine[i]);
+                //this.recordDef.addRecord(new RecordBO(strLine[i]));
+                RecordBO rb = new RecordBO(strLine[i]);
+                System.out.println(rb.getColumnName());
+                recordList.addRecordBO(rb);
+            }
+        }
+    }
     @Override
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {
         try {
@@ -125,6 +194,10 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
                 setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_def")) != null)
                 setRecordDef(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_def")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordSet")) != null)
+                setRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordSet")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")) != null)
+                openRecordList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")));
 
         } catch (Exception e) {
             throw new KettleXMLException("ECL Dataset Job Plugin Unable to read step info from XML node", e);
@@ -141,7 +214,9 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
         retval += "		<record_name>" + recordName + "</record_name>" + Const.CR;
         retval += "		<dataset_name>" + datasetName + "</dataset_name>" + Const.CR;
         retval += "		<record_def>" + recordDef + "</record_def>" + Const.CR;
-
+        retval += "		<recordSet>" + recordSet + "</recordSet>" + Const.CR;
+        retval += "		<recordList>" + this.saveRecordList() + "</recordList>" + Const.CR;
+        
         return retval;
 
     }
@@ -157,6 +232,12 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
                 recordName = rep.getStepAttributeString(id_jobentry, "recordName"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_jobentry, "recordDef") != null)
                 recordDef = rep.getStepAttributeString(id_jobentry, "recordDef"); //$NON-NLS-1$
+            
+             if(rep.getStepAttributeString(id_jobentry, "recordSet") != null)
+                recordSet = rep.getStepAttributeString(id_jobentry, "recordSet"); //$NON-NLS-1$
+             
+             if(rep.getStepAttributeString(id_jobentry, "recordList") != null)
+                this.openRecordList(rep.getStepAttributeString(id_jobentry, "recordList")); //$NON-NLS-1$
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -169,6 +250,10 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
             rep.saveStepAttribute(id_job, getObjectId(), "datasetName", datasetName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "recordName", recordName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "recordDef", recordDef); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "recordSet", recordSet); //$NON-NLS-1$
+            
+            rep.saveStepAttribute(id_job, getObjectId(), "recordList", this.saveRecordList()); //$NON-NLS-1$
+            
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

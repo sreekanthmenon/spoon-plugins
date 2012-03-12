@@ -34,6 +34,12 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
     private String serverPort = "";
     
     private String landingZone = "";
+    
+    private String mlPath = "ecl-ml";
+    private String eclccInstallDir = "C:\\Program Files\\HPCC Systems\\HPCC\\bin\\ver_3_0\\";
+    private String jobName = "Spoon-job";
+    private String cluster = "hthor";
+    private boolean includeML = true;
 
     public String getServerIP() {
         return serverIP;
@@ -57,6 +63,61 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
 
     public void setLandingZone(String landingZone) {
         this.landingZone = landingZone;
+    }
+
+    public String getCluster() {
+        return cluster;
+    }
+
+    public void setCluster(String cluster) {
+        this.cluster = cluster;
+    }
+
+    public String getEclccInstallDir() {
+        return eclccInstallDir;
+    }
+
+    public void setEclccInstallDir(String eclccInstallDir) {
+        this.eclccInstallDir = eclccInstallDir;
+    }
+
+    public boolean isIncludeML() {
+        return includeML;
+    }
+    public String getIncludeML() {
+        if(includeML){
+            return "true";
+        }else{
+            return "false";
+        }
+    }
+    public void setIncludeML(boolean includeML) {
+        this.includeML = includeML;
+    }
+    
+    public void setIncludeML(String includeML) {
+        if(includeML.equals("true")){
+            this.includeML = true;
+        }else{
+            this.includeML = false;
+        }
+    }
+
+
+    public String getJobName() {
+        return jobName;
+    }
+
+    public void setJobName(String jobName) {
+        this.jobName = jobName;
+    }
+
+    public String getMlPath() {
+        return mlPath;
+    }
+
+    public void setMlPath(String mlPath) {
+        this.mlPath = mlPath;
     }
     
     
@@ -83,6 +144,21 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"landing_zone")) != null)
                 this.setLandingZone(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"landing_zone")));
             
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"mlPath")) != null)
+                this.setMlPath(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"mlPath")));
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"eclccInstallDir")) != null)
+                this.setEclccInstallDir(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"eclccInstallDir")));
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"jobName")) != null)
+                this.setJobName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"jobName")));
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"cluster")) != null)
+                this.setCluster(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"cluster")));
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"includeML")) != null)
+                this.setIncludeML(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"includeML")));
+           
             
         } catch (Exception e) {
             throw new KettleXMLException("ECL Distribute Job Plugin Unable to read step info from XML node", e);
@@ -103,9 +179,16 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
         
         retval += "             <landing_zone>"+this.landingZone+"</landing_zone>"+Const.CR;
         
+        retval += "             <mlPath>"+this.getMlPath()+"</mlPath>"+Const.CR;
+        
+        retval += "             <eclccInstallDir>"+this.getEclccInstallDir()+"</eclccInstallDir>"+Const.CR;
        
+        retval += "             <jobName>"+this.getJobName()+"</jobName>"+Const.CR;
        
-       
+        retval += "             <cluster>"+this.getCluster()+"</cluster>"+Const.CR;
+        
+        retval += "             <includeML>"+this.getIncludeML() + "</includeML>"+Const.CR;
+      
        
         return retval;
 
@@ -121,7 +204,14 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
             
             serverPort = rep.getStepAttributeString(id_jobentry, "server_port");
             landingZone = rep.getStepAttributeString(id_jobentry, "landing_zone");
-                        
+            
+            this.setMlPath( rep.getStepAttributeString(id_jobentry, "mlPath"));
+            this.setEclccInstallDir( rep.getStepAttributeString(id_jobentry, "eclccInstallDir"));
+            this.setJobName( rep.getStepAttributeString(id_jobentry, "jobName"));
+            this.setCluster( rep.getStepAttributeString(id_jobentry, "cluster"));
+            this.setIncludeML( rep.getStepAttributeString(id_jobentry, "includeML"));
+            
+                    
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
         }
@@ -134,6 +224,14 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
             rep.saveStepAttribute(id_job, getObjectId(), "server_ip", serverIP);
             rep.saveStepAttribute(id_job, getObjectId(), "server_port", serverPort);
             rep.saveStepAttribute(id_job, getObjectId(), "landing_zone", landingZone);
+            
+            rep.saveStepAttribute(id_job, getObjectId(), "mlPath", this.getMlPath());
+            rep.saveStepAttribute(id_job, getObjectId(), "eclccInstallDir", this.getEclccInstallDir());
+            rep.saveStepAttribute(id_job, getObjectId(), "jobName", this.getJobName());
+            rep.saveStepAttribute(id_job, getObjectId(), "cluster", this.getCluster());
+            rep.saveStepAttribute(id_job, getObjectId(), "includeML", this.getIncludeML());
+            
+            
         
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);

@@ -40,7 +40,6 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
  * @author ChalaAX
  */
 public class ECLGenericDialog extends JobEntryDialog implements JobEntryDialogInterface {
-
     private ECLGeneric jobEntry;
     
     private Text jobEntryName;
@@ -105,7 +104,7 @@ public class ECLGenericDialog extends JobEntryDialog implements JobEntryDialogIn
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 600;
-        generalGroupFormat.height = 100;
+        generalGroupFormat.height = 65;
         generalGroupFormat.left = new FormAttachment(0, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
@@ -120,7 +119,7 @@ public class ECLGenericDialog extends JobEntryDialog implements JobEntryDialogIn
         FormData recordGroupFormat = new FormData();
         recordGroupFormat.top = new FormAttachment(generalGroup, margin);
         recordGroupFormat.width = 600;
-        recordGroupFormat.height = 425;
+        recordGroupFormat.height = 375;
         recordGroupFormat.left = new FormAttachment(0, 0);
         recordGroup.setLayoutData(recordGroupFormat);
         
