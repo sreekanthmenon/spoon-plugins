@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="ECLJoin"
-	iconfile="join.png"
-	description="Join"
-	tooltip="Join" 
+<plugin id="ECLMergePaths"
+	iconfile="merge.png"
+	description="Merge Paths"
+	tooltip="merge" 
 	category="HPCC Systems"
-	classname="org.hpccsystems.pentaho.job.ecljoin.ECLJoin">
+	classname="org.hpccsystems.pentaho.job.eclmergepaths.ECLMergePaths">
             
     <libraries>
-        <library name="ECLJoinJob.jar"/>
+ 	  <library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
+        <library name="eclmergepaths.jar"/>
     </libraries>            
 </plugin>

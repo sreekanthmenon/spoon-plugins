@@ -122,8 +122,9 @@ public class Iterate implements EclCommand {
             ecl += recordsetName + " := DATASET(["+recordset+"],"+recordName+");\r\n";
         }
         //ecl += returnType + " " + transformName + "(" + returnType + " L, " + returnType + " R) := TRANSFORM \r\n" + transform + "\r\nEND;\r\n\r\n";
-      ecl += transformName + " := TRANSFORM \r\n" + transform + "\r\nEND;\r\n\r\n";
-     
+        if(transformName != null && !transformName.equals("")){
+            ecl += transformName + " := TRANSFORM \r\n" + transform + "\r\nEND;\r\n\r\n";
+        }
         ecl += name + " := ITERATE(" + recordsetName + "," + transformCall;
         //add local if its set if not its optional
         if (runLocal != null && runLocal) {

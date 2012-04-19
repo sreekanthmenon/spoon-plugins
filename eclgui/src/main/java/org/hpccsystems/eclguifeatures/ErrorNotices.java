@@ -27,7 +27,10 @@ public class ErrorNotices {
     
     
      public void openValidateCodeDialog(){
-        String notice = "Would you like to validate the ECL code at this time?";
+        String notice = "Would you like to validate the ECL code at this time?\n\n"
+                + "If there are errors or warnings they will be displayed and the code\n"
+                + "will not be executed on the cluster.  If you know there are\n"
+                + "warnings and wish to run anyways click no.";
         Display display = new Display ();
 	//Shell shell = new Shell (display);
 	//shell.pack ();

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="ECLDataset"
-	iconfile="dataset.png"
-	description="Dataset"
-	tooltip="Dataset" 
+<plugin id="ECLGeneric"
+	iconfile="eclgeneric.png"
+	description="Generic Code"
+	tooltip="Generic code input" 
 	category="HPCC Systems"
-	classname="org.hpccsystems.pentaho.job.ecldataset.ECLDataset">
+	classname="org.hpccsystems.pentaho.job.eclgeneric.ECLGeneric">
             
     <libraries>
-        <library name="ECLDatasetJob.jar"/>
+	  <library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
+        <library name="eclgeneric.jar"/>
     </libraries>            
 </plugin>

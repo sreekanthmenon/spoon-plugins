@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="ECLML_ToField"
-	iconfile="dataset.png"
-	description="ML_ToField"
-	tooltip="ML_ToField" 
-	category="HPCC Systems"
+	iconfile="eclml.png"
+	description="ToField"
+	tooltip="ToField" 
+	category="HPCC Systems - ML"
 	classname="org.hpccsystems.pentaho.job.eclmltofield.ECLML_ToField">
             
     <libraries>
+	<library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
         <library name="eclmltofield.jar"/>
     </libraries>            
 </plugin>

@@ -40,6 +40,8 @@ public class ECLSoap {
     private String outputName = "";
     
     private String wuid = "";
+    
+    private String tempDir = "";
 
     public String getOutputName() {
         return outputName;
@@ -122,7 +124,10 @@ public class ECLSoap {
     }
     //end getters and setters
     
-    
+    public ECLSoap() {
+        this.tempDir = System.getProperty("java.io.tmpdir");
+        System.out.println("OS Temp Dir is: " + tempDir);
+    }
     public String syntaxCheck(String ecl){
         String res = "";
         int test = 0;
@@ -130,10 +135,13 @@ public class ECLSoap {
 
          //write ecl to file
         
-        String inFilePath = "\"" + eclccInstallDir + inFile + "\"";
+        //String inFilePath = "\"" + eclccInstallDir + inFile + "\"";
+        String inFilePath = "\"" + this.tempDir + inFile + "\"";
          try {
-            System.out.println("Created File (synTaxCheck): " + eclccInstallDir + inFile);
-            BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
+            //System.out.println("Created File (synTaxCheck): " + eclccInstallDir + inFile);
+            //BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
+            System.out.println("Created File (synTaxCheck): " + this.tempDir + inFile);
+            BufferedWriter out = new BufferedWriter(new FileWriter(this.tempDir + inFile));
             out.write(ecl);
             out.close();
 
@@ -147,7 +155,7 @@ public class ECLSoap {
             //need to modify -I to include path...
             String include = "";
             if(this.includeML){
-                include = " -I " + this.mlPath;
+                include = " -I \"" + this.mlPath +"\"";
             }
 
             String c = "\"" + eclccInstallDir + "eclcc\" -c -syntax " + include + " " + inFilePath;
@@ -203,7 +211,8 @@ public class ECLSoap {
 
 
 
-            deleteFile(eclccInstallDir+inFile);
+            //deleteFile(eclccInstallDir+inFile);
+            deleteFile(this.tempDir+inFile);
             
             System.out.println("Finished compile check");
             
@@ -216,8 +225,7 @@ public class ECLSoap {
         return res;
     }
    
-   
-    
+
     
     /*executeECL
      * 
@@ -928,12 +936,19 @@ public class ECLSoap {
        
          //write ecl to file
         
-        String inFilePath = "\"" + eclccInstallDir + inFile + "\"";
-        String outFilePath = "\"" + eclccInstallDir + outFile + "\"";
+        //String inFilePath = "\"" + eclccInstallDir + inFile + "\"";
+        //String outFilePath = "\"" + eclccInstallDir + outFile + "\"";
+        
+        String inFilePath = "\"" + this.tempDir + inFile + "\"";
+        String outFilePath = "\"" + this.tempDir + outFile + "\"";
+        
         
         try {
-            System.out.println("Created File (compileECL): " + eclccInstallDir + inFile);
-            BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
+            //System.out.println("Created File (compileECL): " + eclccInstallDir + inFile);
+            //BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
+            
+            System.out.println("Created File (compileECL): " + this.tempDir + inFile);
+            BufferedWriter out = new BufferedWriter(new FileWriter(this.tempDir + inFile));
             out.write(ecl);
             out.close();
         } catch (IOException e) {
@@ -946,7 +961,7 @@ public class ECLSoap {
             //need to modify -I to include path...
             String include = "";
             if(this.includeML){
-                include = " -I " + this.mlPath;
+                include = " -I \"" + this.mlPath +"\"";
             }
             String c = "\"" + eclccInstallDir + "eclcc\" -E -v " + include + " -o" + outFilePath + " " + inFilePath;
             
@@ -982,9 +997,12 @@ public class ECLSoap {
             }
 
             
-            String compiled_ecl = openFile(eclccInstallDir+outFile);
-            deleteFile(eclccInstallDir+outFile);
-            deleteFile(eclccInstallDir+inFile);
+            //String compiled_ecl = openFile(eclccInstallDir+outFile);
+            //deleteFile(eclccInstallDir+outFile);
+            //deleteFile(eclccInstallDir+inFile);
+            String compiled_ecl = openFile(this.tempDir+outFile);
+            deleteFile(this.tempDir+outFile);
+            deleteFile(this.tempDir+inFile);
             
             System.out.println("finished compileECL");
             //load file as string
