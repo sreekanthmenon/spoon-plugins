@@ -619,7 +619,7 @@ public class CreateTable {
 			}
 		};
 		
-		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(tableViewer,new FocusCellOwnerDrawHighlighter(tableViewer), naviStrat);
+		TableViewerFocusCellManager focusCellManager = new TableViewerFocusCellManager(tableViewer,new FocusCellOwnerDrawHighlighter(tableViewer));
 		
 		ColumnViewerEditorActivationStrategy actSupport = new ColumnViewerEditorActivationStrategy(tableViewer) {
 			protected boolean isEditorActivationEvent( ColumnViewerEditorActivationEvent event) {
