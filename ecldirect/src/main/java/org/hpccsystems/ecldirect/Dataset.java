@@ -101,7 +101,7 @@ public class Dataset implements EclCommand {
             for (int i = 0; i < recordFormatList.size(); i++) {
                 sb.append(recordFormatList.get(i)).append(";");
             }
-            recordFmt =  sb.toString();             
+            recordFmt =  (sb.toString()).trim();             
         }
         // attr := DATASET( file, struct, filetype );
         //attr := DATASET( dataset, file, filetype );
@@ -111,8 +111,9 @@ public class Dataset implements EclCommand {
         //this one is for file inputs
         if(logicalFileName != null && logicalFileName.length() > 0){
             System.out.println("regular dataset |" + logicalFileName +"|");
-            recordDef = recordName + ":= record \r\n" + recordFmt + "\r\nend; \r\n";
-        
+            if(recordFmt != null && recordFmt.length() > 0){
+                recordDef = recordName + ":= record \r\n" + recordFmt + "\r\nend; \r\n";
+            }
             datasetDef = name + ":= dataset('" + logicalFileName + "'," + recordName + "," +  fileType + "); \r\n";
         }else{
             System.out.println("ml dataset");

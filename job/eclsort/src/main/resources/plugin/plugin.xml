@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="ECLDataset"
-	iconfile="dataset.png"
-	description="Dataset"
-	tooltip="Dataset" 
+<plugin id="ECLSort"
+	iconfile="sort.png"
+	description="Sort"
+	tooltip="Sort" 
 	category="HPCC Systems"
-	classname="org.hpccsystems.pentaho.job.ecldataset.ECLDataset">
+	classname="org.hpccsystems.pentaho.job.eclsort.ECLSort">
             
     <libraries>
-        <library name="ECLDatasetJob.jar"/>
+	  <library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
+        <library name="eclsort.jar"/>
     </libraries>            
 </plugin>

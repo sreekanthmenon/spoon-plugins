@@ -14,7 +14,7 @@
     </parent>
 
     <properties>
-        <iconfile>dataset.png</iconfile>
+        <iconfile>eclgeneric.png</iconfile>
     </properties>
     
 	<build>

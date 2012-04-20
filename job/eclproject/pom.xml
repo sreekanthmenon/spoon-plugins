@@ -14,7 +14,7 @@
     </parent>
 
     <properties>
-        <iconfile>dataset.png</iconfile>
+        <iconfile>project.png</iconfile>
     </properties>
     
 	<build>

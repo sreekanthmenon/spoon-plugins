@@ -13,7 +13,7 @@
 	</parent>
 
 	<properties>
-		<iconfile>output.png</iconfile>
+		<iconfile>execute.png</iconfile>
 	</properties>
 
 	<dependencies>

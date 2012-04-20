@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="ECLGroup"
-	iconfile="dataset.png"
+	iconfile="group.png"
 	description="Group"
 	tooltip="Group" 
 	category="HPCC Systems"
 	classname="org.hpccsystems.pentaho.job.eclgroup.ECLGroup">
             
     <libraries>
+        <library name="lib/ECLDirect.jar"/>
+	  <library name="lib/ECLGUIFeatures.jar"/>
         <library name="eclgroup.jar"/>
     </libraries>            
 </plugin>

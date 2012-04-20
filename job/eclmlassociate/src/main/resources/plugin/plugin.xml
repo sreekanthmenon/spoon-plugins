@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="ECLML_Associate"
-	iconfile="dataset.png"
-	description="ML_Associate"
-	tooltip="ML_Associate" 
-	category="HPCC Systems"
+	iconfile="eclml.png"
+	description="Associate"
+	tooltip="Associate" 
+	category="HPCC Systems - ML"
 	classname="org.hpccsystems.pentaho.job.eclmlassociate.ECLML_Associate">
             
     <libraries>
+	  <library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
         <library name="eclmlassociate.jar"/>
     </libraries>            
 </plugin>

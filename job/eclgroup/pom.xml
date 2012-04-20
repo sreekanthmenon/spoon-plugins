@@ -15,7 +15,7 @@
 
 
     <properties>
-        <iconfile>dataset.png</iconfile>
+        <iconfile>group.png</iconfile>
     </properties>
     
 	<build>

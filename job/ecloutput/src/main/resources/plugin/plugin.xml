@@ -7,6 +7,8 @@
 	classname="org.hpccsystems.pentaho.job.ecloutput.ECLOutput">
             
     <libraries>
-        <library name="ECLOutputJob.jar"/>
+	  <library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
+        <library name="ecloutput.jar"/>
     </libraries>            
 </plugin>

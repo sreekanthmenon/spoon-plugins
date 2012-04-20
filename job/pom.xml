@@ -22,10 +22,9 @@
 		<module>ecliterate</module>
 		<module>ecljoin</module>
 		<module>eclmergepaths</module>
-		<module>eclml</module>
 		<module>eclmlassociate</module>
-		<module>eclmlbuildnaivebayes</module>
-		<module>eclmlclassification</module>
+		<module>eclmlbuildclassify</module>
+		<module>eclmlclassify</module>
 		<module>eclmldiscretize</module>
 		<module>eclmlfromfield</module>
 		<module>eclmlkmeans</module>

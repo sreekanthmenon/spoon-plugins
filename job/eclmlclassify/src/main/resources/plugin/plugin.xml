@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="ECLML_Classify"
+	iconfile="eclml.png"
+	description="Classify"
+	tooltip="Classification" 
+	category="HPCC Systems - ML"
+	classname="org.hpccsystems.pentaho.job.eclmlclassify.ECLML_Classify">
+            
+    <libraries>
+  	  <library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
+        <library name="eclmlclassify.jar"/>
+    </libraries>            
+</plugin>

@@ -38,3 +38,5 @@ REM Folder changed
 cscript //B temp.vbs
 
 del temp.vbs
+pause;
+

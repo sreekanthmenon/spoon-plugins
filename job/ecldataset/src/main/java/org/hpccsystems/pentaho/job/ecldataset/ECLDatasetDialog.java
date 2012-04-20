@@ -63,6 +63,8 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
     private boolean backupChanged;
     private SelectionAdapter lsDef;
     
+    private Combo fileType;
+    
     private Table table;
     private TableViewer tableViewer;
 
@@ -175,7 +177,9 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
         recordGroupFormat.left = new FormAttachment(middle, 0);
         recordGroup.setLayoutData(recordGroupFormat);
 
-        recordName = buildText("Record Name", datasetName, lsMod, middle, margin, recordGroup);
+        recordName = buildText("Record Name", null, lsMod, middle, margin, recordGroup);
+        fileType = buildCombo("File Type", recordName, lsMod, middle, margin, recordGroup,new String[]{"", "CSV", "THOR"});
+
        // recordDef = buildMultiText("Record Definition", recordName, lsMod, middle, margin, recordGroup);
         
         
@@ -258,7 +262,9 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
         if (jobEntry.getRecordSet() != null) {
             recordSet.setText(jobEntry.getRecordSet());
         }
-
+        if (jobEntry.getFileType() != null) {
+            fileType.setText(jobEntry.getFileType());
+        }
 
         shell.pack();
         shell.open();
@@ -358,6 +364,7 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
        // jobEntry.setRecordDef(recordDef.getText());
         jobEntry.setRecordSet(recordSet.getText());
         jobEntry.setRecordList(ct.getRecordList());
+        jobEntry.setFileType(fileType.getText());
         dispose();
     }
 

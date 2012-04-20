@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin id="ECLML_BuildClassify"
+	iconfile="eclml.png"
+	description="Build Classification"
+	tooltip="Classification" 
+	category="HPCC Systems - ML"
+	classname="org.hpccsystems.pentaho.job.eclmlbuildclassify.ECLML_BuildClassify">
+            
+    <libraries>
+	  <library name="../../hpcc-common/ecldirect.jar"/>
+        <library name="../../hpcc-common/eclgui.jar"/>
+        <library name="eclmlbuildclassify.jar"/>
+    </libraries>            
+</plugin>
