@@ -125,8 +125,8 @@ public class ECLSoap {
     //end getters and setters
     
     public ECLSoap() {
-        this.tempDir = System.getProperty("java.io.tmpdir") + "spoon-hpcc/";
-        System.out.println("OS Temp Dir is: " + tempDir);
+        this.tempDir = System.getProperty("java.io.tmpdir");
+        //System.out.println("OS Temp Dir is: " + tempDir);
     }
     public String syntaxCheck(String ecl){
         String res = "";
@@ -140,7 +140,7 @@ public class ECLSoap {
          try {
             //System.out.println("Created File (synTaxCheck): " + eclccInstallDir + inFile);
             //BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
-            System.out.println("Created File (synTaxCheck): " + this.tempDir + inFile);
+            //System.out.println("Created File (synTaxCheck): " + this.tempDir + inFile);
             BufferedWriter out = new BufferedWriter(new FileWriter(this.tempDir + inFile));
             out.write(ecl);
             out.close();
@@ -175,7 +175,7 @@ public class ECLSoap {
             BufferedReader brErr = new BufferedReader(isrError);
             String lineErr;
             while((lineErr = brErr.readLine()) != null){
-                System.out.println("#####"+lineErr);
+               // System.out.println("#####"+lineErr);
                 res += lineErr+"\r\n";
             }
             InputStream is = p.getInputStream();
@@ -186,11 +186,11 @@ public class ECLSoap {
             String line;
             
 
-            System.out.println("(((((((((((("+c+"))))))))))))))))))))");
+            //System.out.println("(((((((((((("+c+"))))))))))))))))))))");
             
             int pStatus = p.waitFor();
             
-            System.out.println("STATUS: " + pStatus);
+            //System.out.println("STATUS: " + pStatus);
             while((line = br.readLine()) != null){
                 res += line+"\r\n";
             }
@@ -206,16 +206,16 @@ public class ECLSoap {
             
 
             while((line2 = br2.readLine()) != null){
-                System.out.println("****"+line2);
+                //System.out.println("****"+line2);
                 res += line2 +"\r\n";
             }
 
 
 
             //deleteFile(eclccInstallDir+inFile);
-            //**deleteFile(this.tempDir+inFile);
+            deleteFile(this.tempDir+inFile);
             
-            System.out.println("Finished compile check");
+            //System.out.println("Finished compile check");
             
         }catch (Exception e){
             System.out.println(e.toString());
@@ -244,7 +244,7 @@ public class ECLSoap {
         
         String cECL = compileECL(ecl);
         if(cECL == null || cECL.equals("")){
-        	System.out.println("----------- proceed = false --------------");
+        	//System.out.println("----------- proceed = false --------------");
         	proceed = false;
         }else{
 	        
@@ -351,10 +351,10 @@ public class ECLSoap {
             doc.getDocumentElement().normalize();
 
             NodeList nList = doc.getElementsByTagName("WUWaitResponse");
-            System.out.println("-----------PARSE- " + nList.getLength() + " -----------");
+            //System.out.println("-----------PARSE- " + nList.getLength() + " -----------");
 
                     for (int temp = 0; temp < nList.getLength(); temp++) {
-                        System.out.println("-----------"+temp+"------------");
+                        //System.out.println("-----------"+temp+"------------");
                        Node nNode = nList.item(temp);
                        if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -367,7 +367,7 @@ public class ECLSoap {
                               Element elem = (Element) node;
                               if((node.getNodeName()).equals("StateID")){
                                   String val = getTagValue(node.getNodeName(), eElement);
-                                System.out.println("Node Value: " + val);
+                               // System.out.println("Node Value: " + val);
                                 if(val.equals("3")){
                                     complete = true;
                                 }else if(val.equals("1") || val.equals("2") || val.equals("11")){
@@ -658,8 +658,8 @@ public class ECLSoap {
                         rowArray.add(columnsArray);
                         
                         for (int k = 0; k < columnList.getLength(); k++) {
-                            System.out.println("Name: " + columnList.item(k).getNodeName());
-                            System.out.println("Value: " + columnList.item(k).getTextContent());
+                            //System.out.println("Name: " + columnList.item(k).getNodeName());
+                           // System.out.println("Value: " + columnList.item(k).getTextContent());
                             columnsArray.add(new Column(columnList.item(k).getNodeName(), columnList.item(k).getTextContent()));
                            
                            
@@ -712,7 +712,7 @@ public class ECLSoap {
             results = dsArray;
 
             for (int i = 0; i < dsList.getLength(); i++) {
-                System.out.println("here");
+                //System.out.println("here");
                 Element ds = (Element) dsList.item(i);
                 NodeList rowList = ds.getElementsByTagName("Result");
 
@@ -721,13 +721,13 @@ public class ECLSoap {
 
                     for (int j = 0; j < rowList.getLength(); j++) {
                         Element row = (Element) rowList.item(j);
-                        System.out.println(j);
+                       // System.out.println(j);
                         NodeList columnList = row.getChildNodes();
 
                         
                         for (int k = 0; k < columnList.getLength(); k++) {
-                           System.out.println("colName: " +  columnList.item(k).getNodeName());
-                            System.out.println("colVal: " + columnList.item(k).getTextContent());
+                          // System.out.println("colName: " +  columnList.item(k).getNodeName());
+                          //  System.out.println("colVal: " + columnList.item(k).getTextContent());
                             if(columnList.item(k).getNodeName().equals("#text")){
                                 
                                 results = parseDirect(columnList.item(k).getTextContent());
@@ -766,7 +766,7 @@ public class ECLSoap {
         if (dsList != null && dsList.getLength() > 0) {
 
             for (int i = 0; i < dsList.getLength(); i++) {
-                System.out.println("here");
+               // System.out.println("here");
                 Element ds = (Element) dsList.item(i);
                 NodeList rowList = ds.getElementsByTagName("Result");
 
@@ -775,13 +775,13 @@ public class ECLSoap {
 
                     for (int j = 0; j < rowList.getLength(); j++) {
                         Element row = (Element) rowList.item(j);
-                        System.out.println(j);
+                       // System.out.println(j);
                         NodeList columnList = row.getChildNodes();
 
                         
                         for (int k = 0; k < columnList.getLength(); k++) {
-                           System.out.println("colName: " +  columnList.item(k).getNodeName());
-                            System.out.println("colVal: " + columnList.item(k).getTextContent());
+                          // System.out.println("colName: " +  columnList.item(k).getNodeName());
+                           // System.out.println("colVal: " + columnList.item(k).getTextContent());
                             if(columnList.item(k).getNodeName().equals("#text")){
                                 
                                 results = columnList.item(k).getTextContent();
@@ -818,10 +818,10 @@ public class ECLSoap {
         doc.getDocumentElement().normalize();
         
         NodeList nList = doc.getElementsByTagName("Workunit");
-        System.out.println("-----------PARSE- " + nList.getLength() + " -----------");
+       // System.out.println("-----------PARSE- " + nList.getLength() + " -----------");
  
 		for (int temp = 0; temp < nList.getLength(); temp++) {
-                    System.out.println("-----------"+temp+"------------");
+                 //   System.out.println("-----------"+temp+"------------");
 		   Node nNode = nList.item(temp);
 		   if (nNode.getNodeType() == Node.ELEMENT_NODE) {
  
@@ -833,15 +833,15 @@ public class ECLSoap {
                           Node node = nl.item(temp1);
                           Element elem = (Element) node;
                           if(node.getNodeName() != null)
-                          System.out.println("Node Name: " + node.getNodeName());
-                          System.out.println("Node Value: " + getTagValue(node.getNodeName(), eElement));
+                         // System.out.println("Node Name: " + node.getNodeName());
+                         // System.out.println("Node Value: " + getTagValue(node.getNodeName(), eElement));
                           map.put(node.getNodeName(), getTagValue(node.getNodeName(), eElement));
-                          System.out.println("MAP PUT");
+                         // System.out.println("MAP PUT");
                       }
                       
                      
-                      System.out.println("TEST MAP");
-		      System.out.println("WUID : " + map.get("Wuid") );
+                      //System.out.println("TEST MAP");
+		      //System.out.println("WUID : " + map.get("Wuid") );
                       // System.out.println("WUID : " + getTagValue("Wuid", eElement));
 		      results.add(getTagValue("Wuid", eElement));
  
@@ -896,7 +896,7 @@ public class ECLSoap {
           
             String encoding = new sun.misc.BASE64Encoder().encode ((user+":"+pass).getBytes());
             String host = "http://"+hostname+":"+port+path;
-            System.out.println("HOST: " + host);
+            //System.out.println("HOST: " + host);
             URL url = new URL(host);
             
             
@@ -953,7 +953,7 @@ public class ECLSoap {
             //System.out.println("Created File (compileECL): " + eclccInstallDir + inFile);
             //BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
             
-            System.out.println("Created File (compileECL): " + this.tempDir + inFile);
+            //System.out.println("Created File (compileECL): " + this.tempDir + inFile);
             BufferedWriter out = new BufferedWriter(new FileWriter(this.tempDir + inFile));
             out.write(ecl);
             out.close();
@@ -969,13 +969,13 @@ public class ECLSoap {
             if(this.includeML){
                 include = " -I \"" + this.mlPath +"\"";
             }else{
-            	System.out.println("NO ML LIBRARY INCLUDED!");
+            	//System.out.println("NO ML LIBRARY INCLUDED!");
             }
             String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
             String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
             
-            System.out.println("_________________________ECLCC_______________________________");
-            System.out.println(c);
+           // System.out.println("_________________________ECLCC_______________________________");
+           // System.out.println(c);
             ProcessBuilder pb = new ProcessBuilder(c);
             pb.redirectErrorStream(true); // merge stdout, stderr of process
 
@@ -988,7 +988,7 @@ public class ECLSoap {
             BufferedReader brErr = new BufferedReader(isrError);
             String lineErr;
             while((lineErr = brErr.readLine()) != null){
-                System.out.println("#####"+lineErr);
+                //System.out.println("#####"+lineErr);
                 
             }
             
@@ -998,11 +998,11 @@ public class ECLSoap {
             String line;
             
 
-            System.out.println(c);
+            //System.out.println(c);
             
 
             while((line = br.readLine()) != null){
-                System.out.println(line);
+                //System.out.println(line);
             }
 
             
@@ -1010,10 +1010,10 @@ public class ECLSoap {
             //deleteFile(eclccInstallDir+outFile);
             //deleteFile(eclccInstallDir+inFile);
             String compiled_ecl = openFile(this.tempDir+outFile);
-            //**deleteFile(this.tempDir+outFile);
-            //**deleteFile(this.tempDir+inFile);
+            deleteFile(this.tempDir+outFile);
+            deleteFile(this.tempDir+inFile);
             
-            System.out.println("finished compileECL");
+            //System.out.println("finished compileECL");
             //load file as string
             return compiled_ecl;
             
@@ -1047,7 +1047,7 @@ public class ECLSoap {
      */
     private static String openFile(String filePath){
         StringBuffer fileData = new StringBuffer(1000);
-        System.out.println("++++++++++++++++ Open File: " + filePath);
+        //System.out.println("++++++++++++++++ Open File: " + filePath);
          try{
         
         BufferedReader reader = new BufferedReader(
