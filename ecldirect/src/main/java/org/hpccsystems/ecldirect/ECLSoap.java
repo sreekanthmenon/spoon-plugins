@@ -31,11 +31,11 @@ public class ECLSoap {
     private String hostname = "192.168.80.130";
     private int port = 8010;
     
-    private String mlPath = "ecl-ml";
-    private String eclccInstallDir = "C:\\Program Files\\HPCC Systems\\HPCC\\bin\\ver_3_0\\";
+    private String mlPath = "";
+    private String eclccInstallDir = "C:\\Program Files\\HPCC Systems\\HPCC\\bin\\ver_3_6\\";
     private String jobName = "Spoon-job";
     private String cluster = "hthor";
-    private boolean includeML = true;
+    private boolean includeML = false;
     
     private String outputName = "";
     
@@ -125,7 +125,7 @@ public class ECLSoap {
     //end getters and setters
     
     public ECLSoap() {
-        this.tempDir = System.getProperty("java.io.tmpdir");
+        this.tempDir = System.getProperty("java.io.tmpdir") + "spoon-hpcc/";
         System.out.println("OS Temp Dir is: " + tempDir);
     }
     public String syntaxCheck(String ecl){
@@ -157,9 +157,9 @@ public class ECLSoap {
             if(this.includeML){
                 include = " -I \"" + this.mlPath +"\"";
             }
-            String logFile = "--logfile " + this.tempDir + this.outputName + "_syntax_log.log ";
+            String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";
             
-            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-c -syntax " + include + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-c -syntax" + include + " " + inFilePath;
 
 
             ProcessBuilder pb = new ProcessBuilder(c);
@@ -186,7 +186,7 @@ public class ECLSoap {
             String line;
             
 
-            //System.out.println("(((((((((((("+c+"))))))))))))))))))))");
+            System.out.println("(((((((((((("+c+"))))))))))))))))))))");
             
             int pStatus = p.waitFor();
             
@@ -213,7 +213,7 @@ public class ECLSoap {
 
 
             //deleteFile(eclccInstallDir+inFile);
-            deleteFile(this.tempDir+inFile);
+            //**deleteFile(this.tempDir+inFile);
             
             System.out.println("Finished compile check");
             
@@ -243,32 +243,37 @@ public class ECLSoap {
         boolean proceed = false;
         
         String cECL = compileECL(ecl);
-
-        String wuid = this.createAndUpdateSoapCall(cECL);
-        this.wuid = wuid;
-        InputStream is = null;
-        if(wuid != null && !wuid.equals("")){
-            this.submitSoapCall(wuid);
-            try{
-                
-                proceed = this.isComplete(wuid);
-                
-                /*
-                if(proceed){
-                    is = this.ResultsSoapCall(wuid);
-                    results = this.parseResults(is);
-                }else{
-                    System.out.println("ECL Failed");
-                }
-                 * 
-                 */
-
-            }catch(Exception e){
-                 System.out.println(e);
-                 e.printStackTrace();
-            }
+        if(cECL == null || cECL.equals("")){
+        	System.out.println("----------- proceed = false --------------");
+        	proceed = false;
+        }else{
+	        
+	        String wuid = this.createAndUpdateSoapCall(cECL);
+	        this.wuid = wuid;
+	        InputStream is = null;
+	        if(wuid != null && !wuid.equals("")){
+	            this.submitSoapCall(wuid);
+	            try{
+	                
+	                proceed = this.isComplete(wuid);
+	                
+	                /*
+	                if(proceed){
+	                    is = this.ResultsSoapCall(wuid);
+	                    results = this.parseResults(is);
+	                }else{
+	                    System.out.println("ECL Failed");
+	                }
+	                 * 
+	                 */
+	
+	            }catch(Exception e){
+	                 System.out.println(e);
+	                 e.printStackTrace();
+	                 proceed = false;
+	            }
+	        }
         }
-        
         return proceed;
     }
     
@@ -963,9 +968,11 @@ public class ECLSoap {
             String include = "";
             if(this.includeML){
                 include = " -I \"" + this.mlPath +"\"";
+            }else{
+            	System.out.println("NO ML LIBRARY INCLUDED!");
             }
             String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
-            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-E -v " + include + " -o" + outFilePath + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
             
             System.out.println("_________________________ECLCC_______________________________");
             System.out.println(c);
@@ -977,7 +984,7 @@ public class ECLSoap {
             Process p = pb.start();
             
             InputStream iError = p.getErrorStream();
-             InputStreamReader isrError = new InputStreamReader(iError);
+            InputStreamReader isrError = new InputStreamReader(iError);
             BufferedReader brErr = new BufferedReader(isrError);
             String lineErr;
             while((lineErr = brErr.readLine()) != null){
@@ -1003,8 +1010,8 @@ public class ECLSoap {
             //deleteFile(eclccInstallDir+outFile);
             //deleteFile(eclccInstallDir+inFile);
             String compiled_ecl = openFile(this.tempDir+outFile);
-            deleteFile(this.tempDir+outFile);
-            deleteFile(this.tempDir+inFile);
+            //**deleteFile(this.tempDir+outFile);
+            //**deleteFile(this.tempDir+inFile);
             
             System.out.println("finished compileECL");
             //load file as string

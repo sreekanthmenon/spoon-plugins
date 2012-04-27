@@ -189,6 +189,8 @@ public class EclDirect {
          * 
          */
         ECLSoap es = getECLSoap();
+        
+        
         Boolean proceed = es.executeECL(eclCode);
         this.wuid = es.getWuid();
         return proceed;
