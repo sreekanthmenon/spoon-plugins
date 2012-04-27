@@ -126,7 +126,7 @@ public class ECLSoap {
     
     public ECLSoap() {
         this.tempDir = System.getProperty("java.io.tmpdir");
-        System.out.println("OS Temp Dir is: " + tempDir);
+        //System.out.println("OS Temp Dir is: " + tempDir);
     }
     public String syntaxCheck(String ecl){
         String res = "";
@@ -140,7 +140,7 @@ public class ECLSoap {
          try {
             //System.out.println("Created File (synTaxCheck): " + eclccInstallDir + inFile);
             //BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
-            System.out.println("Created File (synTaxCheck): " + this.tempDir + inFile);
+            //System.out.println("Created File (synTaxCheck): " + this.tempDir + inFile);
             BufferedWriter out = new BufferedWriter(new FileWriter(this.tempDir + inFile));
             out.write(ecl);
             out.close();
@@ -175,7 +175,7 @@ public class ECLSoap {
             BufferedReader brErr = new BufferedReader(isrError);
             String lineErr;
             while((lineErr = brErr.readLine()) != null){
-                System.out.println("#####"+lineErr);
+                //System.out.println("#####"+lineErr);
                 res += lineErr+"\r\n";
             }
             InputStream is = p.getInputStream();
@@ -190,7 +190,7 @@ public class ECLSoap {
             
             int pStatus = p.waitFor();
             
-            System.out.println("STATUS: " + pStatus);
+            //System.out.println("STATUS: " + pStatus);
             while((line = br.readLine()) != null){
                 res += line+"\r\n";
             }
@@ -206,7 +206,7 @@ public class ECLSoap {
             
 
             while((line2 = br2.readLine()) != null){
-                System.out.println("****"+line2);
+                //System.out.println("****"+line2);
                 res += line2 +"\r\n";
             }
 
@@ -243,32 +243,37 @@ public class ECLSoap {
         boolean proceed = false;
         
         String cECL = compileECL(ecl);
-
-        String wuid = this.createAndUpdateSoapCall(cECL);
-        this.wuid = wuid;
-        InputStream is = null;
-        if(wuid != null && !wuid.equals("")){
-            this.submitSoapCall(wuid);
-            try{
-                
-                proceed = this.isComplete(wuid);
-                
-                /*
-                if(proceed){
-                    is = this.ResultsSoapCall(wuid);
-                    results = this.parseResults(is);
-                }else{
-                    System.out.println("ECL Failed");
-                }
-                 * 
-                 */
-
-            }catch(Exception e){
-                 System.out.println(e);
-                 e.printStackTrace();
-            }
-        }
         
+        if(cECL == null || cECL.equals("")){
+        	proceed = false;
+        }else{
+	
+	        String wuid = this.createAndUpdateSoapCall(cECL);
+	        this.wuid = wuid;
+	        InputStream is = null;
+	        if(wuid != null && !wuid.equals("")){
+	            this.submitSoapCall(wuid);
+	            try{
+	                
+	                proceed = this.isComplete(wuid);
+	                
+	                /*
+	                if(proceed){
+	                    is = this.ResultsSoapCall(wuid);
+	                    results = this.parseResults(is);
+	                }else{
+	                    System.out.println("ECL Failed");
+	                }
+	                 * 
+	                 */
+	
+	            }catch(Exception e){
+	                 System.out.println(e);
+	                 e.printStackTrace();
+	                 proceed = false;
+	            }
+	        }	
+        }
         return proceed;
     }
     
@@ -948,7 +953,7 @@ public class ECLSoap {
             //System.out.println("Created File (compileECL): " + eclccInstallDir + inFile);
             //BufferedWriter out = new BufferedWriter(new FileWriter(eclccInstallDir + inFile));
             
-            System.out.println("Created File (compileECL): " + this.tempDir + inFile);
+           // System.out.println("Created File (compileECL): " + this.tempDir + inFile);
             BufferedWriter out = new BufferedWriter(new FileWriter(this.tempDir + inFile));
             out.write(ecl);
             out.close();
@@ -967,8 +972,8 @@ public class ECLSoap {
             String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
             String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-E -v " + include + " -o" + outFilePath + " " + inFilePath;
             
-            System.out.println("_________________________ECLCC_______________________________");
-            System.out.println(c);
+           // System.out.println("_________________________ECLCC_______________________________");
+           // System.out.println(c);
             ProcessBuilder pb = new ProcessBuilder(c);
             pb.redirectErrorStream(true); // merge stdout, stderr of process
 
@@ -1003,6 +1008,7 @@ public class ECLSoap {
             //deleteFile(eclccInstallDir+outFile);
             //deleteFile(eclccInstallDir+inFile);
             String compiled_ecl = openFile(this.tempDir+outFile);
+            
             deleteFile(this.tempDir+outFile);
             deleteFile(this.tempDir+inFile);
             

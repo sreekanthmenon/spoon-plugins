@@ -1,7 +1,6 @@
 package org.hpccsystems.mapper;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class RecordList {
 	
@@ -14,6 +13,10 @@ public class RecordList {
 	
 	public void addRecord(MapperBO record) {
 		arlRecords.add(arlRecords.size(), record);
+	}
+	
+	public void addRecordAtIndex(int index, MapperBO record) {
+		arlRecords.add(index, record);
 	}
 	
 	public void removeRecord(int index) {

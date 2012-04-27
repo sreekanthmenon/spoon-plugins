@@ -37,6 +37,9 @@ public class MainMapper {
 	private Text txtVariableName;
 	private Text txtExpression;
 	
+	private Button btnSaveExpression;
+	private Button btnAddExpression;
+	
 	private String[] functionList = null;
 	private String[] dataSetList = null;
 	private String[] operatorList = null;
@@ -182,6 +185,7 @@ public class MainMapper {
 						txtVariableName.setText(objRecord.getOpVariable());
 						txtExpression.setText(objRecord.getExpression());
 						txtExpression.setFocus();
+						btnSaveExpression.setEnabled(true);
 					}
 				}
 			}
@@ -215,6 +219,21 @@ public class MainMapper {
 		
 	}
 	
+	/**
+	 * Uncheck's all the records of the table
+	 * @return result
+	 */
+	private boolean uncheckAll(){
+		boolean result = false;
+		for (int i = 0; i < tableViewer.getTable().getItemCount(); i++) {
+			tableViewer.getTable().getItems()[i].setChecked(false);
+		}
+		btnSaveExpression.setEnabled(false);
+		result = true;
+		
+		return result;
+	}
+	
 	public void buildExpressionPanel(Shell shell){
 		
 		Composite comp2 = new Composite(shell, SWT.NONE);
@@ -236,7 +255,6 @@ public class MainMapper {
 		
 		Composite compVariable = new Composite(group1, SWT.NONE);
 		layout = new GridLayout();
-		//layout.marginLeft = 0;
 		layout.numColumns = 2;
 		data = new GridData();
 		data.horizontalSpan = 2;
@@ -298,9 +316,15 @@ public class MainMapper {
 				Tree selectedTree = (Tree)e.widget;
 				if(selectedTree.getSelection()[0].getParentItem() != null){
 					String dataField = ((Tree)e.widget).getSelection()[0].getText();
-					StringBuilder txtBuilder = new StringBuilder();
-					txtBuilder.append(txtExpression.getText());
-					txtExpression.setText(txtBuilder.append(dataField).toString());
+					if(txtExpression.getCaretPosition() > 0) {
+						StringBuffer buf = new StringBuffer(txtExpression.getText());
+						buf.insert(txtExpression.getCaretPosition(), dataField);
+						txtExpression.setText(buf.toString());
+					} else {
+						StringBuffer buf = new StringBuffer(txtExpression.getText());
+						buf.append(dataField);
+						txtExpression.setText(buf.toString());
+					}
 				}
 			}
 		});
@@ -328,10 +352,15 @@ public class MainMapper {
 				Tree selectedTree = (Tree)e.widget;
 				if(selectedTree.getSelection()[0].getParentItem() != null){
 					String dataField = ((Tree)e.widget).getSelection()[0].getText();
+					//System.out.println("Text Position:: "+txtExpression.getCaretPosition());
 					if(txtExpression.getSelectionText() != null && txtExpression.getSelectionText().length() > 0) {
 						String txtToBeReplaced = dataField+"( "+txtExpression.getSelectionText()+" )";
 						StringBuffer buf = new StringBuffer(txtExpression.getText());
 						buf.replace(txtExpression.getSelection().x, txtExpression.getSelection().y, txtToBeReplaced);
+						txtExpression.setText(buf.toString());
+					} else if(txtExpression.getCaretPosition() > 0) {
+						StringBuffer buf = new StringBuffer(txtExpression.getText());
+						buf.insert(txtExpression.getCaretPosition(), dataField+"()");
 						txtExpression.setText(buf.toString());
 					} else {
 						StringBuffer buf = new StringBuffer(txtExpression.getText());
@@ -369,9 +398,15 @@ public class MainMapper {
 			@Override
 			public void mouseDoubleClick(MouseEvent e) {
 				String dataField = ((Table)e.widget).getSelection()[0].getText();
-				StringBuilder txtBuilder = new StringBuilder();
-				txtBuilder.append(txtExpression.getText());
-				txtExpression.setText(txtBuilder.append(dataField).toString());
+				if(txtExpression.getCaretPosition() > 0) {
+					StringBuffer buf = new StringBuffer(txtExpression.getText());
+					buf.insert(txtExpression.getCaretPosition(), dataField);
+					txtExpression.setText(buf.toString());
+				} else {
+					StringBuffer buf = new StringBuffer(txtExpression.getText());
+					buf.append(dataField);
+					txtExpression.setText(buf.toString());
+				}
 			}
 		});
 		
@@ -385,21 +420,65 @@ public class MainMapper {
 		gridData.horizontalSpan = 2;
 		txtExpression.setLayoutData(gridData);
 		
-		Button btnSave = new Button(group1, SWT.PUSH | SWT.CENTER);
-		btnSave.setText("Add Expression");
+		
+		Composite compButton = new Composite(group1, SWT.NONE);
+		layout = new GridLayout();
+		layout.numColumns = 2;
+		data = new GridData();
+		compButton.setLayout(layout);
+		compButton.setLayoutData(data);
+		
+		btnSaveExpression = new Button(compButton, SWT.PUSH | SWT.CENTER);
+		btnSaveExpression.setText("Save Expression");
 		gridData = new GridData (GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gridData.widthHint = 120;
-		btnSave.setLayoutData(gridData);
-		btnSave.addSelectionListener(new SelectionAdapter() {
+		btnSaveExpression.setLayoutData(gridData);
+		btnSaveExpression.addSelectionListener(new SelectionAdapter() {
 	   		// Add a record and refresh the view
 			public void widgetSelected(SelectionEvent e) {
-				MapperBO record = new MapperBO();
-				record.setOpVariable(txtVariableName.getText());
-				record.setExpression(txtExpression.getText());
-				txtVariableName.setText("");
-				txtExpression.setText("");
-				recordList.addRecord(record);
-				tableViewer.refresh();
+				int selectionIndex = 0;
+				if(tableViewer.getTable().getItemCount() >0 ){
+					for (int i = 0; i < tableViewer.getTable().getItemCount(); i++) {
+						if (tableViewer.getTable().getItems()[i].getChecked()) {
+							selectionIndex = i;
+						}
+					}
+					if(tableViewer.getTable().getItem(selectionIndex).getChecked()){
+						MapperBO objRecord = recordList.getRecord(selectionIndex);
+						objRecord.setOpVariable(txtVariableName.getText());
+						objRecord.setExpression(txtExpression.getText());
+						recordList.removeRecord(selectionIndex);
+						recordList.addRecordAtIndex(selectionIndex, objRecord);
+						txtVariableName.setText("");
+						txtExpression.setText("");
+						uncheckAll();
+						tableViewer.refresh();
+					}
+				}
+			}
+		});
+		
+		btnSaveExpression.setEnabled(false);
+		
+		btnAddExpression = new Button(compButton, SWT.PUSH | SWT.CENTER);
+		btnAddExpression.setText("Add Expression");
+		gridData = new GridData (GridData.HORIZONTAL_ALIGN_BEGINNING);
+		gridData.widthHint = 120;
+		btnAddExpression.setLayoutData(gridData);
+		btnAddExpression.addSelectionListener(new SelectionAdapter() {
+	   		// Add a record and refresh the view
+			public void widgetSelected(SelectionEvent e) {
+				if( (txtVariableName.getText()!= null && txtVariableName.getText().trim().length() > 0 ) 
+						|| (txtExpression.getText()!= null && txtExpression.getText().trim().length() > 0 ) ) {
+					MapperBO record = new MapperBO();
+					record.setOpVariable(txtVariableName.getText());
+					record.setExpression(txtExpression.getText());
+					txtVariableName.setText("");
+					txtExpression.setText("");
+					recordList.addRecord(record);
+					uncheckAll();
+					tableViewer.refresh();
+				}
 			}
 		});
 		
