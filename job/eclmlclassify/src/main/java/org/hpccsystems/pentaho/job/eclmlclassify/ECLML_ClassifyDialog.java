@@ -104,7 +104,11 @@ public class ECLML_ClassifyDialog extends JobEntryDialog implements JobEntryDial
         int margin = Const.MARGIN;
 
         shell.setLayout(formLayout);
+<<<<<<< HEAD
         shell.setText("Define a Classification - Classify");
+=======
+        shell.setText("Define Classification - Classify");
+>>>>>>> master
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
