@@ -2,9 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.hpccsystems.pentaho.steps</groupId>
-	<artifactId>eclglobalvariablesstep</artifactId>
+	<artifactId>eclexecutestep</artifactId>
 	<packaging>jar</packaging>
-	<name>HPCC Systems Pentaho Data Integration ECL Global Variables Steps Plugin</name>
+	<name>HPCC Systems Pentaho Data Integration ECL Execute Steps Plugin</name>
 	<description></description>
 	<parent>
 		<groupId>org.hpccsystems.pentaho</groupId>

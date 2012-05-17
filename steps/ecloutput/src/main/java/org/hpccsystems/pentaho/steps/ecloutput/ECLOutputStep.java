@@ -26,19 +26,22 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
     public boolean processRow(StepMetaInterface smi, StepDataInterface sdi) throws KettleException {
     	meta = (ECLOutputStepMeta) smi;
         data = (ECLOutputStepData) sdi;
-        
-        
-        Object[] r = getRow(); 
+        System.out.println("-------------------------------------");
+    	System.out.println("Started ecloutputstep processrow");
+        logBasic("Rendered Output ECL Code processRow: ");
+        /*
+        Object[] r = this.getRow(); 
         String input = "";
         if (r == null) 
         {
+        	logBasic("r is null");
         } else {
             logBasic("Found Row = " + r[r.length-1]);
             input = r[r.length-1].toString() + "\r\n";
         }
-        
+         */
         Object[] newRow = new Object[1]; 
-         
+        
         Output op = new Output();
         op.setAttributeName(meta.getAttributeName());
         op.setIsDef(meta.getIsDef());
@@ -62,14 +65,15 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
         op.setRepeat(meta.getRepeat());
         op.setPipeType(meta.getPipeType());
         op.setName(meta.getName());
-         
-         newRow[0] = input + op.ecl();
-         
-         putRow(data.outputRowMeta, newRow);
-         
-         logBasic("{Dataset Step} Output = " + newRow[0]);
-         
-         return false;
+        logBasic("done with direct");
+		newRow[0] = op.ecl();
+		//meta.setOutputField(op.ecl()); 
+		putRow(data.outputRowMeta, newRow);
+        data.output += op.ecl();
+		logBasic("{Dataset Step} Output = ");
+		//should change this to catch errors
+		System.out.println("done processRow Outputstep");
+		return false;
     }
 
     
@@ -96,11 +100,21 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
 
     //
     // Run is were the action happens!
+    /*
     public void run() {
+    	System.out.println("-------------------------------------");
+    	System.out.println("Started ecloutputstep");
         logBasic("Starting to run...");
         try {
-            while (processRow(meta, data) && !isStopped())
-				;
+            while (processRow(meta, data) && !isStopped()){
+            	System.out.println("loop");
+            }
+            //boolean isValid = processRow(meta,data);
+            logBasic("Rendered Output ECL Code: ");// + meta.getOutputField());
+            //if(!isValid){
+            //	setErrors(1);
+            //	stopAll();
+            //}
         } catch (Exception e) {
             logError("Unexpected error : " + e.toString());
             logError(Const.getStackTracker(e));
@@ -112,4 +126,5 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
             markStop();
         }
     }
+    */
 }

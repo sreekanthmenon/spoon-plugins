@@ -33,6 +33,7 @@ import org.hpccsystems.eclguifeatures.RecordList;
 
 public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface {
 	 private String stepName;
+	 private String outputField;
 	 
 	 private String attributeName = "";
 	  private String isDef = ""; //true set output into attr using job entry name
@@ -62,6 +63,14 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
 		public String getStepName() {
 		        return stepName;
 		}
+		public String getOutputField() {
+	        return outputField;
+	    }
+
+	    public void setOutputField(String outputField) {
+	        this.outputField = outputField;
+	    }
+	    
 
 	    public String getAttributeName() {
 	        return attributeName;
@@ -265,6 +274,7 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
     	String retval = "";
     
     	retval += "		<stepName>" + stepName + "</stepName>" + Const.CR;
+    	retval += "		<outputfield>" + outputField + "</outputfield>" + Const.CR;
         retval += "		<attributeName>" + attributeName + "</attributeName>" + Const.CR;
             //private String isDef; //true set output into attr using job entry name
     
@@ -320,6 +330,8 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
            //super.loadXML(node, list, list1);
     		if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "stepName")) != null)
    			 setStepName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "stepName")));
+    		if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")) != null)
+    		 setOutputField(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")));
 
            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "attributeName")) != null)
                setAttributeName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "attributeName")));
@@ -388,7 +400,7 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
 
     
     public void setDefault() {
-       // outputField = "template_outfield";
+        outputField = "";
     }
 
     public void check(List<CheckResultInterface> remarks, TransMeta transmeta, StepMeta stepMeta, RowMetaInterface prev, String input[], String output[], RowMetaInterface info) {
@@ -414,8 +426,8 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
     }
 
     public StepDataInterface getStepData() {
-        //return new ECLDatasetStepData(outputField);
-    	return null;
+        return new ECLOutputStepData(outputField);
+    	
     }
     public String getRepElement(Repository rep, ObjectId id, String key) throws KettleException{
         String rStr = "";
@@ -432,6 +444,9 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
     	try {
     		if(rep.getStepAttributeString(id_step, "stepName") != null)
     			stepName = rep.getStepAttributeString(id_step, "stepName"); //$NON-NLS-1$
+    		
+    		if(rep.getStepAttributeString(id_step, "outputField") != null)
+    			outputField = rep.getStepAttributeString(id_step, "outputField"); //$NON-NLS-1$
 
             if(rep.getStepAttributeString(id_step, "attributeName") != null)
                 attributeName = rep.getStepAttributeString(id_step, "attributeName"); //$NON-NLS-1$
@@ -503,6 +518,7 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
                //  System.out.println("ObjectID["+i+"] = " + allIDs[i]);
              }
              rep.saveStepAttribute(id_transformation, id_step, "stepName", stepName); //$NON-NLS-1$
+             rep.saveStepAttribute(id_transformation, id_step, "outputField", outputField); //$NON-NLS-1$
              rep.saveStepAttribute(id_step, getObjectId(), "attributeName", attributeName); //$NON-NLS-1$
              
              //private String isDef; //true set output into attr using job entry name

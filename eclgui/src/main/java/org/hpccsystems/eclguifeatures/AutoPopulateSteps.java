@@ -589,7 +589,7 @@ public static Map<String, List<String>> getDefFields(List<StepMeta> jobs){
 
                     //adDS.add((String)((StepMeta)jec[j]).getName());
                  String xml = ((StepMeta)jec[j]).getXML();
-                    //System.out.println(xml);
+                //    System.out.println(xml);
 
                    NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
                    for (int temp = 0; temp < nl.getLength(); temp++){
@@ -598,8 +598,9 @@ public static Map<String, List<String>> getDefFields(List<StepMeta> jobs){
                        String type = XMLHandler.getNodeValue(
                            XMLHandler.getSubNode(nNode, "type")
                            );
-                       //System.out.println("Type: " + type);
-                       if(type.equalsIgnoreCase("ECLGlobalVariables")){
+                      // System.out.println("Type: " + type);
+                       if(type.equalsIgnoreCase("ECLGlobalVariablesStep")){
+                    	  // System.out.println("match");
                            if(ofType.equalsIgnoreCase("server_ip")){
                                 out = XMLHandler.getNodeValue(
                                     XMLHandler.getSubNode(nNode, "server_ip")

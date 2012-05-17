@@ -1,4 +1,4 @@
-package org.hpccsystems.pentaho.steps.ecldataset;
+package org.hpccsystems.pentaho.steps.eclglobalvariables;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -15,10 +15,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.trans.TransMeta;
+import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 import org.pentaho.di.trans.step.BaseStepMeta;
 import org.pentaho.di.trans.step.StepDialogInterface;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Iterator;
 
@@ -40,16 +42,28 @@ import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.graphics.Color;
 
-public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogInterface {
+public class ECLGlobalVariablesStepDialog extends BaseStepDialog implements StepDialogInterface {
 
-	private ECLDatasetStepMeta input;
-    private HashMap controls = new HashMap();
+	private ECLGlobalVariablesStepMeta input;
+
     
     private Text stepnameField;
+    
+    private Text jobEntryName;
+
+    private Text serverIP;
+    private Text serverPort;
+    private Text landingZone;
+    
+    private Text cluster;
+    private Text jobName;
+    private Text eclccInstallDir;
+    private Text mlPath;
+    private Combo includeML;
    
-    public ECLDatasetStepDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
+    public ECLGlobalVariablesStepDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
         super(parent, (BaseStepMeta) in, transMeta, stepName);
-        input = (ECLDatasetStepMeta) in;
+        input = (ECLGlobalVariablesStepMeta) in;
     }
 
     public String open() {
@@ -107,6 +121,40 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
         
         
         
+
+        //All other contols
+        //Distribute Declaration
+        Group varGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(varGroup);
+        varGroup.setText("Server Details");
+        varGroup.setLayout(groupLayout);
+        FormData datasetGroupFormat = new FormData();
+        datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
+        datasetGroupFormat.width = 400;
+        datasetGroupFormat.height = 220;
+        datasetGroupFormat.left = new FormAttachment(middle, 0);
+        varGroup.setLayoutData(datasetGroupFormat);
+
+        //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
+
+        
+        serverIP = buildText("Server Host", null, lsMod, middle, margin, varGroup);
+        serverPort = buildText("Server Port", serverIP, lsMod, middle, margin, varGroup);
+        landingZone = buildText("Landing Zone Dir", serverPort, lsMod, middle, margin, varGroup);
+        
+        //move thes to Job Information
+        cluster = buildText("Cluster", landingZone, lsMod, middle, margin, varGroup);
+        jobName = buildText("Job Name", cluster, lsMod, middle, margin, varGroup);
+        
+        //move these to Library(s)
+        
+        eclccInstallDir = buildText("eclcc Install Dir", jobName, lsMod, middle, margin, varGroup);
+        mlPath = buildText("Path to ML Library", eclccInstallDir, lsMod, middle, margin, varGroup);
+        includeML = buildCombo("Include ML Library?", mlPath, lsMod, middle, margin, varGroup, new String[]{"true", "false"});
+        
+        
+        
+        
         
         
         wOK = new Button(shell, SWT.PUSH);
@@ -114,7 +162,7 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
         wCancel = new Button(shell, SWT.PUSH);
         wCancel.setText("Cancel");
 
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, CHANGEME);
+        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, varGroup);
 
         // Add listeners
         Listener cancelListener = new Listener() {
@@ -126,13 +174,13 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
         Listener okListener = new Listener() {
 
             public void handleEvent(Event e) {
-            	//updatePaths();
-            	//boolean isReady = verifySettings();
-            	//if(isReady){
+            	updatePaths();
+            	boolean isReady = verifySettings();
+            	if(isReady){
             		ok();
-            	//}else{
+            	}else{
             		
-            	//}
+            	}
             }
         };
 
@@ -163,6 +211,34 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
         }
         //add other set functions here
         
+        if (input.getServerIP() != null) {
+            serverIP.setText(input.getServerIP());
+        }
+        if (input.getServerPort() != null) {
+            serverPort.setText(input.getServerPort());
+        }
+        
+        if (input.getLandingZone() != null) {
+            landingZone.setText(input.getLandingZone());
+        }
+
+        
+        if (input.getCluster() != null) {
+            cluster.setText(input.getCluster());
+        }
+        
+        if (input.getJobName() != null) {
+            jobName.setText(input.getJobName());
+        }
+        if (input.getEclccInstallDir() != null) {
+            eclccInstallDir.setText(input.getEclccInstallDir());
+        }
+        if (input.getMlPath() != null) {
+            mlPath.setText(input.getMlPath());
+        }
+        if (input.getIncludeML() != null) {
+            includeML.setText(input.getIncludeML());
+        }
         
         
 
@@ -182,7 +258,7 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
     }
 
     private void cancel() {
-        stepname = null;
+        stepnameField = null;
         input.setChanged(changed);
         dispose();
     }
@@ -192,7 +268,16 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
     	//input.setName(jobEntryName.getText());
     	input.setStepName(stepnameField.getText());
     	//add other here
-    	
+    	input.setServerIP(serverIP.getText());
+    	input.setServerPort(serverPort.getText());
+    	input.setLandingZone(landingZone.getText());
+        
+    	input.setCluster(cluster.getText());
+    	input.setJobName(jobName.getText());
+        
+    	input.setEclccInstallDir(eclccInstallDir.getText());
+    	input.setMlPath(mlPath.getText());
+    	input.setIncludeML(includeML.getText());
         dispose();
     	
     }
@@ -273,5 +358,96 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
         combo.setLayoutData(fieldFormat);
 
         return combo;
+    }
+    
+    
+    private void updatePaths(){
+    	String eclPath = eclccInstallDir.getText();
+    	boolean eclLast = false;
+    	if(eclPath.lastIndexOf("\\") == (eclPath.length()-1)){
+    		//has last \
+    		eclLast = true;
+    	}
+    	if(!eclLast && eclPath.lastIndexOf("/") == (eclPath.length()-1)){
+    		eclLast = true;
+    	}
+    	if(!eclLast){
+    		eclccInstallDir.setText(eclccInstallDir.getText() + "\\");
+    	}
+    	
+    	if(includeML.getText().equals("true")){
+	    	String mlP = mlPath.getText();
+	    	boolean mlLast = false;
+	    	if(mlP.lastIndexOf("\\") == (mlP.length()-1)){
+	    		//has last \
+	    		mlLast = true;
+	    	}
+	    	if(!mlLast && mlP.lastIndexOf("/") == (mlP.length()-1)){
+	    		mlLast = true;
+	    	}
+	    	if(mlLast){	    		
+	    		String noSlash = (mlPath.getText()).substring(0,(mlPath.getText()).length()-1);
+	    		mlPath.setText(noSlash);
+	    	}
+    	}
+    }
+    private boolean verifySettings(){
+    	boolean isReady = false;
+    	
+    	boolean eclccExists = true;
+    	boolean mlExists = true;
+    	
+    	String errorTxt = "Some Fields Were Not Correct:\r\n";
+    	
+    	eclccExists = (new File(eclccInstallDir.getText())).exists();
+    	if(!eclccExists){
+    		//warn
+    		System.out.println("no eclcc install found");
+    		errorTxt += "The \"eclcc Install Dir\" could not be located\r\n";
+    	}
+    	if(includeML.getText().equals("true")){
+    		mlExists = (new File(mlPath.getText())).exists();
+    		if(!mlExists){
+    			//warn
+    			errorTxt += "The \"Path to ML Library\" could not be located\r\n";
+    			System.out.println("No ML Library found");
+    		}
+    	}
+    	if(eclccExists && mlExists){
+    		isReady = true;
+    		System.out.println("paths validated");
+    	}else{
+    		Shell parentShell = getParent();
+            //Display display = parentShell.getDisplay();
+    		//final Shell dialog = new Shell (display, SWT.DIALOG_TRIM);
+    		final Shell dialog = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
+
+    		Label label = new Label (dialog, SWT.NONE);
+    		label.setText (errorTxt);
+    		Button okButton = new Button (dialog, SWT.PUSH);
+    		okButton.setText ("&OK");
+   
+	        Listener cancelListener = new Listener() {
+
+	            public void handleEvent(Event e) {
+	                dialog.close();
+	            }
+	        };
+	        
+	        okButton.addListener(SWT.Selection, cancelListener);
+	        
+	        FormLayout form = new FormLayout ();
+	    	form.marginWidth = form.marginHeight = 8;
+	    	dialog.setLayout (form);
+	    	FormData okData = new FormData ();
+	    	okData.top = new FormAttachment (label, 8);
+	    	okButton.setLayoutData (okData);
+	    	
+	        
+	        dialog.setDefaultButton (okButton);
+	    	dialog.pack ();
+	    	dialog.open ();
+    	}
+    	return isReady;
     }
 }
