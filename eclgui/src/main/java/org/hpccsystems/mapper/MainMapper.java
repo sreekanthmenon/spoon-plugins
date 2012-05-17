@@ -41,12 +41,12 @@ public class MainMapper {
 	private Button btnAddExpression;
 	
 	private String[] functionList = null;
-	private String[] dataSetList = null;
+	private Map<String, List<String>> inputMap = null;
 	private String[] operatorList = null;
 	
 	//The Constructor has input as 
-	public MainMapper(Shell shell, String[] dataSetList){
-		setDataSetList(dataSetList);
+	public MainMapper(Shell shell, Map<String, List<String>> inputMap){
+		setDataSetList(inputMap);
 		populateFunctionList();
 		populateOperatorList();
 		this.addChildControls(shell);
@@ -82,12 +82,12 @@ public class MainMapper {
 		this.functionList = functionList;
 	}
 
-	public String[] getDataSetList() {
-		return dataSetList;
+	public Map<String, List<String>> getDataSetList() {
+		return inputMap;
 	}
 
-	public void setDataSetList(String[] dataSetList) {
-		this.dataSetList = dataSetList;
+	public void setDataSetList(Map<String, List<String>> dataSetList) {
+		this.inputMap = dataSetList;
 	}
 	
 	public String[] getOperatorList() {
@@ -298,7 +298,7 @@ public class MainMapper {
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 	    gridData.heightHint = 100;
 	    treeInputDataSet.setLayoutData(gridData);
-	    Utils.fillTree(treeInputDataSet);
+	    Utils.fillTree(treeInputDataSet, inputMap);
 	    treeInputDataSet.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -527,8 +527,9 @@ public class MainMapper {
 		shell.setLayoutData(data);
 		
 		//Create a DataSet
-		String[] dataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
-		final MainMapper objMainMapper = new MainMapper(shell, dataSetList);
+		//String[] dataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
+		Map<String, List<String>> mapFunctionValues = Utils.getDemoInputValueMap();
+		final MainMapper objMainMapper = new MainMapper(shell, mapFunctionValues);
 		
 		shell.open();
 		
