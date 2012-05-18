@@ -40,7 +40,8 @@ public class ECLGlobalVariablesStep extends BaseStep implements StepInterface {
     public boolean init(StepMetaInterface smi, StepDataInterface sdi) {
         meta = (ECLGlobalVariablesStepMeta) smi;
         data = (ECLGlobalVariablesStepData) sdi;
-
+        super.setStepname(meta.getStepName());
+        
         return super.init(smi, sdi);
     }
 

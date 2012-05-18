@@ -63,6 +63,9 @@ public class ECLExecuteStepDialog extends BaseStepDialog implements StepDialogIn
     public ECLExecuteStepDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
         super(parent, (BaseStepMeta) in, transMeta, stepName);
         input = (ECLExecuteStepMeta) in;
+        if(stepName != null && !stepName.equals("")){
+        	input.setStepName(stepName);
+        }
     }
 
     public String open() {
@@ -239,6 +242,7 @@ public class ECLExecuteStepDialog extends BaseStepDialog implements StepDialogIn
     private void ok() {
     	//input.setName(jobEntryName.getText());
     	input.setStepName(stepnameField.getText());
+    	super.stepname = stepnameField.getText();
     	//add other here
     	AutoPopulateSteps ap = new AutoPopulateSteps();
         String serverHost = "";

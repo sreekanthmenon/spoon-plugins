@@ -64,7 +64,8 @@ public class ECLDatasetStep extends BaseStep implements StepInterface {
     public boolean init(StepMetaInterface smi, StepDataInterface sdi) {
         meta = (ECLDatasetStepMeta) smi;
         data = (ECLDatasetStepData) sdi;
-
+        super.setStepname(meta.getStepName());
+        
         return super.init(smi, sdi);
     }
 

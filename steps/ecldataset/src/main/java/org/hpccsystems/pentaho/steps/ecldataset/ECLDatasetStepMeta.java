@@ -59,6 +59,7 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
 
     public void setStepName(String stepName) {
         this.stepName = stepName;
+        
     }
     public String getOutputField() {
         return outputField;

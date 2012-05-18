@@ -64,6 +64,9 @@ public class ECLGlobalVariablesStepDialog extends BaseStepDialog implements Step
     public ECLGlobalVariablesStepDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
         super(parent, (BaseStepMeta) in, transMeta, stepName);
         input = (ECLGlobalVariablesStepMeta) in;
+        if(stepName != null && !stepName.equals("")){
+        	input.setStepName(stepName);
+        }
     }
 
     public String open() {
@@ -267,6 +270,7 @@ public class ECLGlobalVariablesStepDialog extends BaseStepDialog implements Step
     private void ok() {
     	//input.setName(jobEntryName.getText());
     	input.setStepName(stepnameField.getText());
+    	super.stepname = stepnameField.getText();
     	//add other here
     	input.setServerIP(serverIP.getText());
     	input.setServerPort(serverPort.getText());

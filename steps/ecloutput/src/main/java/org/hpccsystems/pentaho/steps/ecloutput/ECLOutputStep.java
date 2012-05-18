@@ -76,7 +76,8 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
     public boolean init(StepMetaInterface smi, StepDataInterface sdi) {
         meta = (ECLOutputStepMeta) smi;
         data = (ECLOutputStepData) sdi;
-
+        super.setStepname(meta.getStepName());
+        
         return super.init(smi, sdi);
     }
 

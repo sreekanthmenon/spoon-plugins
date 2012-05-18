@@ -50,9 +50,6 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
     public ECLDatasetStepDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
         super(parent, (BaseStepMeta) in, transMeta, stepName);
         input = (ECLDatasetStepMeta) in;
-        if(stepName != null && !stepName.equals("")){
-        	input.setStepName(stepName);
-        }
     }
 
     public String open() {
@@ -194,7 +191,6 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
     private void ok() {
     	//input.setName(jobEntryName.getText());
     	input.setStepName(stepnameField.getText());
-    	super.stepname = stepnameField.getText();
     	//add other here
     	
         dispose();
