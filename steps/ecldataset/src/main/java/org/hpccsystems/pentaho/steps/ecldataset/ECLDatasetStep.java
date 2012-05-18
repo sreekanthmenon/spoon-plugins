@@ -55,13 +55,6 @@ public class ECLDatasetStep extends BaseStep implements StepInterface {
          
          return false;
     }
-
-    
-    
-    
-    
-    
-    
     
     
     public boolean init(StepMetaInterface smi, StepDataInterface sdi) {

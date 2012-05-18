@@ -33,7 +33,7 @@ import org.hpccsystems.eclguifeatures.RecordList;
 
 public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterface {
 	 private String stepName;
-	 
+	 private String outputField;
 	 
 	private String logicalFileName = "";
     private String datasetName = "";
@@ -59,6 +59,13 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
 
     public void setStepName(String stepName) {
         this.stepName = stepName;
+    }
+    public String getOutputField() {
+        return outputField;
+    }
+
+    public void setOutputField(String outputField) {
+        this.outputField = outputField;
     }
 
     public String getRecordSet() {
@@ -194,7 +201,8 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     	String retval = "";
         
     	retval += "		<stepName>" + stepName + "</stepName>" + Const.CR;
-        
+    	retval += "		<outputfield>" + outputField + "</outputfield>" + Const.CR;
+    	
         retval += "		<logical_file_name>" + logicalFileName + "</logical_file_name>" + Const.CR;
         retval += "		<record_name isDef=\"true\">" + recordName + "</record_name>" + Const.CR;
         retval += "		<dataset_name isDef=\"true\">" + datasetName + "</dataset_name>" + Const.CR;
@@ -212,6 +220,8 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     	 try {
     		 if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "stepName")) != null)
     			 setStepName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "stepName")));
+    		 if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")) != null)
+       		  setOutputField(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")));
     		 
              if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")) != null)
                  setLogicalFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "logical_file_name")));
@@ -245,7 +255,7 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
 
     
     public void setDefault() {
-       // outputField = "template_outfield";
+        outputField = "template_outfield";
     }
 
     public void check(List<CheckResultInterface> remarks, TransMeta transmeta, StepMeta stepMeta, RowMetaInterface prev, String input[], String output[], RowMetaInterface info) {
@@ -271,14 +281,16 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     }
 
     public StepDataInterface getStepData() {
-        //return new ECLDatasetStepData(outputField);
-    	return null;
+        return new ECLDatasetStepData(outputField);
+    	//return null;
     }
 
     public void readRep(Repository rep, ObjectId id_step, List<DatabaseMeta> databases, Map<String, Counter> counters) throws KettleException {
     	try {
     		if(rep.getStepAttributeString(id_step, "stepName") != null)
     			stepName = rep.getStepAttributeString(id_step, "stepName"); //$NON-NLS-1$ 
+    		if(rep.getStepAttributeString(id_step, "outputField") != null)
+        		outputField = rep.getStepAttributeString(id_step, "outputField"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_step, "logicalFileName") != null)
                 logicalFileName = rep.getStepAttributeString(id_step, "logicalFileName"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_step, "datasetName") != null)
@@ -305,6 +317,7 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     public void saveRep(Repository rep, ObjectId id_transformation, ObjectId id_step) throws KettleException {
     	try {
     		rep.saveStepAttribute(id_transformation, id_step, "stepName", stepName); //$NON-NLS-1$
+    		rep.saveStepAttribute(id_transformation, id_step, "outputField", outputField); //$NON-NLS-1$
             rep.saveStepAttribute(id_step, getObjectId(), "logicalFileName", logicalFileName); //$NON-NLS-1$
             rep.saveStepAttribute(id_step, getObjectId(), "datasetName", datasetName); //$NON-NLS-1$
             rep.saveStepAttribute(id_step, getObjectId(), "recordName", recordName); //$NON-NLS-1$

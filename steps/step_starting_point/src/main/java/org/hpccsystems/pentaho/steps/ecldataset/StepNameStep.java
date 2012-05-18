@@ -5,6 +5,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.hpccsystems.ecldirect.Dataset;
+import org.hpccsystems.ecldirect.Output;
+import org.hpccsystems.pentaho.steps.ecloutput.ECLOutputStepData;
+import org.hpccsystems.pentaho.steps.ecloutput.ECLOutputStepMeta;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.row.RowDataUtil;
@@ -23,8 +26,8 @@ public class ECLDatasetStep extends BaseStep implements StepInterface {
     }
 
     public boolean processRow(StepMetaInterface smi, StepDataInterface sdi) throws KettleException {
-    	meta = (ECLDatasetStepMeta) smi;
-        data = (ECLDatasetStepData) sdi;
+    	meta = (ECLOutputStepMeta) smi;
+        data = (ECLOutputStepData) sdi;
         
         
         Object[] r = getRow(); 
@@ -37,23 +40,17 @@ public class ECLDatasetStep extends BaseStep implements StepInterface {
         }
         
         Object[] newRow = new Object[1]; 
-         
-         Dataset dataset = new Dataset();
-         dataset.setLogicalFileName(meta.getLogicalFileName());
-         dataset.setName(meta.getDatasetName());
-        // dataset.setRecordFormatString(getRecordDef());
-         dataset.setRecordFormatString(meta.resultListToString());
-         dataset.setRecordName(meta.getRecordName());
-         dataset.setFileType(meta.getFileType());
-         dataset.setRecordSet(meta.getRecordSet());
-         
-         newRow[0] = input + dataset.ecl();
-         
-         putRow(data.outputRowMeta, newRow);
-         
-         logBasic("{Dataset Step} Output = " + newRow[0]);
-         
-         return false;
+        
+        //call the related direct library and fetch the ecl code
+        
+        //Create a line like htis where op is the direct library that referecnes the direct 
+        //newRow[0] = input + op.ecl();
+        
+        putRow(data.outputRowMeta, newRow);
+        
+        logBasic("{Dataset Step} Output = " + newRow[0]);
+        
+        return false;
     }
 
     
