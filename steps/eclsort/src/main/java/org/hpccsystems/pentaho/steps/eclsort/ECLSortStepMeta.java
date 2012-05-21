@@ -1,4 +1,4 @@
-package org.hpccsystems.pentaho.steps.ecldataset;
+package org.hpccsystems.pentaho.steps.eclsort;
 
 
 import org.eclipse.swt.widgets.Shell;
@@ -31,16 +31,19 @@ import org.hpccsystems.eclguifeatures.CreateTable;
 import org.hpccsystems.eclguifeatures.RecordBO;
 import org.hpccsystems.eclguifeatures.RecordList;
 
-public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterface {
-	 private String stepName;
-	 private String outputField;
+public class ECLSortStepMeta extends BaseStepMeta implements StepMetaInterface {
+	private String stepName;
+	private String outputField;
 
-    
+	private String datasetName = "";
+	private String fields = "";//Comma separated list of fieldNames. a "-" prefix to the field name will indicate descending order
+	private String recordsetName = "";
   
     public String getStepName() {
         return stepName;
     }
 
+    
     public void setStepName(String stepName) {
         this.stepName = stepName;
     }
@@ -52,6 +55,30 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
         this.outputField = outputField;
     }
     
+    public String getDatasetName() {
+        return datasetName;
+    }
+
+    public void setDatasetName(String datasetName) {
+        this.datasetName = datasetName;
+    }
+    
+    public String getFields() {
+        return fields;
+    }
+
+    public void setFields(String fields) {
+        this.fields = fields;
+    }
+    
+    public String getRecordsetName() {
+        return recordsetName;
+    }
+
+    public void setRecordsetName(String recordsetName) {
+        this.recordsetName = recordsetName;
+    }
+
     
     
     public void getFields(RowMetaInterface r, String origin, RowMetaInterface[] info, StepMeta nextStep, VariableSpace space) {
@@ -72,7 +99,9 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
         
     	retval += "		<stepName>" + stepName + "</stepName>" + Const.CR;
     	retval += "		<outputfield>" + outputField + "</outputfield>" + Const.CR;
-        
+    	retval += "		<dataset_name>" + datasetName + "</dataset_name>" + Const.CR;
+        retval += "		<fields>" + fields + "</fields>" + Const.CR;
+        retval += "		<recordset_name>" + recordsetName + "</recordset_name>" + Const.CR;
         
         return retval;
     }
@@ -86,6 +115,14 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     		 if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")) != null)
    		  		setOutputField(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")));
 
+    		 if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fields")) != null)
+                 setFields(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fields")));
+             //setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")));
+             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")) != null)
+                 setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "dataset_name")));
+             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")) != null)
+                 setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
+             
          } catch (Exception e) {
              throw new KettleXMLException("ECL Dataset Job Plugin Unable to read step info from XML node", e);
          }
@@ -119,15 +156,15 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     }
 
     public StepDialogInterface getDialog(Shell shell, StepMetaInterface meta, TransMeta transMeta, String name) {
-        return new ECLDatasetStepDialog(shell, meta, transMeta, name);
+        return new ECLSortStepDialog(shell, meta, transMeta, name);
     }
 
     public StepInterface getStep(StepMeta stepMeta, StepDataInterface stepDataInterface, int cnr, TransMeta transMeta, Trans disp) {
-        return new ECLDatasetStep(stepMeta, stepDataInterface, cnr, transMeta, disp);
+        return new ECLSortStep(stepMeta, stepDataInterface, cnr, transMeta, disp);
     }
 
     public StepDataInterface getStepData() {
-        return new ECLDatasetStepData(outputField);
+        return new ECLSortStepData(outputField);
     	
     }
 
@@ -137,7 +174,14 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     			stepName = rep.getStepAttributeString(id_step, "stepName"); //$NON-NLS-1$ 
     		if(rep.getStepAttributeString(id_step, "outputField") != null)
         		outputField = rep.getStepAttributeString(id_step, "outputField"); //$NON-NLS-1$
-        
+
+    		if(rep.getStepAttributeString(id_step, "fields") != null)
+                fields = rep.getStepAttributeString(id_step, "fields"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_step, "datasetName") != null)
+                datasetName = rep.getStepAttributeString(id_step, "datasetName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_step, "recordset_name") != null)
+                recordsetName = rep.getStepAttributeString(id_step, "recordset_name"); //$NON-NLS-1$
+            
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
         }
@@ -148,6 +192,9 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     		rep.saveStepAttribute(id_transformation, id_step, "stepName", stepName); //$NON-NLS-1$
     		rep.saveStepAttribute(id_transformation, id_step, "outputField", outputField); //$NON-NLS-1$
             
+    		rep.saveStepAttribute(id_step, getObjectId(), "fields", fields); //$NON-NLS-1$
+            rep.saveStepAttribute(id_step, getObjectId(), "datasetName", datasetName); //$NON-NLS-1$
+            rep.saveStepAttribute(id_step, getObjectId(), "recordset_name", recordsetName); //$NON-NLS-1$
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_step, e);
         }
