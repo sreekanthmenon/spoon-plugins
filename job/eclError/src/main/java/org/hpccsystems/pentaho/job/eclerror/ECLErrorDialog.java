@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.eclexecute;
+package org.hpccsystems.pentaho.job.eclerror;
 
 import java.util.ArrayList;
 import org.eclipse.swt.SWT;
@@ -52,36 +52,24 @@ import org.hpccsystems.eclguifeatures.*;
 
 
 
-
-
-
-import java.util.HashMap;
 import org.eclipse.swt.widgets.DirectoryDialog;
 
 /**
  *
  * @author ChalaAX
  */
-public class ECLExecuteDialog extends JobEntryDialog implements JobEntryDialogInterface {
+public class ECLErrorDialog extends JobEntryDialog implements JobEntryDialogInterface {
 
-    private ECLExecute jobEntry;
+    private ECLError jobEntry;
     private Text jobEntryName;
-
     private Button wOK, wCancel, fileOpenButton;
-    private boolean backupChanged;
     private SelectionAdapter lsDef;
-    private Combo debugLevel;
-   
-    //private Combo attributeName;
-    private Text fileName;
-    //private Text serverAddress;
     
-    
-    private HashMap controls = new HashMap();
 
-    public ECLExecuteDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+
+    public ECLErrorDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (ECLExecute) jobEntryInt;
+        jobEntry = (ECLError) jobEntryInt;
         if (this.jobEntry.getName() == null) {
             this.jobEntry.setName("Execute");
         }
@@ -122,8 +110,6 @@ public class ECLExecuteDialog extends JobEntryDialog implements JobEntryDialogIn
             }
         };
 
-        backupChanged = jobEntry.hasChanged();
-
         FormLayout formLayout = new FormLayout();
         formLayout.marginWidth = Const.FORM_MARGIN;
         formLayout.marginHeight = Const.FORM_MARGIN;
@@ -157,42 +143,6 @@ public class ECLExecuteDialog extends JobEntryDialog implements JobEntryDialogIn
         jobEntryName = buildText("Job Entry Name", null, lsMod, middle, margin, generalGroup);
 
 
-           //All other contols
-        //Output Declaration
-        Group fileGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(fileGroup);
-        fileGroup.setText("Configuration Details");
-        fileGroup.setLayout(groupLayout);
-        FormData fileGroupFormat = new FormData();
-        fileGroupFormat.top = new FormAttachment(generalGroup, margin);
-        fileGroupFormat.width = 400;
-        fileGroupFormat.height = 150;
-        fileGroupFormat.left = new FormAttachment(middle, 0);
-        fileGroup.setLayoutData(fileGroupFormat);
-        
-        
-        //this.serverAddress = buildText("Server Address", fileGroup, lsMod, middle, margin, fileGroup);
-        //controls.put("serverAddress", serverAddress);
-        this.debugLevel = buildCombo("Compile Check", null, lsMod, middle, margin, fileGroup, new String[]{"None", "Stop on Errors", "Stop on Errors or Warnings"});
-        
-        this.fileName = buildText("Output File(s) Directory", this.debugLevel, lsMod, middle, margin, fileGroup);
-        controls.put("fileName", fileName);
-        
-        this.fileOpenButton = buildButton("Choose Location", fileName, lsMod, middle, margin, fileGroup);
-        controls.put("fOpen", fileOpenButton);
-        
-        Listener fileOpenListener = new Listener() {
-
-            public void handleEvent(Event e) {
-                String newFile = buildFileDialog();
-                if(newFile != ""){
-                    fileName.setText(newFile);
-                }
-            }
-        };
-        this.fileOpenButton.addListener(SWT.Selection, fileOpenListener);
-        
-        
 
 
         //controls.put("fOpen", fOpen);
@@ -202,7 +152,7 @@ public class ECLExecuteDialog extends JobEntryDialog implements JobEntryDialogIn
         wCancel = new Button(shell, SWT.PUSH);
         wCancel.setText("Cancel");
 
-       BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, fileGroup);
+       BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, generalGroup);
 
         // Add listeners
         Listener cancelListener = new Listener() {
@@ -241,16 +191,6 @@ public class ECLExecuteDialog extends JobEntryDialog implements JobEntryDialogIn
         if (jobEntry.getName() != null) {
             jobEntryName.setText(jobEntry.getName());
         }
-
-
-        if (jobEntry.getFileName() != null) {
-            this.fileName.setText(jobEntry.getFileName());
-        }
-        if (jobEntry.getDebugLevel() != null) {
-            this.debugLevel.setText(jobEntry.getDebugLevel());
-        }
-
-
 
         shell.pack();
         shell.open();
@@ -392,33 +332,11 @@ private String buildFileDialog() {
 
     private void ok() {
         jobEntry.setName(jobEntryName.getText());
-        
-        AutoPopulate ap = new AutoPopulate();
-        String serverHost = "";
-        String serverPort = "";
-            try{
-            //Object[] jec = this.jobMeta.getJobCopies().toArray();
-                
-                serverHost = ap.getGlobalVariable(this.jobMeta.getJobCopies(),"server_ip");
-                serverPort = ap.getGlobalVariable(this.jobMeta.getJobCopies(),"server_port");
-                
-            }catch (Exception e){
-                System.out.println("Error Parsing existing Global Variables ");
-                System.out.println(e.toString());
-                
-            }
-            
-        jobEntry.setServerAddress(serverHost);
-        jobEntry.setServerPort(serverPort);
-        
-        jobEntry.setFileName(this.fileName.getText());
-        jobEntry.setDebugLevel(this.debugLevel.getText());
-        
         dispose();
     }
 
     private void cancel() {
-        jobEntry.setChanged(backupChanged);
+        jobEntry.setChanged(jobEntry.hasChanged());
         jobEntry = null;
         dispose();
     }
