@@ -114,76 +114,63 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
            } 
         }else{
         
-        ErrorNotices en = new ErrorNotices();
-        
-        //decide if we need to do a pre compile check before we send it off to the server
-        boolean validate = false;
-        if(!this.debugLevel.equalsIgnoreCase("None")){
-        	validate = true;
-        }
-        
-        //generates popup -- removed in lue of the error level
-        //en.openValidateCodeDialog();
-        //boolean validate = en.isValidateCode();
-
-        JobMeta jobMeta = super.parentJob.getJobMeta();
-                
-        String serverHost = "";
-        String serverPort = "";
-        String cluster = "";
-        String jobName = "";
-        String eclccInstallDir = "";
-        String mlPath = "";
-        String includeML = "";
-        
-        AutoPopulate ap = new AutoPopulate();
-        try{
-        //Object[] jec = this.jobMeta.getJobCopies().toArray();
-
-            serverHost = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_ip");
-            serverPort = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_port");
-
-            cluster = ap.getGlobalVariable(jobMeta.getJobCopies(),"cluster");
-            jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
-
-            eclccInstallDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"eclccInstallDir");
-            mlPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"mlPath");
-            includeML = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeML");
-            
-            //System.out.println("@@@@@@@@@@@@@@@@@@@" + includeML + "@@@@@@");
-
-        }catch (Exception e){
-            System.out.println("Error Parsing existing Global Variables ");
-            System.out.println(e.toString());
-            e.printStackTrace();
-
-        }
-        
-        System.out.println("Output -- Finished setting up Global Variables");
-        this.setServerAddress(serverHost);
-        this.setServerPort(serverPort);
+	        ErrorNotices en = new ErrorNotices();
+	        
+	        //decide if we need to do a pre compile check before we send it off to the server
+	        boolean validate = false;
+	        if(!this.debugLevel.equalsIgnoreCase("None")){
+	        	validate = true;
+	        }
+	        
+	        //generates popup -- removed in lue of the error level
+	        //en.openValidateCodeDialog();
+	        //boolean validate = en.isValidateCode();
+	
+	        JobMeta jobMeta = super.parentJob.getJobMeta();
+	                
+	        String serverHost = "";
+	        String serverPort = "";
+	        String cluster = "";
+	        String jobName = "";
+	        String eclccInstallDir = "";
+	        String mlPath = "";
+	        String includeML = "";
+	        
+	        AutoPopulate ap = new AutoPopulate();
+	        try{
+	        //Object[] jec = this.jobMeta.getJobCopies().toArray();
+	
+	            serverHost = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_ip");
+	            serverPort = ap.getGlobalVariable(jobMeta.getJobCopies(),"server_port");
+	
+	            cluster = ap.getGlobalVariable(jobMeta.getJobCopies(),"cluster");
+	            jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
+	
+	            eclccInstallDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"eclccInstallDir");
+	            mlPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"mlPath");
+	            includeML = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeML");
+	            
+	            //System.out.println("@@@@@@@@@@@@@@@@@@@" + includeML + "@@@@@@");
+	
+	        }catch (Exception e){
+	            System.out.println("Error Parsing existing Global Variables ");
+	            System.out.println(e.toString());
+	            e.printStackTrace();
+	
+	        }
+	        
+	        //System.out.println("Output -- Finished setting up Global Variables");
+	        this.setServerAddress(serverHost);
+	        this.setServerPort(serverPort);
         
         
         
             ECLExecute.isReady=true;
             logBasic("not waiting: " + ECLExecute.isReady);
-            //Output op = new Output();
-            //op.setDefinitionName(getAttributeName());
-
-            //String opResults = op.ecl();
-
-            //logBasic("{Output Job} Execute = " + opResults);
-
-            logBasic("{Output Job} Previous =" + result.getLogText());
-
             result.setResult(true);
-
-           // RowMetaAndData data = new RowMetaAndData();
-            //data.addValue("ecl", Value.VALUE_TYPE_STRING, opResults);
 
 
             List list = result.getRows();
-          //  list.add(data);
             String eclCode = "";
             if (list == null) {
                 list = new ArrayList();
@@ -233,7 +220,6 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                     es.setHostname(serverAddress);
                     es.setJobName(jobName);
                     es.setOutputName(this.getName());
-                    //System.out.println("@@@@@@@@@@@@@@@@@@@2" + includeML + "@@@@@@");
                     if(includeML.equals("true")){
                         es.setIncludeML(true);
                         //System.out.println("includML");
@@ -243,13 +229,25 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                     }
                     es.setMlPath(mlPath);
                     es.setPort(Integer.parseInt(serverPort));
-                    // System.out.println("+++++");
                     error = (es.syntaxCheck(eclCode)).trim();
-                    //System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-                    //System.out.println("|"+error+"|");
-                    if(!error.equals("")){
-                        //System.out.println("Throw Exception");
+                    
+                    boolean isError = false;
+                    boolean isWarning = false;
+                    
+                   
+                    
+                    if(es.getErrorCount() > 0 &&  this.debugLevel.equalsIgnoreCase("Stop on Errors")){
+                    	isError = true;
+                    }
+                    if(es.getWarningCount() > 0 && this.debugLevel.equalsIgnoreCase("Stop on Errors or Warnings")){
+                    	isWarning = true;
+                    }
+                   
+                    if((isError || isWarning) && !error.equals("")){
+                    	
+                    	
                     	//need to detect level here
+                    	//int errorLevel = detectErrorLevel(error);
                         logError("Syntax Check Failed:\n\r"+error);
                         this.logRowlevel("Syntax Check Failed:\n\r"+error);
                         //en.openDialog("Syntax Check Failed:", error,eclCode);
@@ -257,6 +255,7 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                         result.setResult(false);
                         result.setLogText(error);
                         
+                        /*
                         RowMetaAndData data = new RowMetaAndData();
                         data.addValue("eclErrorCode", Value.VALUE_TYPE_STRING,eclCode+"\r\n");
                         list.add(data);
@@ -264,7 +263,7 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                         data = new RowMetaAndData();
                         data.addValue("eclError", Value.VALUE_TYPE_STRING, error + "\r\n");
                         list.add(data);
-                        
+                        */
                         //throw new KettleException("ECL failed Validation, please correct and re-run." + error);
                     }else{
                     	System.out.println("!!!!!!!!!!1 USE execute_noResults");
@@ -274,6 +273,12 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                         
                         isValid = es.executeECL(eclCode);
                         eclDirect.setWuid(es.getWuid());
+                        
+                        //if not isValid add error
+                        if(!isValid){
+                        	error += "\r\nServer Failed to compile code please refer to ECLWatch and verify your settings\r\n";
+                        	logError("Server Failed to compile code please refer to ECLWatch and verify your settings");
+                        }
                         
                     }
                    // System.out.println("Output -- Finished Validating");
@@ -298,6 +303,11 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                     es.setPort(Integer.parseInt(serverPort));
                     isValid = es.executeECL(eclCode);
                     eclDirect.setWuid(es.getWuid());
+                    
+                    if(!isValid){
+                    	error += "\r\nFailed to execute code on the cluster, please verify your settings\r\n";
+                    	logError("Failed to execute code on the cluster, please verify your settings");
+                    }
                 }
                 //logBasic("Start Log Results");
                
@@ -331,13 +341,13 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                                         es.setHostname(serverAddress);
                                         es.setJobName(jobName);
                                         es.setOutputName(this.getName());
-                                        System.out.println("@@@@@@@@@@@@@@@@@@@3" + includeML + "@@@@@@");
+                                        //System.out.println("@@@@@@@@@@@@@@@@@@@3" + includeML + "@@@@@@");
                                         if(includeML.equals("true")){
                                             es.setIncludeML(true);
-                                            System.out.println("includML");
+                                            //System.out.println("includML");
                                         }else{
                                             es.setIncludeML(false);
-                                            System.out.println("Dont includML");
+                                            //System.out.println("Dont includML");
                                         }
                                         
                                         InputStream is = es.ResultsSoapCall(eclDirect.getWuid(), resName);
@@ -358,9 +368,9 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                       //  this.createOutputFile(dsList,fileName);
                       //  result.setRows(list);
                     }else{
-                    	logError("Failed to compile code please verify your settings");
+                    	logError("Tasked Failed");
                     	result.setResult(false);
-                    	error += "Code Failed on the Cluster, Please see ECLWatch for more details.";
+                    	//error += "\r\nFailed to compile code please verify your settings\r\n";
                     
                     }
                     
@@ -399,6 +409,17 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
         
        return result;
     }
+	
+	/*
+	public int detectErrorLevel(String error){
+		int errorLevel = 0;
+		
+		//does it contain error
+		
+		//does it contain warning
+		
+		return errorLevel;
+	}*/
     
     public void createOutputFile(ArrayList dsList,String fileName, int count){
          String outStr = "";

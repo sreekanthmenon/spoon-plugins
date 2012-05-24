@@ -174,8 +174,10 @@ public class ECLExecuteDialog extends JobEntryDialog implements JobEntryDialogIn
         //this.serverAddress = buildText("Server Address", fileGroup, lsMod, middle, margin, fileGroup);
         //controls.put("serverAddress", serverAddress);
         this.debugLevel = buildCombo("Compile Check", null, lsMod, middle, margin, fileGroup, new String[]{"None", "Stop on Errors", "Stop on Errors or Warnings"});
+        Label lb = buildLabel("Compile Check will occur before passing the code to the Cluster.\r\n\r\n", this.debugLevel, lsMod, 0, margin, fileGroup);
+
         
-        this.fileName = buildText("Output File(s) Directory", this.debugLevel, lsMod, middle, margin, fileGroup);
+        this.fileName = buildText("Output File(s) Directory", lb, lsMod, middle, margin, fileGroup);
         controls.put("fileName", fileName);
         
         this.fileOpenButton = buildButton("Choose Location", fileName, lsMod, middle, margin, fileGroup);
@@ -389,6 +391,23 @@ private String buildFileDialog() {
 
         return combo;
     }
+    
+    private Label buildLabel(String strLabel, Control prevControl,
+            ModifyListener lsMod, int middle, int margin, Composite groupBox){
+            Label fmt = new Label(groupBox, SWT.RIGHT);
+            fmt.setText(strLabel);
+            props.setLook(fmt);
+            FormData labelFormat = new FormData();
+            //labelFormat.left = new FormAttachment(0, 0);
+            //labelFormat.top = new FormAttachment(prevControl, margin);
+           // labelFormat.right = new FormAttachment(middle, -margin);
+            
+            labelFormat.left = new FormAttachment(middle, 0);
+            labelFormat.top = new FormAttachment(prevControl, margin);
+            labelFormat.right = new FormAttachment(100, 0);
+            fmt.setLayoutData(labelFormat);
+            return fmt;
+        }
 
     private void ok() {
         jobEntry.setName(jobEntryName.getText());
