@@ -40,7 +40,6 @@ import org.pentaho.di.job.JobMeta;
  */
 public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInterface {
     
-
     private String attributeName = "";
     private String fileName = "";
     private String serverAddress = "";

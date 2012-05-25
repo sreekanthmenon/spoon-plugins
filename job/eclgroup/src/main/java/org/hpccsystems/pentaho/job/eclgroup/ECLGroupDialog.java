@@ -4,6 +4,7 @@
  */
 package org.hpccsystems.pentaho.job.eclgroup;
 
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
@@ -34,6 +35,11 @@ import org.pentaho.di.ui.core.gui.WindowProperty;
 import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
+
+import org.pentaho.di.repository.ObjectId;
+import org.pentaho.di.job.JobHopMeta;
+
+import org.pentaho.di.job.entry.JobEntryCopy;
 
 /**
  *

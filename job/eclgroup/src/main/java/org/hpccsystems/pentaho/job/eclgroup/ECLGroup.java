@@ -6,6 +6,7 @@ package org.hpccsystems.pentaho.job.eclgroup;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.hpccsystems.ecldirect.Group;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
@@ -22,13 +23,18 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 
+import org.pentaho.di.ui.spoon.Spoon;
+import org.pentaho.di.core.*;
+import org.pentaho.di.core.gui.SpoonFactory;
+import org.pentaho.di.job.JobMeta;
+
 /**
  *
  * @author SimmonsJA
  */
 public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterface {
 	
-	private String name;
+	//private String name;
 	private String recordsetName;
 	private String recordset;
 	private String breakCriteria;
@@ -36,13 +42,13 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
 	private Boolean runLocal = false;
 	
 	
-	public String getName() {
-		return name;
-	}
+	//public String getName() {
+	//	return name;
+	//}
 	
-	public void setName(String name) {
-		this.name = name;
-	}
+	//public void setName(String name) {
+	//	this.name = name;
+	//}
 	
 	public String getRecordSetName() {
 		return recordsetName;
@@ -160,13 +166,13 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {
         try {
             super.loadXML(node, list, list1);
-
+            
             this.setRecordSetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
             this.setRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset")));
             this.setBreakCriteria(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"breakCriteria")));
             this.setIsAllString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"isAll")));
             this.setRunLocalString(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"runLocal")));
-
+			
         } catch (Exception e) {
             throw new KettleXMLException("ECL Group Job Plugin is unable to read step info from XML node", e);
         }
@@ -177,13 +183,13 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
         String retval = "";
         
         retval += super.getXML();
-        
+       
         retval += "             <recordset_name>"+this.recordsetName+"</recordset_name>"+Const.CR;
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <breakCriteria>"+this.breakCriteria+"</breakCriteria>"+Const.CR;
         retval += "             <isAll>"+this.getIsAllString()+"</isAll>"+Const.CR;
         retval += "             <runLocal>"+this.getIsRunLocalString()+"</runLocal>"+Const.CR;
-
+		
         return retval;
 
     }
@@ -191,7 +197,7 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
 	public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
         try {
-
+        	
             recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
             recordset = rep.getStepAttributeString(id_jobentry, "recordset");
             breakCriteria = rep.getStepAttributeString(id_jobentry, "breakCriteria");
@@ -205,12 +211,13 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
 	
 	public void saveRep(Repository rep, ObjectId id_job) throws KettleException {
         try {
+        	
             rep.saveStepAttribute(id_job, getObjectId(), "recordset_name", recordsetName);
             rep.saveStepAttribute(id_job, getObjectId(), "recordset", recordset);
             rep.saveStepAttribute(id_job, getObjectId(), "breakCriteria", breakCriteria);
             rep.saveStepAttribute(id_job, getObjectId(), "isAll", this.getIsAllString());
             rep.saveStepAttribute(id_job, getObjectId(), "runLocal", this.getIsRunLocalString());
-        
+        	
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

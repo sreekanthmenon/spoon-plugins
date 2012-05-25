@@ -61,13 +61,7 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
         this.rightJoinCondition = rightJoinCondition;
     }
 
-    public String getName() {
-        return this.joinName;
-    }
-
-    public void setName(String joinName) {
-        this.joinName = joinName;
-    }
+   
 
     public String getJoinCondition() {
         return this.joinCondition;

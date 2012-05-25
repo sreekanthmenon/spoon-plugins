@@ -29,7 +29,7 @@ import org.w3c.dom.Node;
 public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterface {
     
     //private String jobName;
-    private String name = "";
+
 
     private String recordsetName = "";
     private String recordset = "";
