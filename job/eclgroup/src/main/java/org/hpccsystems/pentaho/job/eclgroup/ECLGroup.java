@@ -184,7 +184,7 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
         
         retval += super.getXML();
        
-        retval += "             <recordset_name>"+this.recordsetName+"</recordset_name>"+Const.CR;
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetName+"</recordset_name>"+Const.CR;
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <breakCriteria>"+this.breakCriteria+"</breakCriteria>"+Const.CR;
         retval += "             <isAll>"+this.getIsAllString()+"</isAll>"+Const.CR;

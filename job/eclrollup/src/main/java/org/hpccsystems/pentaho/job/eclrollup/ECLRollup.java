@@ -240,10 +240,10 @@ public class ECLRollup extends JobEntryBase implements Cloneable, JobEntryInterf
         
         retval += super.getXML();
         
-        retval += "             <recordset_name>"+this.recordsetName+"</recordset_name>"+Const.CR;
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetName+"</recordset_name>"+Const.CR;
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <condition>"+this.condition+"</condition>"+Const.CR;
-        retval += "             <transformName>"+this.transformName+"</transformName>"+Const.CR;
+        retval += "             <transformName eclIsDef=\"true\" eclType=\"recordset\">"+this.transformName+"</transformName>"+Const.CR;
         retval += "             <transform>"+this.transform+"</transform>"+Const.CR;
         retval += "             <transformCall>"+this.transformCall+"</transformCall>"+Const.CR;
         retval += "             <fieldlist>"+this.fieldlist+"</fieldlist>"+Const.CR;

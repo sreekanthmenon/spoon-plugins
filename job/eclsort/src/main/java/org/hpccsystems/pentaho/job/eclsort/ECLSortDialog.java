@@ -141,7 +141,7 @@ public class ECLSortDialog extends JobEntryDialog implements JobEntryDialogInter
         datasetGroup.setLayoutData(datasetGroupFormat);
         
         
-        recordsetName = buildText("Resulting Dataset Name", null, lsMod, middle, margin, datasetGroup);
+        recordsetName = buildText("Resulting Recordset Name", null, lsMod, middle, margin, datasetGroup);
         
         datasetName = buildCombo("Dataset to be Sorted", recordsetName, lsMod, middle, margin, datasetGroup, datasets);
         fields = buildText("Fields", datasetName, lsMod, middle, margin, datasetGroup);

@@ -215,16 +215,16 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
         try {
             super.loadXML(node, list, list1);
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
-            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")) != null)
-                this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformName")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform_name")) != null)
+                this.setTransformName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform_name")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")) != null)
                 this.setTransform(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transform")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record")) != null)
                 this.setRecord(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record")));
-            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordName")) != null)
-                this.setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordName")));
-            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordsetName")) != null)
-                this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordsetName")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record_name")) != null)
+                this.setRecordName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"record_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")) != null)
+                this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name_iterate")) != null)
                 this.setRecordsetNameIterate(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name_iterate")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"transformCall")) != null)
@@ -254,12 +254,12 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
     private Text recordsetName;
     */
         retval += "             <record>"+this.record+"</record>"+Const.CR;
-        retval += "             <recordName>"+this.recordName+"</recordName>"+Const.CR;
-        retval += "             <recordsetName>"+this.recordsetName+"</recordsetName>"+Const.CR;
-        retval += "             <recordset_name_iterate>"+this.recordsetNameIterate+"</recordset_name_iterate>"+Const.CR;
+        retval += "             <record_name eclIsDef=\"true\" eclType=\"record\">"+this.recordName+"</record_name>"+Const.CR;
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetName+"</recordset_name>"+Const.CR;
+        retval += "             <recordset_name_iterate eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetNameIterate+"</recordset_name_iterate>"+Const.CR;
         
         
-        retval += "             <transformName>"+this.transformName+"</transformName>"+Const.CR;
+        retval += "             <transform_name eclIsDef=\"true\" eclType=\"recordset\">"+this.transformName+"</transform_name>"+Const.CR;
         retval += "             <transform>"+this.transform+"</transform>"+Const.CR;
         retval += "             <transformCall>"+this.transformCall+"</transformCall>"+Const.CR;
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;

@@ -275,7 +275,7 @@ public class ECLTable extends JobEntryBase implements Cloneable, JobEntryInterfa
         
         retval += super.getXML();
         
-        retval += "             <recordset_name>"+this.recordsetName+"</recordset_name>"+Const.CR;
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetName+"</recordset_name>"+Const.CR;
         
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <format>"+this.format+"</format>"+Const.CR;

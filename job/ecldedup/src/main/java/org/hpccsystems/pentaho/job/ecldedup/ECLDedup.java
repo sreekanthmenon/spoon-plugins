@@ -250,7 +250,7 @@ public class ECLDedup extends JobEntryBase implements Cloneable, JobEntryInterfa
         retval += super.getXML();
                     
 
-        retval += "             <recordset_name>"+this.RecordsetName+"</recordset_name>"+Const.CR;
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\">"+this.RecordsetName+"</recordset_name>"+Const.CR;
         retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
         retval += "             <condition>"+this.condition+"</condition>"+Const.CR;
         retval += "             <runLocal>"+this.getRunLocalString()+"</runLocal>"+Const.CR;

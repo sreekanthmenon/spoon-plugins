@@ -175,8 +175,8 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
                 setLeftRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "left_recordset")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "right_recordset")) != null)
                 setRightRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "right_recordset")));
-            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")) != null)
-                setJoinRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "record_name")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")) != null)
+                setJoinRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
 
         } catch (Exception e) {
             throw new KettleXMLException("ECL Join Job Plugin Unable to read step info from XML node", e);
@@ -196,7 +196,7 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
         retval += "		<join_type>" + this.joinType + "</join_type>" + Const.CR;
         retval += "		<left_recordset>" + this.leftRecordSet + "</left_recordset>" + Const.CR;
         retval += "		<right_recordset>" + this.rightRecordSet + "</right_recordset>" + Const.CR;
-        retval += "		<record_name>" + this.joinRecordSet + "</record_name>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.joinRecordSet + "</recordset_name>" + Const.CR;
   
         return retval;
 
@@ -219,8 +219,8 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
                 this.leftRecordSet = rep.getStepAttributeString(id_jobentry, "leftRecordSet"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_jobentry, "rightRecordSet") != null)
                 this.rightRecordSet = rep.getStepAttributeString(id_jobentry, "rightRecordSet"); //$NON-NLS-1$
-            if(rep.getStepAttributeString(id_jobentry, "record_name") != null)
-                this.joinRecordSet = rep.getStepAttributeString(id_jobentry, "record_name"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "recordset_name") != null)
+                this.joinRecordSet = rep.getStepAttributeString(id_jobentry, "recordset_name"); //$NON-NLS-1$
                 
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -236,7 +236,7 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
             rep.saveStepAttribute(id_job, getObjectId(), "joinType", joinType); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "leftRecordSet", leftRecordSet); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "rightRecordSet", rightRecordSet); //$NON-NLS-1$
-            rep.saveStepAttribute(id_job, getObjectId(), "record_name", joinRecordSet); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "recordset_name", joinRecordSet); //$NON-NLS-1$
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

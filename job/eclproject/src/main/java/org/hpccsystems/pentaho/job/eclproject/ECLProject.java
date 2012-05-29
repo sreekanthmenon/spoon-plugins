@@ -236,11 +236,11 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         
         //retval += "		<name>" + name + "</name>" + Const.CR;
         retval += "		<declareCounter>" + this.getDeclareCounterString() + "</declareCounter>" + Const.CR;
-        retval += "		<recordset_name>" + recordsetName + "</recordset_name>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + recordsetName + "</recordset_name>" + Const.CR;
         retval += "		<inRecordName>" + inRecordName + "</inRecordName>" + Const.CR;
-        retval += "		<outRecordName>" + outRecordName + "</outRecordName>" + Const.CR;
+        retval += "		<outRecordName eclIsDef=\"true\" eclType=\"record\">" + outRecordName + "</outRecordName>" + Const.CR;
         retval += "		<outRecordFormat>" + outRecordFormat + "</outRecordFormat>" + Const.CR;
-        retval += "		<transformName>" + transformName + "</transformName>" + Const.CR;
+        retval += "		<transformName eclIsDef=\"true\" eclType=\"recordset\">" + transformName + "</transformName>" + Const.CR;
         retval += "		<transformFormat>" + transformFormat + "</transformFormat>" + Const.CR;
         retval += "		<parameterName>" + parameterName + "</parameterName>" + Const.CR;
         
