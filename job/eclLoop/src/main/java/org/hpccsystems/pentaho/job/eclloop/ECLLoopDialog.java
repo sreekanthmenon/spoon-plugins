@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.hpccsystems.pentaho.job.eclgroup;
+package org.hpccsystems.pentaho.job.eclloop;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -26,6 +22,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
+import org.hpccsystems.pentaho.job.eclloop.ECLLoop;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.job.entry.JobEntryDialogInterface;
@@ -36,31 +33,33 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
-/**
- *
- * @author SimmonsJA
- */
-public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInterface {
-	
-	private ECLGroup jobEntry;
-	
+public class ECLLoopDialog extends JobEntryDialog implements JobEntryDialogInterface {
+
+	private ECLLoop jobEntry;
 	private Text jobEntryName;
 	
 	private Text recordsetName;
 	private Combo recordset;
-	private Text breakCriteria;
-	private Combo isAll;
-	private Combo runLocal;
+	
+	private Text loopCount;
+	private Text loopBody;
+	private Text iterations;
+	private Text iterationList;
+	private Text dfault;
+	private Text loopFilter;
+	private Text loopCondition;
+	private Text rowFilter;
 	
 	private Button wOK, wCancel;
 	private boolean backupChanged;
 	private SelectionAdapter lsDef;
 	
-	public ECLGroupDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+	public ECLLoopDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (ECLGroup) jobEntryInt;
-        if (this.jobEntry.getName() == null)
-            this.jobEntry.setName("Group");
+        jobEntry = (ECLLoop) jobEntryInt;
+        if (this.jobEntry.getName() == null) {
+            this.jobEntry.setName("Loop");
+        }
     }
 	
 	public JobEntryInterface open() {
@@ -81,7 +80,7 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
 		String datasets[] = null;
         AutoPopulate ap = new AutoPopulate();
         try{
-            
+        	
             datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
             
         }catch (Exception e){
@@ -97,13 +96,13 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
 		formLayout.marginHeight = Const.FORM_MARGIN;
 		
 		shell.setLayout(formLayout);
-		shell.setText("Group");
+		shell.setText("Loop");
 		
 		int middle = props.getMiddlePct();
 		int margin = Const.MARGIN;
 		
 		shell.setLayout(formLayout);
-        shell.setText("Define an ECL Group");
+        shell.setText("Define an ECL Loop");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -124,26 +123,40 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
         jobEntryName = buildText("Job Entry Name", null, lsMod, middle, margin, generalGroup);
 
         //All other contols
-        //Distribute Declaration
-        Group groupGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(groupGroup);
-        groupGroup.setText("Distribute Details");
-        groupGroup.setLayout(groupLayout);
-        FormData datasetGroupFormat = new FormData();
-        datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
-        datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 300;
-        datasetGroupFormat.left = new FormAttachment(middle, 0);
-        groupGroup.setLayoutData(datasetGroupFormat);
+        Group loopGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(loopGroup);
+        loopGroup.setText("Distribute Details");
+        loopGroup.setLayout(groupLayout);
+        FormData loopGroupFormat = new FormData();
+        loopGroupFormat.top = new FormAttachment(generalGroup, margin);
+        loopGroupFormat.width = 400;
+        loopGroupFormat.height = 200;
+        loopGroupFormat.left = new FormAttachment(middle, 0);
+        loopGroup.setLayoutData(loopGroupFormat);
         
+        recordsetName = buildText("Result Recordset", null, lsMod, middle, margin, loopGroup);
+        recordset = buildCombo("Recordset", recordsetName, lsMod, middle, margin, loopGroup, datasets);
+        loopCount = buildText("Loop Count", recordset, lsMod, middle, margin, loopGroup);
+        loopBody = buildText("Loop Body", loopCount, lsMod, middle, margin, loopGroup);
+        loopFilter = buildText("Loop filter", dfault, lsMod, middle, margin, loopGroup);
+        loopCondition = buildText("Loop Condition", loopFilter, lsMod, middle, margin, loopGroup);
+        rowFilter = buildText("Row Filter", loopCondition, lsMod, middle, margin, loopGroup);
         
-        recordsetName = buildText("Result Recordset", null, lsMod, middle, margin, groupGroup);
-        recordset = buildCombo("Recordset", recordsetName, lsMod, middle, margin, groupGroup, datasets);
-        breakCriteria = buildText("Break Criteria", recordset, lsMod, middle, margin, groupGroup);
+        //Run in PARALLEL?
+        Group parallelGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(parallelGroup);
+        parallelGroup.setText("PARALLEL");
+        parallelGroup.setLayout(groupLayout);
+        FormData parallelGroupFormat = new FormData();
+        parallelGroupFormat.top = new FormAttachment(loopGroup, margin);
+        parallelGroupFormat.width = 400;
+        parallelGroupFormat.height = 150;
+        parallelGroupFormat.left = new FormAttachment(middle, 0);
+        parallelGroup.setLayoutData(parallelGroupFormat);
         
-        isAll = buildCombo("All", breakCriteria, lsMod, middle, margin, groupGroup,new String[]{"false", "true"});
-        
-        runLocal = buildCombo("RUNLOCAL", isAll, lsMod, middle, margin, groupGroup,new String[]{"false", "true"});
+        iterations = buildText("Iterations", null, lsMod, middle, margin, parallelGroup);
+        iterationList = buildText("Iteration List", iterations, lsMod, middle, margin, parallelGroup);
+        dfault = buildText("Default", iterationList, lsMod, middle, margin, parallelGroup);
         
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -151,7 +164,7 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
         wCancel.setText("Cancel");
         
         
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, groupGroup);
+        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, parallelGroup);
 
         // Add listeners
         Listener cancelListener = new Listener() {
@@ -188,24 +201,38 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
             jobEntryName.setText(jobEntry.getName());
         }
         
-        if (jobEntry.getRecordSetName() != null) {
-            recordsetName.setText(jobEntry.getRecordSetName());
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
         }
         
-        if (jobEntry.getRecordSet() != null) {
-            recordset.setText(jobEntry.getRecordSet());
+        if (jobEntry.getRecordset() != null) {
+            recordset.setText(jobEntry.getRecordset());
         }
         
-        if (jobEntry.getBreakCriteria() != null) {
-            breakCriteria.setText(jobEntry.getBreakCriteria());
-        }
-        
-         if (jobEntry.getIsAllString() != null) {
-            isAll.setText(jobEntry.getIsAllString());
+         if (jobEntry.getLoopCount() != null) {
+            loopCount.setText(jobEntry.getLoopCount());
         }
          
-        if (jobEntry.getIsRunLocalString() != null) {
-            runLocal.setText(jobEntry.getIsRunLocalString());
+        if (jobEntry.getLoopBody() != null) {
+            loopBody.setText(jobEntry.getLoopBody());
+        }
+        if (jobEntry.getIterations() != null) {
+            iterations.setText(jobEntry.getIterations());
+        }
+        if (jobEntry.getIterationList() != null) {
+            iterationList.setText(jobEntry.getIterationList());
+        }
+        if (jobEntry.getDefault() != null) {
+            dfault.setText(jobEntry.getDefault());
+        }
+        if (jobEntry.getLoopFilter() != null) {
+            loopFilter.setText(jobEntry.getLoopFilter());
+        }
+        if (jobEntry.getLoopCondition() != null) {
+            loopCondition.setText(jobEntry.getLoopCondition());
+        }
+        if (jobEntry.getRowFilter() != null) {
+            rowFilter.setText(jobEntry.getRowFilter());
         }
         
         shell.pack();
@@ -302,12 +329,16 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
 
         jobEntry.setName(jobEntryName.getText());
 
-        jobEntry.setRecordSetName(recordsetName.getText());
-        jobEntry.setRecordSet(recordset.getText());
-        jobEntry.setBreakCriteria(breakCriteria.getText());
-        
-        jobEntry.setIsAllString(isAll.getText());
-        jobEntry.setRunLocalString(runLocal.getText());
+        jobEntry.setRecordsetName(recordsetName.getText());
+        jobEntry.setRecordset(recordset.getText());
+        jobEntry.setLoopCount(loopCount.getText());
+        jobEntry.setLoopBody(loopBody.getText());
+        jobEntry.setIterations(iterations.getText());
+        jobEntry.setIterationList(iterationList.getText());
+        jobEntry.setDefault(dfault.getText());
+        jobEntry.setLoopFilter(loopFilter.getText());
+        jobEntry.setLoopCondition(loopCondition.getText());
+        jobEntry.setRowFilter(rowFilter.getText());
 
         dispose();
     }
@@ -323,18 +354,4 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
         props.setScreen(winprop);
         shell.dispose();
     }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }

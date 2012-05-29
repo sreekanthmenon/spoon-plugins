@@ -35,6 +35,11 @@
 		<module>eclsort</module>
 		<module>eclsprayfile</module>
 		<module>ecltable</module>
+		<module>eclcount</module>
+		<module>eclDeSpray</module>
+		<module>eclLimit</module>
+		<module>eclLoop</module>
+		<module>eclMerge</module>
 	</modules>
 
 	<properties>

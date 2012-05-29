@@ -1,8 +1,4 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-package org.hpccsystems.pentaho.job.eclgroup;
+package org.hpccsystems.pentaho.job.eclmerge;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.ModifyEvent;
@@ -26,6 +22,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
+import org.hpccsystems.pentaho.job.eclmerge.ECLMerge;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.job.entry.JobEntryDialogInterface;
@@ -36,31 +33,29 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
-/**
- *
- * @author SimmonsJA
- */
-public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInterface {
-	
-	private ECLGroup jobEntry;
-	
+public class ECLMergeDialog extends JobEntryDialog implements JobEntryDialogInterface {
+
+	private ECLMerge jobEntry;
 	private Text jobEntryName;
 	
 	private Text recordsetName;
-	private Combo recordset;
-	private Text breakCriteria;
-	private Combo isAll;
+	private Text recordsetSet;
+	private Text recordsetList;
+	private Text fieldList;
+	private Combo dedup;
 	private Combo runLocal;
+	
 	
 	private Button wOK, wCancel;
 	private boolean backupChanged;
 	private SelectionAdapter lsDef;
 	
-	public ECLGroupDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+	public ECLMergeDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (ECLGroup) jobEntryInt;
-        if (this.jobEntry.getName() == null)
-            this.jobEntry.setName("Group");
+        jobEntry = (ECLMerge) jobEntryInt;
+        if (this.jobEntry.getName() == null) {
+            this.jobEntry.setName("Merge");
+        }
     }
 	
 	public JobEntryInterface open() {
@@ -81,7 +76,7 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
 		String datasets[] = null;
         AutoPopulate ap = new AutoPopulate();
         try{
-            
+        	
             datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
             
         }catch (Exception e){
@@ -97,13 +92,13 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
 		formLayout.marginHeight = Const.FORM_MARGIN;
 		
 		shell.setLayout(formLayout);
-		shell.setText("Group");
+		shell.setText("Merge");
 		
 		int middle = props.getMiddlePct();
 		int margin = Const.MARGIN;
 		
 		shell.setLayout(formLayout);
-        shell.setText("Define an ECL Group");
+        shell.setText("Define an ECL Merge");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -124,26 +119,23 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
         jobEntryName = buildText("Job Entry Name", null, lsMod, middle, margin, generalGroup);
 
         //All other contols
-        //Distribute Declaration
-        Group groupGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(groupGroup);
-        groupGroup.setText("Distribute Details");
-        groupGroup.setLayout(groupLayout);
-        FormData datasetGroupFormat = new FormData();
-        datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
-        datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 300;
-        datasetGroupFormat.left = new FormAttachment(middle, 0);
-        groupGroup.setLayoutData(datasetGroupFormat);
+        Group mergeGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(mergeGroup);
+        mergeGroup.setText("Merge Details");
+        mergeGroup.setLayout(groupLayout);
+        FormData mergeGroupFormat = new FormData();
+        mergeGroupFormat.top = new FormAttachment(generalGroup, margin);
+        mergeGroupFormat.width = 400;
+        mergeGroupFormat.height = 300;
+        mergeGroupFormat.left = new FormAttachment(middle, 0);
+        mergeGroup.setLayoutData(mergeGroupFormat);
         
-        
-        recordsetName = buildText("Result Recordset", null, lsMod, middle, margin, groupGroup);
-        recordset = buildCombo("Recordset", recordsetName, lsMod, middle, margin, groupGroup, datasets);
-        breakCriteria = buildText("Break Criteria", recordset, lsMod, middle, margin, groupGroup);
-        
-        isAll = buildCombo("All", breakCriteria, lsMod, middle, margin, groupGroup,new String[]{"false", "true"});
-        
-        runLocal = buildCombo("RUNLOCAL", isAll, lsMod, middle, margin, groupGroup,new String[]{"false", "true"});
+        recordsetName = buildText("Result Recordset", null, lsMod, middle, margin, mergeGroup);
+        recordsetSet = buildText("Recordset Set", recordsetName, lsMod, middle, margin, mergeGroup);
+        recordsetList = buildText("Recordset List", recordsetSet, lsMod, middle, margin, mergeGroup);
+       	fieldList = buildText("Field List", recordsetList, lsMod, middle, margin, mergeGroup);
+       	dedup = buildCombo("DEDUP", fieldList, lsMod, middle, margin, mergeGroup, new String[] {"false","true"});
+       	runLocal = buildCombo("LOCAL", dedup, lsMod, middle, margin, mergeGroup, new String[] {"false","true"});
         
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -151,7 +143,7 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
         wCancel.setText("Cancel");
         
         
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, groupGroup);
+        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, mergeGroup);
 
         // Add listeners
         Listener cancelListener = new Listener() {
@@ -187,25 +179,23 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
         if (jobEntry.getName() != null) {
             jobEntryName.setText(jobEntry.getName());
         }
-        
-        if (jobEntry.getRecordSetName() != null) {
-            recordsetName.setText(jobEntry.getRecordSetName());
+        if (jobEntry.getRecordsetName() != null) {
+        	recordsetName.setText(jobEntry.getRecordsetName());
         }
-        
-        if (jobEntry.getRecordSet() != null) {
-            recordset.setText(jobEntry.getRecordSet());
+        if (jobEntry.getRecordsetSet() != null) {
+            recordsetSet.setText(jobEntry.getRecordsetSet());
         }
-        
-        if (jobEntry.getBreakCriteria() != null) {
-            breakCriteria.setText(jobEntry.getBreakCriteria());
+         if (jobEntry.getRecordsetList() != null) {
+            recordsetList.setText(jobEntry.getRecordsetList());
         }
-        
-         if (jobEntry.getIsAllString() != null) {
-            isAll.setText(jobEntry.getIsAllString());
+        if (jobEntry.getFieldList() != null) {
+            fieldList.setText(jobEntry.getFieldList());
         }
-         
-        if (jobEntry.getIsRunLocalString() != null) {
-            runLocal.setText(jobEntry.getIsRunLocalString());
+        if (jobEntry.isDedupString() != null) {
+            dedup.setText(jobEntry.isDedupString());
+        }
+        if (jobEntry.runLocalString() != null) {
+            runLocal.setText(jobEntry.runLocalString());
         }
         
         shell.pack();
@@ -301,12 +291,12 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
     private void ok() {
 
         jobEntry.setName(jobEntryName.getText());
-
-        jobEntry.setRecordSetName(recordsetName.getText());
-        jobEntry.setRecordSet(recordset.getText());
-        jobEntry.setBreakCriteria(breakCriteria.getText());
         
-        jobEntry.setIsAllString(isAll.getText());
+        jobEntry.setRecordsetName(recordsetName.getText());
+        jobEntry.setRecordsetSet(recordsetSet.getText());
+        jobEntry.setRecordsetList(recordsetList.getText());
+        jobEntry.setFieldList(fieldList.getText());
+        jobEntry.setDedupString(dedup.getText());
         jobEntry.setRunLocalString(runLocal.getText());
 
         dispose();
@@ -323,18 +313,4 @@ public class ECLGroupDialog extends JobEntryDialog implements JobEntryDialogInte
         props.setScreen(winprop);
         shell.dispose();
     }
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-
 }
