@@ -81,7 +81,7 @@ public class ECLLoopDialog extends JobEntryDialog implements JobEntryDialogInter
         AutoPopulate ap = new AutoPopulate();
         try{
         	
-            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
+            datasets = ap.parseDatasetsRecordsets(this.jobMeta.getJobCopies());
             
         }catch (Exception e){
             System.out.println("Error Parsing existing Datasets");
