@@ -194,7 +194,7 @@ public class ECLLoop extends JobEntryBase implements Cloneable, JobEntryInterfac
         
         retval += super.getXML();
         
-        retval += " 	<recordset_name>" + this.recordsetName + "</recordset_name>";
+        retval += " 	<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.recordsetName + "</recordset_name>";
         retval += "		<recordset>" + this.recordset + "</recordset>" + Const.CR;
         retval += "		<loopCount>" + this.loopCount + "</loopCount>" + Const.CR;
         retval += "		<loopBody>" + this.loopBody + "</loopBody>" + Const.CR;

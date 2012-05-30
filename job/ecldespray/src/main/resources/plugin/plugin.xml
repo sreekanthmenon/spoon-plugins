@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <plugin id="ECLDeSpray"
-	iconfile="depsray.png"
+	iconfile="despray.png"
 	description="DeSpray"
 	tooltip="DeSpray" 
 	category="HPCC Systems"

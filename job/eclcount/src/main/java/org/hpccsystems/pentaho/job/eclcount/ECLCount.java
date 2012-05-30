@@ -43,11 +43,11 @@ public class ECLCount extends JobEntryBase implements Cloneable, JobEntryInterfa
 		this.name = name;
 	}
 	
-	public String getRecordSetName() {
+	public String getRecordsetName() {
 		return recordsetName;
 	}
 	
-	public void setRecordSetName(String recordsetName) {
+	public void setRecordsetName(String recordsetName) {
 		this.recordsetName = recordsetName;
 	}
 	
@@ -92,7 +92,7 @@ public class ECLCount extends JobEntryBase implements Cloneable, JobEntryInterfa
 		
 		Count count = new Count();
 		
-		count.setName(this.getRecordSetName());
+		count.setName(this.getRecordsetName());
 		count.setRecordSet(this.getRecordSet());
 		count.setExpression(this.getExpression());
 		count.setKeyed(this.getKeyed());
@@ -131,7 +131,7 @@ public class ECLCount extends JobEntryBase implements Cloneable, JobEntryInterfa
         try {
             super.loadXML(node, list, list1);
             
-            setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
+            setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset_name")));
             setRecordSet(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordset")));
             setExpression(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "expression")));
             setKeyed(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "keyed")));
@@ -148,7 +148,7 @@ public class ECLCount extends JobEntryBase implements Cloneable, JobEntryInterfa
         
         retval += super.getXML();
         
-        retval += "		<recordset_name>" + this.name + "</recordset_name>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.recordsetName + "</recordset_name>" + Const.CR;
         retval += "		<recordset>" + this.recordset + "</recordset>" + Const.CR;
         retval += "		<expression>" + this.expression + "</expression>" + Const.CR;
         retval += "		<keyed>" + this.keyed + "</keyed>" + Const.CR;
@@ -161,7 +161,7 @@ public class ECLCount extends JobEntryBase implements Cloneable, JobEntryInterfa
     public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
         try {
-            this.name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
+            this.recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name"); //$NON-NLS-1$
             this.recordset = rep.getStepAttributeString(id_jobentry, "recordset"); //$NON-NLS-1$
             this.expression = rep.getStepAttributeString(id_jobentry, "expression"); //$NON-NLS-1$
             this.keyed = rep.getStepAttributeString(id_jobentry, "keyed"); //$NON-NLS-1$
@@ -174,7 +174,7 @@ public class ECLCount extends JobEntryBase implements Cloneable, JobEntryInterfa
 
     public void saveRep(Repository rep, ObjectId id_job) throws KettleException {
         try {
-            rep.saveStepAttribute(id_job, getObjectId(), "name", name); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "recordset_name", recordsetName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "recordset", recordset); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "expression", expression); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "keyed", keyed); //$NON-NLS-1$

@@ -178,7 +178,7 @@ public class ECLMerge extends JobEntryBase implements Cloneable, JobEntryInterfa
         
         retval += super.getXML();
         
-        retval += "		<recordset_name>" + this.recordsetName + "</recordset_name>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.recordsetName + "</recordset_name>" + Const.CR;
         retval += "		<recordsetList>" + this.recordsetList + "</recordsetList>" + Const.CR;
         retval += "		<recordsetSet>" + this.recordsetSet + "</recordsetSet>" + Const.CR;
         retval += "		<fieldList>" + this.fieldList + "</fieldList>" + Const.CR;

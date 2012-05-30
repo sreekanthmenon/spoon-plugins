@@ -187,8 +187,8 @@ public class ECLCountDialog extends JobEntryDialog implements JobEntryDialogInte
             jobEntryName.setText(jobEntry.getName());
         }
         
-        if (jobEntry.getRecordSetName() != null) {
-            recordsetName.setText(jobEntry.getRecordSetName());
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
         }
         
         if (jobEntry.getRecordSet() != null) {
@@ -301,7 +301,7 @@ public class ECLCountDialog extends JobEntryDialog implements JobEntryDialogInte
 
         jobEntry.setName(jobEntryName.getText());
 
-        jobEntry.setRecordSetName(recordsetName.getText());
+        jobEntry.setRecordsetName(recordsetName.getText());
         jobEntry.setRecordSet(recordset.getText());
         jobEntry.setExpression(expression.getText());
         jobEntry.setKeyed(keyed.getText());

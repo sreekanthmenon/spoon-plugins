@@ -220,14 +220,14 @@ public class ECLLimit extends JobEntryBase implements Cloneable, JobEntryInterfa
         
         retval += super.getXML();
         
-        retval += "		<recordset_name>" + this.recordsetName + "</recordset_name>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.recordsetName + "</recordset_name>" + Const.CR;
         retval += "		<recordset>" + this.recordset + "</recordset>" + Const.CR;
         retval += "		<maxRecs>" + this.maxRecs + "</maxRecs>" + Const.CR;
         retval += "		<failClause>" + this.failClause + "</failClause>" + Const.CR;
         retval += "		<keyed>" + this.keyed + "</keyed>" + Const.CR;
         retval += "		<count>" + this.count + "</count>" + Const.CR;
         retval += "		<skip>" + this.skip + "</skip>" + Const.CR;
-        retval += "		<onFailTranform>" + this.onFailTransform + "</onFailTranform>" + Const.CR;
+        retval += "		<onFailTransform>" + this.onFailTransform + "</onFailTransform>" + Const.CR;
   
         return retval;
 
