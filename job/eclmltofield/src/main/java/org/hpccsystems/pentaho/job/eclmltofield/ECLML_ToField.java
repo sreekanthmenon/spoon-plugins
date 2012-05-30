@@ -150,7 +150,7 @@ public class ECLML_ToField extends JobEntryBase implements Cloneable, JobEntryIn
         retval += super.getXML();
     
         retval += "             <inDS>"+this.inDS+"</inDS>"+Const.CR;
-        retval += "             <outDS>"+this.outDS+"</outDS>"+Const.CR;  
+        retval += "             <outDS eclIsDef=\"true\" eclType=\"recordset\">"+this.outDS+"</outDS>"+Const.CR;  
         retval += "             <idColumn>"+this.idColumn+"</idColumn>"+Const.CR;  
         retval += "             <parseToNumeric>"+this.parseToNumeric+"</parseToNumeric>"+Const.CR;  
         

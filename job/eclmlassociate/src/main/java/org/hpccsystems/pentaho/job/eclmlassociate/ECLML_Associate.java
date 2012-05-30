@@ -154,7 +154,7 @@ public class ECLML_Associate extends JobEntryBase implements Cloneable, JobEntry
         retval += "             <recordName>"+this.recordName+"</recordName>"+Const.CR;
         retval += "             <cooccur>"+this.cooccur+"</cooccur>"+Const.CR;  
         retval += "             <routine>"+this.routine+"</routine>"+Const.CR; 
-        retval += "             <recordset_name>"+this.recordsetName+"</recordset_name>"+Const.CR;
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetName+"</recordset_name>"+Const.CR;
 
         return retval;
 
