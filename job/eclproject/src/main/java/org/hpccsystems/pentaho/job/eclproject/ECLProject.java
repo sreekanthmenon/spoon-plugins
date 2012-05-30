@@ -235,14 +235,16 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         //System.out.println(" ------------ getXML ------------- ");
         
         //retval += "		<name>" + name + "</name>" + Const.CR;
-        retval += "		<declareCounter>" + this.getDeclareCounterString() + "</declareCounter>" + Const.CR;
-        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + recordsetName + "</recordset_name>" + Const.CR;
-        retval += "		<inRecordName>" + inRecordName + "</inRecordName>" + Const.CR;
-        retval += "		<outRecordName eclIsDef=\"true\" eclType=\"record\">" + outRecordName + "</outRecordName>" + Const.CR;
-        retval += "		<outRecordFormat>" + outRecordFormat + "</outRecordFormat>" + Const.CR;
-        retval += "		<transformName eclIsDef=\"true\" eclType=\"recordset\">" + transformName + "</transformName>" + Const.CR;
-        retval += "		<transformFormat>" + transformFormat + "</transformFormat>" + Const.CR;
-        retval += "		<parameterName>" + parameterName + "</parameterName>" + Const.CR;
+        
+       
+        retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + recordsetName + "]]></recordset_name>" + Const.CR;
+        retval += "		<inRecordName><![CDATA[" + inRecordName + "]]></inRecordName>" + Const.CR;
+        retval += "		<outRecordName eclIsDef=\"true\" eclType=\"record\"><![CDATA[" + outRecordName + "]]></outRecordName>" + Const.CR;
+        retval += "		<outRecordFormat><![CDATA[" + outRecordFormat + "]]></outRecordFormat>" + Const.CR;
+        retval += "		<transformName eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + transformName + "]]></transformName>" + Const.CR;
+        retval += "		<transformFormat><![CDATA[" + transformFormat + "]]></transformFormat>" + Const.CR;
+        retval += "		<parameterName><![CDATA[" + parameterName + "]]></parameterName>" + Const.CR;
         
        
        //System.out.println(" end getXML ");

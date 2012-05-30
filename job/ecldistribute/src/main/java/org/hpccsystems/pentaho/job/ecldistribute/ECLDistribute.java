@@ -173,12 +173,13 @@ public class ECLDistribute extends JobEntryBase implements Cloneable, JobEntryIn
         retval += super.getXML();
         //retval += "		<job_name>" + jobName + "</jobName>" + Const.CR;
         //retval += "		<name>" + name + "</name>" + Const.CR;
-        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + recordsetName + "</recordset_name>" + Const.CR;
-        retval += "		<dataset_name>" + datasetName + "</dataset_name>" + Const.CR;
-        retval += "		<expression>" + expression + "</expression>" + Const.CR;
-        retval += "		<index>" + index + "</index>" + Const.CR;
-        retval += "		<join_condition>" + joinCondition + "</join_condition>" + Const.CR;
-        retval += "		<skew>" + skew + "</skew>" + Const.CR;
+      
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + recordsetName + "]]></recordset_name>" + Const.CR;
+        retval += "		<dataset_name><![CDATA[" + datasetName + "]]></dataset_name>" + Const.CR;
+        retval += "		<expression><![CDATA[" + expression + "]]></expression>" + Const.CR;
+        retval += "		<index><![CDATA[" + index + "]]></index>" + Const.CR;
+        retval += "		<join_condition><![CDATA[" + joinCondition + "]]></join_condition>" + Const.CR;
+        retval += "		<skew><![CDATA[" + skew + "]]></skew>" + Const.CR;
        
        
        

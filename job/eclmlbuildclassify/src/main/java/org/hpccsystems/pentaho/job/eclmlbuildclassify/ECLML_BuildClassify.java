@@ -247,6 +247,7 @@ public class ECLML_BuildClassify extends JobEntryBase implements Cloneable, JobE
         String retval = "";
         
         retval += super.getXML();
+      
         retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA["+this.recordsetName+"]]></recordset_name>"+Const.CR;
                 
         

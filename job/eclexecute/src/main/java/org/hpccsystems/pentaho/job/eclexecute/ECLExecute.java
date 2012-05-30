@@ -502,8 +502,10 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
 
         //retval += "		<attribute_name>" + attributeName + "</attribute_name>" + Const.CR;
        // retval += "		<server_address>" + serverAddress + "</server_address>" + Const.CR;
-        retval += "		<file_name>" + fileName + "</file_name>" + Const.CR;
-        retval += "		<debugLevel>" + this.debugLevel + "</debugLevel>" + Const.CR;
+        
+      
+        retval += "		<file_name><![CDATA[" + fileName + "]]></file_name>" + Const.CR;
+        retval += "		<debugLevel><![CDATA[" + this.debugLevel + "]]></debugLevel>" + Const.CR;
         //System.out.println(" end getXML ");
         return retval;
 

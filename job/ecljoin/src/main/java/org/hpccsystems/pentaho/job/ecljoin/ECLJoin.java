@@ -188,15 +188,15 @@ public class ECLJoin extends JobEntryBase implements Cloneable, JobEntryInterfac
         String retval = "";
         
         retval += super.getXML();
-        
-        retval += "		<join_name>" + this.joinName + "</join_name>" + Const.CR;
-        retval += "		<join_condition>" + this.joinCondition + "</join_condition>" + Const.CR;
-        retval += "		<left_join_condition>" + this.leftJoinCondition + "</left_join_condition>" + Const.CR;
-        retval += "		<right_join_condition>" + this.rightJoinCondition + "</right_join_condition>" + Const.CR;
-        retval += "		<join_type>" + this.joinType + "</join_type>" + Const.CR;
-        retval += "		<left_recordset>" + this.leftRecordSet + "</left_recordset>" + Const.CR;
-        retval += "		<right_recordset>" + this.rightRecordSet + "</right_recordset>" + Const.CR;
-        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.joinRecordSet + "</recordset_name>" + Const.CR;
+      
+        retval += "		<join_name><![CDATA[" + this.joinName + "]]></join_name>" + Const.CR;
+        retval += "		<join_condition><![CDATA[" + this.joinCondition + "]]></join_condition>" + Const.CR;
+        retval += "		<left_join_condition><![CDATA[" + this.leftJoinCondition + "]]></left_join_condition>" + Const.CR;
+        retval += "		<right_join_condition><![CDATA[" + this.rightJoinCondition + "]]></right_join_condition>" + Const.CR;
+        retval += "		<join_type><![CDATA[" + this.joinType + "]]></join_type>" + Const.CR;
+        retval += "		<left_recordset><![CDATA[" + this.leftRecordSet + "]]></left_recordset>" + Const.CR;
+        retval += "		<right_recordset><![CDATA[" + this.rightRecordSet + "]]></right_recordset>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + this.joinRecordSet + "]]></recordset_name>" + Const.CR;
   
         return retval;
 

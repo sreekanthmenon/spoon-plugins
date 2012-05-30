@@ -193,17 +193,17 @@ public class ECLLoop extends JobEntryBase implements Cloneable, JobEntryInterfac
         String retval = "";
         
         retval += super.getXML();
-        
-        retval += " 	<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.recordsetName + "</recordset_name>";
-        retval += "		<recordset>" + this.recordset + "</recordset>" + Const.CR;
-        retval += "		<loopCount>" + this.loopCount + "</loopCount>" + Const.CR;
-        retval += "		<loopBody>" + this.loopBody + "</loopBody>" + Const.CR;
-        retval += "		<iterations>" + this.iterations + "</iterations>" + Const.CR;
-        retval += "		<iterationList>" + this.iterationList + "</iterationList>" + Const.CR;
-        retval += "		<default>" + this.dfault + "</default>" + Const.CR;
-        retval += "		<loopFilter>" + this.loopFilter + "</loopFilter>" + Const.CR;
-        retval += "		<loopCondition>" + this.loopCondition + "</loopCondition>" + Const.CR;
-        retval += "		<rowFilter>" + this.rowFilter + "</rowFilter>" + Const.CR;
+      
+        retval += " 	<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + this.recordsetName + "]]></recordset_name>";
+        retval += "		<recordset><![CDATA[" + this.recordset + "]]></recordset>" + Const.CR;
+        retval += "		<loopCount><![CDATA[" + this.loopCount + "]]></loopCount>" + Const.CR;
+        retval += "		<loopBody><![CDATA[" + this.loopBody + "]]></loopBody>" + Const.CR;
+        retval += "		<iterations><![CDATA[" + this.iterations + "]]></iterations>" + Const.CR;
+        retval += "		<iterationList><![CDATA[" + this.iterationList + "]]></iterationList>" + Const.CR;
+        retval += "		<default><![CDATA[" + this.dfault + "]]></default>" + Const.CR;
+        retval += "		<loopFilter><![CDATA[" + this.loopFilter + "]]></loopFilter>" + Const.CR;
+        retval += "		<loopCondition><![CDATA[" + this.loopCondition + "]]></loopCondition>" + Const.CR;
+        retval += "		<rowFilter><![CDATA[" + this.rowFilter + "]]></rowFilter>" + Const.CR;
   
         return retval;
 

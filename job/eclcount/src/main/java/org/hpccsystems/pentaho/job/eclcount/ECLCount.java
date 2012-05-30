@@ -148,11 +148,11 @@ public class ECLCount extends JobEntryBase implements Cloneable, JobEntryInterfa
         
         retval += super.getXML();
         
-        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.recordsetName + "</recordset_name>" + Const.CR;
-        retval += "		<recordset>" + this.recordset + "</recordset>" + Const.CR;
-        retval += "		<expression>" + this.expression + "</expression>" + Const.CR;
-        retval += "		<keyed>" + this.keyed + "</keyed>" + Const.CR;
-        retval += "		<valuelist>" + this.valuelist + "</valuelist>" + Const.CR;
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + this.recordsetName + "]]></recordset_name>" + Const.CR;
+        retval += "		<recordset><![CDATA[" + this.recordset + "]]></recordset>" + Const.CR;
+        retval += "		<expression><![CDATA[" + this.expression + "]]></expression>" + Const.CR;
+        retval += "		<keyed><![CDATA[" + this.keyed + "]]></keyed>" + Const.CR;
+        retval += "		<valuelist><![CDATA[" + this.valuelist + "]]></valuelist>" + Const.CR;
   
         return retval;
 

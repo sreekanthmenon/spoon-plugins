@@ -219,15 +219,15 @@ public class ECLLimit extends JobEntryBase implements Cloneable, JobEntryInterfa
         String retval = "";
         
         retval += super.getXML();
-        
-        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\">" + this.recordsetName + "</recordset_name>" + Const.CR;
-        retval += "		<recordset>" + this.recordset + "</recordset>" + Const.CR;
-        retval += "		<maxRecs>" + this.maxRecs + "</maxRecs>" + Const.CR;
-        retval += "		<failClause>" + this.failClause + "</failClause>" + Const.CR;
-        retval += "		<keyed>" + this.keyed + "</keyed>" + Const.CR;
-        retval += "		<count>" + this.count + "</count>" + Const.CR;
-        retval += "		<skip>" + this.skip + "</skip>" + Const.CR;
-        retval += "		<onFailTransform>" + this.onFailTransform + "</onFailTransform>" + Const.CR;
+      
+        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + this.recordsetName + "]]></recordset_name>" + Const.CR;
+        retval += "		<recordset><![CDATA[" + this.recordset + "]]></recordset>" + Const.CR;
+        retval += "		<maxRecs><![CDATA[" + this.maxRecs + "]]></maxRecs>" + Const.CR;
+        retval += "		<failClause><![CDATA[" + this.failClause + "]]></failClause>" + Const.CR;
+        retval += "		<keyed><![CDATA[" + this.keyed + "]]></keyed>" + Const.CR;
+        retval += "		<count><![CDATA[" + this.count + "]]></count>" + Const.CR;
+        retval += "		<skip><![CDATA[" + this.skip + "]]></skip>" + Const.CR;
+        retval += "		<onFailTransform><![CDATA[" + this.onFailTransform + "]]></onFailTransform>" + Const.CR;
   
         return retval;
 

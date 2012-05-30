@@ -253,18 +253,20 @@ public class ECLIterate extends JobEntryBase implements Cloneable, JobEntryInter
     private Text recordName;
     private Text recordsetName;
     */
-        retval += "             <record>"+this.record+"</record>"+Const.CR;
-        retval += "             <record_name eclIsDef=\"true\" eclType=\"record\">"+this.recordName+"</record_name>"+Const.CR;
-        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetName+"</recordset_name>"+Const.CR;
-        retval += "             <recordset_name_iterate eclIsDef=\"true\" eclType=\"recordset\">"+this.recordsetNameIterate+"</recordset_name_iterate>"+Const.CR;
+        
+      
+        retval += "             <record><![CDATA["+this.record+"]]></record>"+Const.CR;
+        retval += "             <record_name eclIsDef=\"true\" eclType=\"record\"><![CDATA["+this.recordName+"]]></record_name>"+Const.CR;
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA["+this.recordsetName+"]]></recordset_name>"+Const.CR;
+        retval += "             <recordset_name_iterate eclIsDef=\"true\" eclType=\"recordset\"><![CDATA["+this.recordsetNameIterate+"]]></recordset_name_iterate>"+Const.CR;
         
         
-        retval += "             <transform_name eclIsDef=\"true\" eclType=\"recordset\">"+this.transformName+"</transform_name>"+Const.CR;
-        retval += "             <transform>"+this.transform+"</transform>"+Const.CR;
-        retval += "             <transformCall>"+this.transformCall+"</transformCall>"+Const.CR;
-        retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
-        retval += "             <runLocal>"+this.getRunLocalString()+"</runLocal>"+Const.CR;
-        retval += "             <returnType>"+this.getReturnType()+"</returnType>"+Const.CR;
+        retval += "             <transform_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA["+this.transformName+"]]></transform_name>"+Const.CR;
+        retval += "             <transform><![CDATA["+this.transform+"]]></transform>"+Const.CR;
+        retval += "             <transformCall><![CDATA["+this.transformCall+"]]></transformCall>"+Const.CR;
+        retval += "             <recordset><![CDATA["+this.recordset+"]]></recordset>"+Const.CR;
+        retval += "             <runLocal><![CDATA["+this.getRunLocalString()+"]]></runLocal>"+Const.CR;
+        retval += "             <returnType><![CDATA["+this.getReturnType()+"]]></returnType>"+Const.CR;
        
        
        
