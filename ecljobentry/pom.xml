@@ -1,52 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>job</artifactId>
-	<packaging>pom</packaging>
-	<name>HPCC Systems Pentaho Data Integration Job Plugin Modules</name>
+	<artifactId>eclJobEntry</artifactId>
+	<packaging>jar</packaging>
+	<name>HPCC Systems Pentaho Data Integration ECL Base Clases</name>
 	<description></description>
 	<parent>
 		<groupId>org.hpccsystems.pentaho</groupId>
 		<artifactId>spoon-plugins</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
-	<modules>
-		<module>ecldataset</module>
-		<module>ecldedup</module>
-		<module>ecldistribute</module>
-		<module>eclexecute</module>
-		<module>eclgeneric</module>
-		<module>eclglobalvariables</module>
-		<module>eclgroup</module>
-		<module>eclindex</module>
-		<module>ecliterate</module>
-		<module>ecljoin</module>
-		<module>eclmergepaths</module>
-		<module>eclmlassociate</module>
-		<module>eclmlbuildclassify</module>
-		<module>eclmlclassify</module>
-		<module>eclmldiscretize</module>
-		<module>eclmlfromfield</module>
-		<module>eclmlkmeans</module>
-		<module>eclmltofield</module>
-		<module>ecloutput</module>
-		<module>eclproject</module>
-		<module>eclrollup</module>
-		<module>eclsort</module>
-		<module>eclsprayfile</module>
-		<module>ecltable</module>
-		<module>eclcount</module>
-		<module>eclDeSpray</module>
-		<module>eclLimit</module>
-		<module>eclLoop</module>
-		<module>eclMerge</module>
-	</modules>
-
-	<properties>
-		<maven.assembly.plugin.version>2.2.2</maven.assembly.plugin.version>
-		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
 
 	<dependencyManagement>
 		<dependencies>
@@ -85,11 +48,6 @@
                 <artifactId>eclgui</artifactId>
                 <version>0.1-SNAPSHOT</version>
             </dependency>
-			<dependency>
-                <groupId>org.hpccsystems.pentaho</groupId>
-                <artifactId>ecljobentry</artifactId>
-                <version>0.1-SNAPSHOT</version>
-            </dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -121,10 +79,6 @@
         <dependency>
             <groupId>org.hpccsystems.pentaho</groupId>
             <artifactId>eclgui</artifactId>
-        </dependency>
-		<dependency>
-            <groupId>org.hpccsystems.pentaho</groupId>
-            <artifactId>ecljobentry</artifactId>
         </dependency>
 	</dependencies>
 </project>
