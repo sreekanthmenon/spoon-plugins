@@ -5,6 +5,8 @@
 package org.hpccsystems.pentaho.job.eclproject;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.CTabFolder;
+import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -14,6 +16,8 @@ import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -75,7 +79,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         Display display = parentShell.getDisplay();
 
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
-
+        
         props.setLook(shell);
         JobDialog.setShellImage(shell, jobEntry);
         
@@ -102,54 +106,99 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         backupChanged = jobEntry.hasChanged();
 
         FormLayout formLayout = new FormLayout();
-        formLayout.marginWidth = Const.FORM_MARGIN;
-        formLayout.marginHeight = Const.FORM_MARGIN;
-
-
+        //formLayout.marginWidth = Const.FORM_MARGIN; //5
+        //formLayout.marginHeight = Const.FORM_MARGIN; //5
+        
         shell.setLayout(formLayout);
-        shell.setText("Distribute");
+        shell.setSize(750,550); //800 X 600 (width X Height)
 
-        int middle = props.getMiddlePct();
-        int margin = Const.MARGIN;
+        int middle = props.getMiddlePct(); //35. This value is defined in org.pentaho.di.core.Const.
+        int margin = Const.MARGIN; //4. This value is defined in org.pentaho.di.core.Const.
 
         shell.setLayout(formLayout);
         shell.setText("Define an ECL Project");
-
+        
+        //Start of code for Tabs
+        CTabFolder tabFolder = new CTabFolder (shell, SWT.BORDER);
+        tabFolder.setSimple(false);
+        FormData tabFolderData = new FormData();
+        tabFolderData.height = 500;
+        tabFolderData.width = 700;
+        tabFolderData.top = new FormAttachment(0, 0);
+        tabFolderData.left = new FormAttachment(0, 0);
+        tabFolderData.right = new FormAttachment(100, 0);
+        tabFolderData.bottom = new FormAttachment(100, 0);
+        tabFolder.setLayoutData(tabFolderData);
+        
+        CTabItem item1 = new CTabItem(tabFolder, SWT.NONE);
+        Composite compForGrp = new Composite(tabFolder, SWT.NONE);
+        compForGrp.setLayout(new FormLayout());
+        
+        item1.setText ("General");
+        item1.setControl(compForGrp);
+        
+        //End of code for Tabs
+        
+        //Define buttons since they are used for component alignment 
+        wOK = new Button(compForGrp, SWT.PUSH);
+        wOK.setText("OK");
+        wCancel = new Button(compForGrp, SWT.PUSH);
+        wCancel.setText("Cancel");
+        
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
         groupLayout.marginHeight = 10;
 
         // Stepname line
-        Group generalGroup = new Group(shell, SWT.SHADOW_NONE);
+        Group generalGroup = new Group(compForGrp, SWT.SHADOW_NONE);
         props.setLook(generalGroup);
         generalGroup.setText("General Details");
         generalGroup.setLayout(groupLayout);
+        
         FormData generalGroupFormat = new FormData();
-        generalGroupFormat.top = new FormAttachment(0, margin);
+        /*generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
         generalGroupFormat.height = 65;
-        generalGroupFormat.left = new FormAttachment(middle, 0);
+        generalGroupFormat.left = new FormAttachment(middle, 0);*/
+        
+        generalGroupFormat.height = 65;
+        generalGroupFormat.left = new FormAttachment(0, 5);
+        generalGroupFormat.right = new FormAttachment(100, -5);
         generalGroup.setLayoutData(generalGroupFormat);
         
         jobEntryName = buildText("Job Entry Name", null, lsMod, middle, margin, generalGroup);
 
         //All other contols
         //Project Declaration
-        Group distributeGroup = new Group(shell, SWT.SHADOW_NONE);
+        Group distributeGroup = new Group(compForGrp, SWT.SHADOW_NONE);
         props.setLook(distributeGroup);
         distributeGroup.setText("Project Details");
         distributeGroup.setLayout(groupLayout);
-        FormData datasetGroupFormat = new FormData();
+        /*FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
         datasetGroupFormat.height = 400;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
-        distributeGroup.setLayoutData(datasetGroupFormat);
-
-       
-       
-        recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, distributeGroup);
+        distributeGroup.setLayoutData(datasetGroupFormat);*/
         
+        FormData datasetGroupFormat = new FormData();
+        datasetGroupFormat.top = new FormAttachment(generalGroup, 5);
+        datasetGroupFormat.bottom = new FormAttachment(wOK, -5);
+        datasetGroupFormat.left = new FormAttachment(generalGroup, 0, SWT.LEFT);
+        datasetGroupFormat.right = new FormAttachment(generalGroup, 0, SWT.RIGHT);
+        distributeGroup.setLayoutData(datasetGroupFormat);
+        
+        FormData data = new FormData(50, 25);
+		data.right = new FormAttachment(50, 0);
+		data.bottom = new FormAttachment(100, 0);
+		wOK.setLayoutData(data);
+		
+		data = new FormData(50, 25);
+		data.left = new FormAttachment(wOK, 5);
+		data.bottom = new FormAttachment(wOK, 0, SWT.BOTTOM);
+		wCancel.setLayoutData(data);
+
+        recordsetName = buildText("Resulting Recordset", null, lsMod, middle, margin, distributeGroup);
         
         declareCounter = buildCombo("Declare Counter", recordsetName, lsMod, middle, margin, distributeGroup, new String[]{"no", "yes"});
         inRecordName = buildCombo("In Record Name", declareCounter, lsMod, middle, margin, distributeGroup,datasets);
@@ -160,13 +209,25 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         
         transformFormat = buildMultiText("Transform Format", parameterName, lsMod, middle, margin, distributeGroup);
         
-        wOK = new Button(shell, SWT.PUSH);
-        wOK.setText("OK");
-        wCancel = new Button(shell, SWT.PUSH);
-        wCancel.setText("Cancel");
-
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, distributeGroup);
-
+        //Code for second tab for Mapper
+        CTabItem item2 = new CTabItem(tabFolder, SWT.NONE);
+        Composite compForGrp2 = new Composite(tabFolder, SWT.NONE);
+        //compForGrp2.setLayout(new FormLayout());
+        
+        item2.setText ("Public");
+        item2.setControl(compForGrp2);
+        
+        GridLayout mapperCompLayout = new GridLayout();
+        mapperCompLayout.numColumns = 1;
+		GridData mapperCompData = new GridData();
+		mapperCompData.grabExcessHorizontalSpace = true;
+		compForGrp2.setLayout(mapperCompLayout);
+		compForGrp2.setLayoutData(mapperCompData);
+		
+		//Create a DataSet
+		String[] dataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
+		MainMapper objMainMapper = new MainMapper(compForGrp2, dataSetList);
+        
         // Add listeners
         Listener cancelListener = new Listener() {
 
@@ -238,7 +299,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         }
 
 
-        shell.pack();
+        //shell.pack();
         shell.open();
         while (!shell.isDisposed()) {
             if (!display.readAndDispatch()) {
@@ -300,7 +361,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
 
         return text;
     }
-
+    
     private Combo buildCombo(String strLabel, Control prevControl,
             ModifyListener lsMod, int middle, int margin, Composite groupBox, String[] items) {
         // label
