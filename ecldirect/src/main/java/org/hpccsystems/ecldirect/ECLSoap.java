@@ -1,7 +1,7 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this template, choose Tools | Templates
+* and open the template in the editor.
+*/
 package org.hpccsystems.ecldirect;
 import java.net.*;
 import java.io.*;
@@ -26,9 +26,9 @@ import java.util.regex.Matcher;
 
         
         /**
- *
- * @author ChambeJX
- */
+*
+* @author ChambeJX
+*/
 public class ECLSoap {
     
     private String hostname = "192.168.80.130";
@@ -87,8 +87,8 @@ public class ECLSoap {
     
     
     /*Getters & Setters
-     * 
-     */
+*
+*/
     
     
     public String getHostname() {
@@ -172,7 +172,7 @@ public class ECLSoap {
         } catch (IOException e) {
             System.out.println(e.toString());
             e.printStackTrace();
-        }   
+        }
 
         try{
             //call eclcc
@@ -325,106 +325,103 @@ public class ECLSoap {
 
     
     /*executeECL
-     * 
-     * @accepts String
-     * @returns InputStream
-     * 
-     * Accepts the raw ecl code and runs through all steps of create, submit, 
-     * and gets the data.
-     * 
-     * 
-     */
+*
+* @accepts String
+* @returns InputStream
+*
+* Accepts the raw ecl code and runs through all steps of create, submit,
+* and gets the data.
+*
+*
+*/
     public Boolean executeECL(String ecl){
         ArrayList results = null;
         boolean proceed = false;
         
         String cECL = compileECL(ecl);
         if(cECL == null || cECL.equals("")){
-        	//System.out.println("----------- proceed = false --------------");
-        	proceed = false;
+         //System.out.println("----------- proceed = false --------------");
+         proceed = false;
         }else{
-	        
-	        String wuid = this.createAndUpdateSoapCall(cECL);
-	        this.wuid = wuid;
-	        InputStream is = null;
-	        if(wuid != null && !wuid.equals("")){
-	            this.submitSoapCall(wuid);
-	            try{
-	                
-	                proceed = this.isComplete(wuid);
-	                
-	                /*
-	                if(proceed){
-	                    is = this.ResultsSoapCall(wuid);
-	                    results = this.parseResults(is);
-	                }else{
-	                    System.out.println("ECL Failed");
-	                }
-	                 * 
-	                 */
-	
-	            }catch(Exception e){
-	                 System.out.println(e);
-	                 e.printStackTrace();
-	                 proceed = false;
-	            }
-	        }
+
+String wuid = this.createAndUpdateSoapCall(cECL);
+this.wuid = wuid;
+InputStream is = null;
+if(wuid != null && !wuid.equals("")){
+this.submitSoapCall(wuid);
+try{
+
+proceed = this.isComplete(wuid);
+
+/*
+if(proceed){
+is = this.ResultsSoapCall(wuid);
+results = this.parseResults(is);
+}else{
+System.out.println("ECL Failed");
+}
+*
+*/
+
+}catch(Exception e){
+System.out.println(e);
+e.printStackTrace();
+proceed = false;
+}
+}
         }
         return proceed;
     }
     
     /*executeECL
-     * 
-     * @accepts String
-     * @returns String
-     * 
-     * Accepts the raw ecl code and runs through all steps of create, submit, 
-     * and gets the data.  Returns an XML of the results similar to Direct
-     * but will require additional work to parse.
-     * 
-     * 
-     */
+*
+* @accepts String
+* @returns String
+*
+* Accepts the raw ecl code and runs through all steps of create, submit,
+* and gets the data. Returns an XML of the results similar to Direct
+* but will require additional work to parse.
+*
+*
+*/
     /*
-    public String execute(String ecl){
-        String results = null;
-        
-        String cECL = compileECL(ecl);
+public String execute(String ecl){
+String results = null;
+String cECL = compileECL(ecl);
 
-        String wuid = this.createAndUpdateSoapCall(cECL);
-        InputStream is = null;
-        if(wuid != null && !wuid.equals("")){
-            this.wuid = wuid;
-            this.submitSoapCall(wuid);
-            try{
-                
-                boolean proceed = this.isComplete(wuid);
-                if(proceed){
-                    is = this.ResultsSoapCall(wuid);
-                    //need to parse this out to string
-                    results = fetchXML(is);
-                }else{
-                    System.out.println("ECL Failed");
-                }
+String wuid = this.createAndUpdateSoapCall(cECL);
+InputStream is = null;
+if(wuid != null && !wuid.equals("")){
+this.wuid = wuid;
+this.submitSoapCall(wuid);
+try{
+boolean proceed = this.isComplete(wuid);
+if(proceed){
+is = this.ResultsSoapCall(wuid);
+//need to parse this out to string
+results = fetchXML(is);
+}else{
+System.out.println("ECL Failed");
+}
 
-            }catch(Exception e){
-                 System.out.println(e);
-                 e.printStackTrace();
-            }
-        }
-        
-        return results;
-    }
-     * 
-     */
+}catch(Exception e){
+System.out.println(e);
+e.printStackTrace();
+}
+}
+return results;
+}
+*
+*/
     
     /*isComplete
-     * 
-     * @accepts String
-     * @returns boolean
-     * 
-     * This is a recursive function, it calls the server until it gets a response 
-     * that the job has completed or failed returning True/False based on this.
-     */
+*
+* @accepts String
+* @returns boolean
+*
+* This is a recursive function, it calls the server until it gets a response
+* that the job has completed or failed returning True/False based on this.
+*/
     public boolean isComplete(String wuid){
         boolean complete = false;
         String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -438,7 +435,7 @@ public class ECLSoap {
                 + "</soap:Body>"
                 + "</soap:Envelope>";
         String path = "/WsWorkunits/WUInfo";
-        InputStream is = this.doSoap(xml, path);        
+        InputStream is = this.doSoap(xml, path);
         try{
             DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -489,13 +486,13 @@ public class ECLSoap {
     
     
     /*
-     * ResultsSoapCall
-     * @accepts String
-     * @returns InputStream
-     * 
-     * Accepts the wuid from the created job
-     * Returns an InputStream that is the SOAP response
-     */
+* ResultsSoapCall
+* @accepts String
+* @returns InputStream
+*
+* Accepts the wuid from the created job
+* Returns an InputStream that is the SOAP response
+*/
     public InputStream ResultsSoapCall(String wuid, String resultName){
         String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"+
                 "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"+
@@ -519,34 +516,34 @@ public class ECLSoap {
     
 
     /*
-     * createAndUpdateSoapCall
-     * @accepts String
-     * @returns String
-     * 
-     * Accepts the ecl query and creates a job on the cluster
-     * Returns A String consisting of the WUID for this new job
-     * the WUID is needed for all aditional soap calls related to this
-     * job
-     */
+* createAndUpdateSoapCall
+* @accepts String
+* @returns String
+*
+* Accepts the ecl query and creates a job on the cluster
+* Returns A String consisting of the WUID for this new job
+* the WUID is needed for all aditional soap calls related to this
+* job
+*/
     public String createAndUpdateSoapCall(String query){
         
         String wuid = "";
          
-        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + 
-        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" + 
-          "<soapenv:Body>" + 
-             "<WUCreateAndUpdate xmlns=\"urn:hpccsystems:ws:wsworkunits\">" + 
-                "<Jobname>" + this.jobName + "</Jobname>" + 
-                "<QueryText>" + query + "</QueryText>" + 
-               " <ApplicationValues>" + 
-                   "<ApplicationValue>" + 
-                      "<Application>org.hpccsystems.eclide</Application>" + 
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" +
+        "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">" +
+          "<soapenv:Body>" +
+             "<WUCreateAndUpdate xmlns=\"urn:hpccsystems:ws:wsworkunits\">" +
+                "<Jobname>" + this.jobName + "</Jobname>" +
+                "<QueryText>" + query + "</QueryText>" +
+               " <ApplicationValues>" +
+                   "<ApplicationValue>" +
+                      "<Application>org.hpccsystems.eclide</Application>" +
                       "<Name>path</Name>" +
-                      "<Value>/HelloWorld/HelloWorld.ecl</Value>" + 
-                   "</ApplicationValue>" + 
-                "</ApplicationValues>" + 
-             "</WUCreateAndUpdate>" + 
-          "</soapenv:Body>" + 
+                      "<Value>/HelloWorld/HelloWorld.ecl</Value>" +
+                   "</ApplicationValue>" +
+                "</ApplicationValues>" +
+             "</WUCreateAndUpdate>" +
+          "</soapenv:Body>" +
         "</soapenv:Envelope>";
         String path = "/WsWorkunits/WUCreateAndUpdate";
         InputStream is = this.doSoap(xml, path);
@@ -562,14 +559,14 @@ public class ECLSoap {
     }
     
     /*
-     * submitSoapCall
-     * @accepts String
-     * @returns void
-     * 
-     * executes the submit Soap Call
-     * returns an nothing, this is a blind call must use ResultsSoapCall
-     * to discover the status of the submit
-     */
+* submitSoapCall
+* @accepts String
+* @returns void
+*
+* executes the submit Soap Call
+* returns an nothing, this is a blind call must use ResultsSoapCall
+* to discover the status of the submit
+*/
     public void submitSoapCall(String wuid){
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"+
@@ -586,13 +583,13 @@ public class ECLSoap {
     }
     
     /*
-     * InfoSoapCall
-     * 
-     * @accepts String
-     * @returns InputStream
-     * 
-     * Calls the Thor clustor to get Info, not currently utilized
-     */
+* InfoSoapCall
+*
+* @accepts String
+* @returns InputStream
+*
+* Calls the Thor clustor to get Info, not currently utilized
+*/
     public InputStream InfoSoapCall(String wuid){
         String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"+
                "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\">"+
@@ -617,13 +614,13 @@ public class ECLSoap {
     
     
      /*
-     * InfoSoapCall
-     * 
-     * @accepts String
-     * @returns InputStream
-     * 
-     * Calls the Thor clustor to get Info, not currently utilized
-     */
+* InfoSoapCall
+*
+* @accepts String
+* @returns InputStream
+*
+* Calls the Thor clustor to get Info, not currently utilized
+*/
     public InputStream InfoDetailsCall(String wuid){
         String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
                 + "<soap:Envelope xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\" xmlns:soap=\"http://schemas.xmlsoap.org/soap/envelope/\">"
@@ -712,13 +709,13 @@ public class ECLSoap {
      }
     
      /*
-     * parseDirect
-     * @accepts InputStream
-     * returns ArrayList
-     * 
-     * This function is copied from ECLDirect it tranlates the xml results
-     * into a arraylist.
-     */
+* parseDirect
+* @accepts InputStream
+* returns ArrayList
+*
+* This function is copied from ECLDirect it tranlates the xml results
+* into a arraylist.
+*/
     public static ArrayList parseDirect(String xml) throws Exception {
         ArrayList results = null;
         xml = "<?xml version=\"1.0\"?><root>" + xml + "</root>";
@@ -782,13 +779,13 @@ public class ECLSoap {
     
     
     /*
-     * parseResults 
-     * @accepts InputStream
-     * returns ArrayList
-     * 
-     * Parses out the data from the results soap call, the string is the xml 
-     * that is the same as returned from the eclDirect
-     */
+* parseResults
+* @accepts InputStream
+* returns ArrayList
+*
+* Parses out the data from the results soap call, the string is the xml
+* that is the same as returned from the eclDirect
+*/
     public static ArrayList parseResults(InputStream xml) throws Exception {
         ArrayList results = null;
 
@@ -822,8 +819,8 @@ public class ECLSoap {
 
                         
                         for (int k = 0; k < columnList.getLength(); k++) {
-                          // System.out.println("colName: " +  columnList.item(k).getNodeName());
-                          //  System.out.println("colVal: " + columnList.item(k).getTextContent());
+                          // System.out.println("colName: " + columnList.item(k).getNodeName());
+                          // System.out.println("colVal: " + columnList.item(k).getTextContent());
                             if(columnList.item(k).getNodeName().equals("#text")){
                                 
                                 results = parseDirect(columnList.item(k).getTextContent());
@@ -840,13 +837,13 @@ public class ECLSoap {
     }
     
      /*
-     * parseResults 
-     * @accepts InputStream
-     * returns ArrayList
-     * 
-     * Parses out the data from the results soap call, the string is the xml 
-     * that is the same as returned from the eclDirect
-     */
+* parseResults
+* @accepts InputStream
+* returns ArrayList
+*
+* Parses out the data from the results soap call, the string is the xml
+* that is the same as returned from the eclDirect
+*/
     public static String fetchXML(InputStream xml) throws Exception {
         String results = null;
 
@@ -876,7 +873,7 @@ public class ECLSoap {
 
                         
                         for (int k = 0; k < columnList.getLength(); k++) {
-                          // System.out.println("colName: " +  columnList.item(k).getNodeName());
+                          // System.out.println("colName: " + columnList.item(k).getNodeName());
                            // System.out.println("colVal: " + columnList.item(k).getTextContent());
                             if(columnList.item(k).getNodeName().equals("#text")){
                                 
@@ -894,15 +891,15 @@ public class ECLSoap {
     }
 
     /*
-     * parse
-     * @accepts InputStream
-     * @returns Map
-     * 
-     * Currently takes the createandupdate calls response and places the data 
-     * in a Map to be returned.  This may make sense to refactor so it just returns 
-     * the wuid
-     */
-     public  Map parse(InputStream xml) throws Exception {
+* parse
+* @accepts InputStream
+* @returns Map
+*
+* Currently takes the createandupdate calls response and places the data
+* in a Map to be returned. This may make sense to refactor so it just returns
+* the wuid
+*/
+     public Map parse(InputStream xml) throws Exception {
         ArrayList results = new ArrayList();
 
         Map<String, String> map = new HashMap<String, String>();
@@ -916,12 +913,12 @@ public class ECLSoap {
         NodeList nList = doc.getElementsByTagName("Workunit");
        // System.out.println("-----------PARSE- " + nList.getLength() + " -----------");
  
-		for (int temp = 0; temp < nList.getLength(); temp++) {
-                 //   System.out.println("-----------"+temp+"------------");
-		   Node nNode = nList.item(temp);
-		   if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+for (int temp = 0; temp < nList.getLength(); temp++) {
+                 // System.out.println("-----------"+temp+"------------");
+Node nNode = nList.item(temp);
+if (nNode.getNodeType() == Node.ELEMENT_NODE) {
  
-		      Element eElement = (Element) nNode;
+Element eElement = (Element) nNode;
                       NodeList nl = eElement.getChildNodes();
                       
                       for (int temp1 = 0; temp1 < nl.getLength(); temp1++) {
@@ -937,27 +934,27 @@ public class ECLSoap {
                       
                      
                       //System.out.println("TEST MAP");
-		      //System.out.println("WUID : " + map.get("Wuid") );
+//System.out.println("WUID : " + map.get("Wuid") );
                       // System.out.println("WUID : " + getTagValue("Wuid", eElement));
-		      results.add(getTagValue("Wuid", eElement));
+results.add(getTagValue("Wuid", eElement));
  
-		   }
-		}
+}
+}
         
         return map;
     }
      
      
     /*
-      * getTagValue
-      * @accepts String, Element
-      * @returns String
-      * 
-      * Accepts the tag and element from the xml tree and returns its value.
-      * this is a helper function for the other xml parse functions
-      */
-    private  String getTagValue(String sTag, Element eElement) {
-	NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
+* getTagValue
+* @accepts String, Element
+* @returns String
+*
+* Accepts the tag and element from the xml tree and returns its value.
+* this is a helper function for the other xml parse functions
+*/
+    private String getTagValue(String sTag, Element eElement) {
+NodeList nlList = eElement.getElementsByTagName(sTag).item(0).getChildNodes();
         String out = "";
         if(nlList != null){
             Node nValue = (Node) nlList.item(0);
@@ -972,13 +969,13 @@ public class ECLSoap {
     }
     
     /*
-     * doSoap
-     * @accepts String, String
-     * @returns InputStream
-     * 
-     * Accepts two strings xmldata and path to soap call (hostname is a global variable)
-     * returns InputStream from the  URLConnection
-     */
+* doSoap
+* @accepts String, String
+* @returns InputStream
+*
+* Accepts two strings xmldata and path to soap call (hostname is a global variable)
+* returns InputStream from the URLConnection
+*/
     public InputStream doSoap(String xmldata, String path){
        ArrayList response = new ArrayList();
        String xml = "";
@@ -1022,18 +1019,18 @@ public class ECLSoap {
     
 
    /*
-     * compileECL
-     * 
-     * @accepts String
-     * @returns String
-     * 
-     * Accepts the ECL code and calls the command line eclcc to compile the code
-     * Currently it pulls in the the ML library by default
-     * Requres that the ecl IDE be installed and the ML library
-     * 
-     */
+* compileECL
+*
+* @accepts String
+* @returns String
+*
+* Accepts the ECL code and calls the command line eclcc to compile the code
+* Currently it pulls in the the ML library by default
+* Requres that the ecl IDE be installed and the ML library
+*
+*/
     private String compileECL(String ecl){
-        String inFile =  this.outputName + "-spoon-eclCode.ecl";
+        String inFile = this.outputName + "-spoon-eclCode.ecl";
         String outFile = this.outputName + "-spoon-eclOut.ecl";
        
          //write ecl to file
@@ -1056,7 +1053,7 @@ public class ECLSoap {
         } catch (IOException e) {
             System.out.println(e.toString());
             e.printStackTrace();
-        }   
+        }
         
         try{
             //call eclcc
@@ -1065,7 +1062,7 @@ public class ECLSoap {
             if(this.includeML){
                 include = " -I \"" + this.mlPath +"\"";
             }else{
-            	//System.out.println("NO ML LIBRARY INCLUDED!");
+             //System.out.println("NO ML LIBRARY INCLUDED!");
             }
             String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
             String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
@@ -1123,24 +1120,24 @@ public class ECLSoap {
     }
     
     /*
-     * deleteFile
-     * @accepts String
-     * @returns String
-     * 
-     * Opesn a file and returns its contents as a string
-     */
+* deleteFile
+* @accepts String
+* @returns String
+*
+* Opesn a file and returns its contents as a string
+*/
     private static void deleteFile(String filePath){
         File f = new File(filePath);
         f.delete();
     }
     
     /*
-     * openFile
-     * @accepts String
-     * @returns String
-     * 
-     * Opesn a file and returns its contents as a string
-     */
+* openFile
+* @accepts String
+* @returns String
+*
+* Opesn a file and returns its contents as a string
+*/
     private static String openFile(String filePath){
         StringBuffer fileData = new StringBuffer(1000);
         //System.out.println("++++++++++++++++ Open File: " + filePath);
@@ -1163,10 +1160,10 @@ public class ECLSoap {
     }
 
     /*
-     * ECLAuthenticator
-     * 
-     * Hnadles the http authentication for the soap request
-     */
+* ECLAuthenticator
+*
+* Hnadles the http authentication for the soap request
+*/
     static class ECLAuthenticator extends Authenticator {
         public String user;
         public String pass;

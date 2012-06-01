@@ -185,6 +185,7 @@ public class ECLDeSpray extends JobEntryBase implements Cloneable, JobEntryInter
         
         retval += super.getXML();
         
+<<<<<<< HEAD
         retval += "		<logicalName><![CDATA[" + this.logicalName + "]]></logicalName>" + Const.CR;
         retval += "		<destinationIp><![CDATA[" + this.destinationIP + "]]></destinationIp>" + Const.CR;
         retval += "		<destinationPath><![CDATA[" + this.destinationPath + "]]></destinationPath>" + Const.CR;
@@ -192,6 +193,15 @@ public class ECLDeSpray extends JobEntryBase implements Cloneable, JobEntryInter
         retval += "		<espserverISPport><![CDATA[" + this.espserverISPport + "]]></espserverISPport>" + Const.CR;
         retval += "		<maxConnections><![CDATA[" + this.maxConnections + "]]></maxConnections>" + Const.CR;
         retval += "		<allowOverwrite><![CDATA[" + this.allowOverwrite + "]]></allowOverwrite>" + Const.CR;
+=======
+        retval += "		<logicalName>" + this.logicalName + "</logicalName>" + Const.CR;
+        retval += "		<destinationIp>" + this.destinationIP + "</destinationIp>" + Const.CR;
+        retval += "		<destinationPath>" + this.destinationPath + "</destinationPath>" + Const.CR;
+        retval += "		<timeout>" + this.timeout + "</timeout>" + Const.CR;
+        retval += "		<espserverISPport>" + this.espserverISPport + "</espserverISPport>" + Const.CR;
+        retval += "		<maxConnections>" + this.maxConnections + "</maxConnections>" + Const.CR;
+        retval += "		<allowOverwrite>" + this.allowOverwrite + "</allowOverwrite>" + Const.CR;
+>>>>>>> c989dac0d09aa29757c8d5230f5524c4c0c8fd6b
   
         return retval;
 

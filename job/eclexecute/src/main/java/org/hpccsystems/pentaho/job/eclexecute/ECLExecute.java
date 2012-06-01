@@ -40,7 +40,12 @@ import org.pentaho.di.job.JobMeta;
  */
 public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInterface {
     
+<<<<<<< HEAD
     private String attributeName = "";
+=======
+
+    //private String attributeName = "";
+>>>>>>> c989dac0d09aa29757c8d5230f5524c4c0c8fd6b
     private String fileName = "";
     private String serverAddress = "";
     private String serverPort = "";
@@ -50,13 +55,13 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
     boolean isValid = true;
 
 
-    public String getAttributeName() {
-        return attributeName;
-    }
+   // public String getAttributeName() {
+    //    return attributeName;
+    //}
 
-    public void setAttributeName(String attributeName) {
-        this.attributeName = attributeName;
-    }
+   // public void setAttributeName(String attributeName) {
+   //     this.attributeName = attributeName;
+   // }
     
     public String getFileName() {
         return fileName;
