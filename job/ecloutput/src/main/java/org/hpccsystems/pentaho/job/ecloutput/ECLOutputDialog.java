@@ -776,6 +776,8 @@ public class ECLOutputDialog extends ECLJobEntryDialog {
     	
     	if(!isValid){
     		ErrorNotices en = new ErrorNotices();
+    		errors += "If you continue to save with errors you may encounter compile errors.\r\n\r\n";
+    		
     		isValid = en.openValidateDialog(getParent(),errors);
     	}
     	return isValid;

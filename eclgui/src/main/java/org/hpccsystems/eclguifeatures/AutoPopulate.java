@@ -6,6 +6,8 @@ package org.hpccsystems.eclguifeatures;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.job.entry.JobEntryCopy;
 import org.w3c.dom.Node;
@@ -161,12 +163,137 @@ public class AutoPopulate {
         return datasets;
     }
     
-     /*
+    public String getType(NodeList returnNode, List<JobEntryCopy> jobs, String datasetValue) throws KettleXMLException{
+    	String type = "";
+    	String attributeName = "eclIsDef";
+    	String attributeValue = "true";
+    			
+    	//find the dataset declaration from the value in the select
+    	
+    	
+    	 //System.out.println(" ------------ parseDataSet ------------- ");
+        String datasets[] = null;
+        ArrayList<String> adDS = new ArrayList<String>();
+      
+        
+        Object[] jec = jobs.toArray();
+
+        int k = 0;
+
+        for(int j = 0; j<jec.length; j++){
+            //System.out.println("Node(i): " + j + " | " +((JobEntryCopy)jec[j]).getName());
+
+            if(!((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("START") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("OUTPUT") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("SUCCESS")){
+                //System.out.println("Node(k): " + k);
+                
+                //adDS.add((String)((JobEntryCopy)jec[j]).getName());
+                String xml = ((JobEntryCopy)jec[j]).getXML();
+                //System.out.println(xml);
+                
+               NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
+               for (int temp = 0; temp < nl.getLength(); temp++){
+                   Node nNode = nl.item(temp);
+                   
+                   
+                   NodeList children;
+                   Node childnode;
+                   String defValue = null;
+                  
+                  
+                   children=nNode.getChildNodes();
+                   String tType = XMLHandler.getNodeValue(
+                           XMLHandler.getSubNode(nNode, "type")
+                           );
+                   for (int i=0;i<children.getLength();i++)
+                   {
+                	   try{
+	                	   childnode=children.item(i);
+	                	   if(childnode != null){
+	                		   if(childnode.getAttributes() != null){
+				                   Node attribute = childnode.getAttributes().getNamedItem(attributeName);
+				                   if (attribute!=null && attributeValue.equals(attribute.getTextContent())){
+				                	   
+				                	   defValue = XMLHandler.getNodeValue(childnode);
+				                	  
+				                	   if(defValue != null){
+				                		   //System.out.println("NODE_VALUE: " + defValue);
+				                		   adDS.add((String)defValue);
+				                		   k++;
+				                		   
+				                		   if(defValue.equals(datasetValue)){
+				                    		   type = tType;
+				                    		   returnNode = children;
+				                    		   //to save execution time lets exit on the first find as it is most likely to be the one we want
+				                    		   return type;
+				                    	   }
+				                		   
+				                	   }else{
+				                		   //System.out.println("NODE_VALUE: IS NULL");
+				                	   }
+				                   }
+	                		   }
+	                	   }
+                	   }catch (Exception exc){
+                		   System.out.println("Failed to Read XML");
+                		   //System.out.println(exc);
+                		   //exc.printStackTrace();
+                	   }
+
+                   }
+                   //ok we have the list of eclIsDef Now lets loop and see if any of them are our datasets
+                   datasets = adDS.toArray(new String[k]);
+                   
+                   for (int i=0;i<datasets.length;i++){
+                	   String val = XMLHandler.getNodeValue(
+                               XMLHandler.getSubNode(nNode, datasets[i])
+                               );
+                	   if(val.equals(datasetValue)){
+                		   type = tType;
+                		   
+                		   //to save execution time lets exit on the first find as it is most likely to be the one we want
+                		   return type;
+                	   }
+                	   
+                   }
+               }
+            }
+        }
+        //saving the loop code using arraylists
+        
+        
+        
+    	return type;
+    }
+    
+    public void getRecordListFromECLDataset(NodeList children, ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs) throws KettleXMLException{
+    	//ok we need to loop through fields and identify the one that is recordList and populate adDS
+
+    }
+    /*
      * Gets the Dataset fields from all existing nodes
      * This uses recursion to travel up from joins etc to the 
      * def of the datasets
      */
     public void fieldsByDatasetList(ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs)throws Exception{
+        System.out.println(" ------------ fieldsByDatasetList ------------ ");
+        Object[] jec = jobs.toArray();
+        NodeList children = null;
+        
+        String type = getType(children, jobs, datasetName);
+        
+        if(type.equalsIgnoreCase("ECLDataset")){
+        	getRecordListFromECLDataset(children, adDS, datasetName,jobs);
+        }//add additional types here
+       
+    }
+    
+    
+     /*
+     * Gets the Dataset fields from all existing nodes
+     * This uses recursion to travel up from joins etc to the 
+     * def of the datasets
+     */
+    public void fieldsByDatasetList2(ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs)throws Exception{
         System.out.println(" ------------ fieldsByDatasetList ------------ ");
         Object[] jec = jobs.toArray();
 

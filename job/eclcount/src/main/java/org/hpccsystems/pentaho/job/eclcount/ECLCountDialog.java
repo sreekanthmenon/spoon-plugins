@@ -26,6 +26,7 @@ import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
+import org.hpccsystems.eclguifeatures.ErrorNotices;
 import org.hpccsystems.pentaho.job.eclcount.ECLCount;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.job.JobMeta;
@@ -297,8 +298,47 @@ public class ECLCountDialog extends JobEntryDialog implements JobEntryDialogInte
         return combo;
     }
 
+    private boolean validate(){
+    	boolean isValid = true;
+    	String errors = "";
+    	//either recordset or valuelist is required but never both, if valuelist, not other allowed
+    	
+    	if(this.recordset.getText().equals("") && this.valuelist.getText().equals("")){
+    		//one is required.
+    		isValid = false;
+    		errors += "You must provide either a \"Recordset\" or a \"Value List\"!\r\n";
+    	}
+    	
+    	if(!this.recordset.getText().equals("") && !this.valuelist.getText().equals("")){
+    		//one is required.
+    		isValid = false;
+    		errors += "You must provide either a \"Recordset\" or a \"Value List\" but not both!\r\n";
+    	}else{
+    		//ok assuming that one is set lets make sure they don't provide paraters to value list
+    		if(!this.valuelist.getText().equals("")){
+    			if(!this.expression.getText().equals("") ||
+    			   !this.keyed.getText().equals("")){
+    				isValid = false;
+    	    		errors += "When using a \"Value List\" \"Expression\" and \"Keyed\" must be blank!\r\n";
+    			}
+    		}
+    	}
+    	
+    	
+    	if(!isValid){
+    		ErrorNotices en = new ErrorNotices();
+    		errors += "\r\n";
+    		errors += "If you continue to save with errors you may encounter compile errors if you try to execute the job.\r\n\r\n";
+    		isValid = en.openValidateDialog(getParent(),errors);
+    	}
+    	return isValid;
+    	
+    }
     private void ok() {
-
+    	if(!validate()){
+    		return;
+    	}
+    	
         jobEntry.setName(jobEntryName.getText());
 
         jobEntry.setRecordsetName(recordsetName.getText());
