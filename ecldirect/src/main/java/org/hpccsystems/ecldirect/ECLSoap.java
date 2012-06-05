@@ -173,7 +173,7 @@ public class ECLSoap {
             System.out.println(e.toString());
             e.printStackTrace();
         }   
-         //System.out.println("check point");
+         System.out.println("check point");
         try{
             //call eclcc
             //need to modify -I to include path...
@@ -182,32 +182,28 @@ public class ECLSoap {
                 include = " -I \"" + this.mlPath +"\"";
             }
             String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";
-           // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
+            System.out.println("LogFIle: " + this.tempDir + this.outputName);
             String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-c -syntax" + include + " " + inFilePath;
 
 
             ProcessBuilder pb = new ProcessBuilder(c);
-            pb.redirectErrorStream(true); // merge stdout, stderr of process
-            //System.out.println("Start Process Builder");
+            //pb.redirectErrorStream(true); // merge stdout, stderr of process
+
             File path = new File(eclccInstallDir);
-            //System.out.println("1");
+
             pb.directory(path);
-           // System.out.println("2");
+
             Process p = pb.start();
-            //System.out.println("3");
+            int pStatus = p.waitFor();
             
-           // int pStatus = p.waitFor();
-           // System.out.println("4");
-            
-           // System.out.println("InputStream");
             InputStream is = p.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String line;
             
-           // System.out.println("STATUS: " + pStatus);
+            System.out.println("STATUS: " + pStatus);
             while((line = br.readLine()) != null){
-            	//System.out.println("#####<InputStream> "+line);
+            	System.out.println("#####<InputStream> "+line);
                 //res += "<InputStream> " + line+"\r\n";
                 res += cleanError(line)+"\r\n";
             }
@@ -218,11 +214,11 @@ public class ECLSoap {
             BufferedReader brErr = new BufferedReader(isrError);
             String lineErr;
             while((lineErr = brErr.readLine()) != null){
-                //System.out.println("#####<ErrorStream> "+lineErr);
+                System.out.println("#####<ErrorStream> "+lineErr);
                 //res += "<ErrorStream> " + lineErr+"\r\n";
                 res += cleanError(lineErr)+"\r\n";
             }
-            //System.out.println("Finished ErrorStream");
+            System.out.println("Finished ErrorStream");
                         
            
             
@@ -244,7 +240,7 @@ public class ECLSoap {
             //deleteFile(eclccInstallDir+inFile);
             deleteFile(this.tempDir+inFile);
             
-          //  System.out.println("Finished compile check");
+            System.out.println("Finished compile check");
             
         }catch (Exception e){
             System.out.println(e.toString());
