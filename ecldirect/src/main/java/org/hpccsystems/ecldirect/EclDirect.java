@@ -46,7 +46,17 @@ public class EclDirect {
      
     private boolean isValid = true;
 
-    public String getOutputName() {
+    
+    
+    public boolean isValid() {
+		return isValid;
+	}
+
+	public void setValid(boolean isValid) {
+		this.isValid = isValid;
+	}
+
+	public String getOutputName() {
         return outputName;
     }
 

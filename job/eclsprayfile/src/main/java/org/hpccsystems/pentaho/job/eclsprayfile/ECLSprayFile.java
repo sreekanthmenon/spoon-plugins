@@ -46,6 +46,8 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
     private String fixedRecordSize = "";
     private String allowOverwrite = "True";
     
+    private boolean isValid = true;
+    
     //private RecordList recordList = new RecordList();
 
    /* public RecordList getRecordList() {
@@ -203,7 +205,13 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
         eclDirect.setOutputName(this.getName());
         ArrayList dsList = eclDirect.execute(spray.ecl());
        
-        
+        isValid = eclDirect.isValid();
+        if(!isValid){
+        	System.out.println("Not Valid Spray");
+        	logError("Failed to execute spray on the cluster, please verify your settings");
+        	result.setResult(false);
+        	result.setStopped(true);
+        }
         
         RowMetaAndData data = new RowMetaAndData();
         data.addValue("ecl", Value.VALUE_TYPE_STRING, spray.ecl());
@@ -362,10 +370,10 @@ public class ECLSprayFile extends JobEntryBase implements Cloneable, JobEntryInt
     }
 
     public boolean evaluates() {
-        return true;
+        return isValid;
     }
 
     public boolean isUnconditional() {
-        return true;
+        return false;
     }
 }
