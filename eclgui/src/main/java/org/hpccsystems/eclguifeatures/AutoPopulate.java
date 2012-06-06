@@ -22,7 +22,7 @@ public class AutoPopulate {
     
     private String[] dataSets;
     private String[] recordSets;
-    
+    private Node datasetNode = null;//used internally to store the node in the load record list functions
     
     
     
@@ -64,13 +64,6 @@ public class AutoPopulate {
                 	   try{
 	                	  
 	                	   childnode=children.item(i);
-	                	  // System.out.println("NODE_NAME: " + childnode.getNodeName());
-	                	   //if (childnode.getNodeName().equalsIgnoreCase("type"))  // <hop>
-	                       //{
-	                		   
-	                		   //type = XMLHandler.getNodeValue(childnode);
-	                		 //  System.out.println("TYPE: " + type);
-	                       //}
 	                	   if(childnode != null){
 	                		   if(childnode.getAttributes() != null){
 				                   Node attribute = childnode.getAttributes().getNamedItem(attributeName);
@@ -163,7 +156,9 @@ public class AutoPopulate {
         return datasets;
     }
     
-    public String getType(NodeList returnNode, List<JobEntryCopy> jobs, String datasetValue) throws KettleXMLException{
+   
+    
+    public String getType(List<JobEntryCopy> jobs, String datasetValue) throws KettleXMLException{
     	String type = "";
     	String attributeName = "eclIsDef";
     	String attributeValue = "true";
@@ -206,24 +201,34 @@ public class AutoPopulate {
                            );
                    for (int i=0;i<children.getLength();i++)
                    {
+                	   
                 	   try{
 	                	   childnode=children.item(i);
+	                	   
 	                	   if(childnode != null){
 	                		   if(childnode.getAttributes() != null){
+	                			   
+	                			 //need to make sure its a def
+		                		   //eclIsDef","true"
 				                   Node attribute = childnode.getAttributes().getNamedItem(attributeName);
 				                   if (attribute!=null && attributeValue.equals(attribute.getTextContent())){
-				                	   
+				                	   //System.out.println(childnode.getNodeName());
 				                	   defValue = XMLHandler.getNodeValue(childnode);
 				                	  
 				                	   if(defValue != null){
-				                		   //System.out.println("NODE_VALUE: " + defValue);
-				                		   adDS.add((String)defValue);
-				                		   k++;
+				                		   //System.out.println("---------------NODE_VALUE: " + defValue);
+
+				                		   
 				                		   
 				                		   if(defValue.equals(datasetValue)){
+				                			   //System.out.println("Verify that " + defValue + " = " + datasetValue);
+				                			  // System.out.println("-------------Yes----------" + tType);
 				                    		   type = tType;
-				                    		   returnNode = children;
+				                    		   datasetNode = nNode;
+				                    		   k++;
 				                    		   //to save execution time lets exit on the first find as it is most likely to be the one we want
+				                    		   
+				                    		  System.out.println("~~~~~~~~~~~~~type: " + type);
 				                    		   return type;
 				                    	   }
 				                		   
@@ -240,21 +245,7 @@ public class AutoPopulate {
                 	   }
 
                    }
-                   //ok we have the list of eclIsDef Now lets loop and see if any of them are our datasets
-                   datasets = adDS.toArray(new String[k]);
                    
-                   for (int i=0;i<datasets.length;i++){
-                	   String val = XMLHandler.getNodeValue(
-                               XMLHandler.getSubNode(nNode, datasets[i])
-                               );
-                	   if(val.equals(datasetValue)){
-                		   type = tType;
-                		   
-                		   //to save execution time lets exit on the first find as it is most likely to be the one we want
-                		   return type;
-                	   }
-                	   
-                   }
                }
             }
         }
@@ -265,10 +256,25 @@ public class AutoPopulate {
     	return type;
     }
     
-    public void getRecordListFromECLDataset(NodeList children, ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs) throws KettleXMLException{
+    public void getRecordListFromECLDataset(Node node, ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs) throws KettleXMLException{
     	//ok we need to loop through fields and identify the one that is recordList and populate adDS
-
+    	String columns = XMLHandler.getNodeValue(
+                XMLHandler.getSubNode(node, "recordList"));
+    	String[] colArr = columns.split("[|]");
+    	 int len = colArr.length;
+    	 if(len>0){
+    		 System.out.println("Len: " + len);
+             for(int i =0; i<len; i++){
+            	 //get just the name
+            	 String[] fieldArr = colArr[i].split("[,]");
+            	 if(fieldArr.length>1){
+            		 adDS.add(fieldArr[0]);
+            	 }
+            	 
+             }
+    	 }
     }
+
     /*
      * Gets the Dataset fields from all existing nodes
      * This uses recursion to travel up from joins etc to the 
@@ -277,12 +283,17 @@ public class AutoPopulate {
     public void fieldsByDatasetList(ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs)throws Exception{
         System.out.println(" ------------ fieldsByDatasetList ------------ ");
         Object[] jec = jobs.toArray();
-        NodeList children = null;
+        Node node = null;
         
-        String type = getType(children, jobs, datasetName);
-        
-        if(type.equalsIgnoreCase("ECLDataset")){
-        	getRecordListFromECLDataset(children, adDS, datasetName,jobs);
+        String type = getType(jobs, datasetName);
+        node = datasetNode;
+        if(type != null && type.equalsIgnoreCase("ECLDataset")){
+        	System.out.println("-------------GETTING RECORD LIST---------------");
+        	System.out.println("Type: " + type);
+        	if(node != null){
+        		System.out.println("We have Node");
+        		getRecordListFromECLDataset(node, adDS, datasetName,jobs);
+        	}
         }//add additional types here
        
     }
