@@ -298,12 +298,13 @@ public class AutoPopulate {
     	
     	String parentName = XMLHandler.getNodeValue(
                 XMLHandler.getSubNode(datasetNode, parentField));
-    	String test = XMLHandler.getNodeValue(
-                XMLHandler.getSubNode(datasetNode, "left_recordset"));
+    	//String test = XMLHandler.getNodeValue(
+        //        XMLHandler.getSubNode(datasetNode, "left_recordset"));
     	//System.out.println("ParentName ("+parentField+"): " + parentName);
     	fieldsByDatasetList(adDS,parentName,jobs);
     	
     }
+    
     /*
      * Gets the Dataset fields from all existing nodes
      * This uses recursion to travel up from joins etc to the 
@@ -342,6 +343,15 @@ public class AutoPopulate {
         	fieldsByParent("ECLDistribute","dataset_name", adDS,datasetName,jobs);
         }else if(type != null && type.equalsIgnoreCase("ECLMerge")){
         	fieldsByParent("ECLMerge","recordsetSet", adDS,datasetName,jobs);	
+        //need to add in statments for all the ML funtions
+        }else if(type != null && type.equalsIgnoreCase("ECLML_FromField")){
+        	
+        	if(node != null){
+        		System.out.println("We have fromField");
+        		String parentNodeName = getRecordListFromField(node, adDS, datasetName,jobs);
+        		fieldsByDatasetList(adDS,parentNodeName,jobs);
+        	}
+        	fieldsByParent("ECLMerge","recordsetSet", adDS,datasetName,jobs);	
         	
         }else if(type != null && type.equalsIgnoreCase("ECLDataset")){
         	//System.out.println("-------------GETTING RECORD LIST---------------");
@@ -357,6 +367,131 @@ public class AutoPopulate {
        
     }
     
+    public String getRecordListFromField(Node node, ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs) throws KettleXMLException{
+    	//use Layout Record -- fromType
+    	//find where fromType isDef and then get the record def
+    	String parentNodeName = "";
+    	String attributeName = "eclType";
+    	String attributeValue = "record";
+    	
+    	String recordName = XMLHandler.getNodeValue(
+                XMLHandler.getSubNode(node, "fromType"));
+    	//use recordName to find parent
+    	Node parentNode = null;
+    	
+    	Object[] jec = jobs.toArray();
+
+        int k = 0;
+
+        for(int j = 0; j<jec.length; j++){
+            //System.out.println("Node(i): " + j + " | " +((JobEntryCopy)jec[j]).getName());
+
+            if(!((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("START") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("OUTPUT") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("SUCCESS")){
+               String xml = ((JobEntryCopy)jec[j]).getXML();
+                
+               NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
+               for (int temp = 0; temp < nl.getLength(); temp++){
+                   Node nNode = nl.item(temp);
+
+                   NodeList children;
+                   Node childnode;
+                   String defValue = null;
+
+                   children=nNode.getChildNodes();
+                   
+                   for (int i=0;i<children.getLength();i++)
+                   {
+                	   
+                	   try{
+	                	   childnode=children.item(i);
+	                	   
+	                	   if(childnode != null){
+	                		   if(childnode.getAttributes() != null){
+	                			   
+	                			 //need to make sure its a def
+		                		   //eclIsDef","true"
+				                   Node attribute = childnode.getAttributes().getNamedItem(attributeName);
+				                   if (attribute!=null && attributeValue.equals(attribute.getTextContent())){
+				                	   //System.out.println(childnode.getNodeName());
+				                	   defValue = XMLHandler.getNodeValue(childnode);
+				                	  
+				                	   if(defValue != null){
+				                		   if(defValue.equals(recordName)){
+				                    		   k++;
+				                    		   parentNode = nNode;
+				                    	   }
+				                		   
+				                	   }else{
+				                		   //System.out.println("NODE_VALUE: IS NULL");
+				                	   }
+				                   }
+	                		   }
+	                	   }
+                	   }catch (Exception exc){
+                		   System.out.println("Failed to Read XML");
+                		   //System.out.println(exc);
+                		   //exc.printStackTrace();
+                	   }
+
+                   }//for
+                   //ok check to see if we have node
+                   if(parentNode != null){
+                	   //we have parent node now get name
+                	   String pAttributeName = "eclType";
+                   	   String pAttributeValue1 = "recordset";
+                   	   String pAttributeValue2 = "dataset";
+                   	   
+                	   children=parentNode.getChildNodes();
+                       
+                       for (int i=0;i<children.getLength();i++)
+                       {
+                    	   
+                    	   try{
+    	                	   childnode=children.item(i);
+    	                	   
+    	                	   if(childnode != null){
+    	                		   if(childnode.getAttributes() != null){
+    	                			   
+    	                			 //need to make sure its a def
+    		                		   //eclIsDef","true"
+    				                   Node attribute = childnode.getAttributes().getNamedItem(pAttributeName);
+    				                   if (attribute!=null && (pAttributeValue1.equals(attribute.getTextContent()) || pAttributeValue2.equals(attribute.getTextContent()))){
+    				                	   //System.out.println(childnode.getNodeName());
+    				                	   defValue = XMLHandler.getNodeValue(childnode);
+    				                	  
+    				                	   if(defValue != null){
+    				                    		   k++; 
+    				                    		   //parent node name found;
+    				                    		   parentNodeName = defValue;
+    				                    		   return parentNodeName;
+    				                	   }else{
+    				                		   //System.out.println("NODE_VALUE: IS NULL");
+    				                	   }
+    				                   }
+    	                		   }
+    	                	   }
+                    	   }catch (Exception exc){
+                    		   System.out.println("Failed to Read XML");
+                    		   //System.out.println(exc);
+                    		   //exc.printStackTrace();
+                    	   }
+
+                       }//for
+                	   
+                   }
+                   
+                   
+               }
+               
+               
+               
+               
+               
+            }
+        }
+        
+        return parentNodeName;
+    }
     
      /*
      * Gets the Dataset fields from all existing nodes
