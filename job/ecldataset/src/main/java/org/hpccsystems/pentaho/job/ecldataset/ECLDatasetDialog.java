@@ -43,6 +43,7 @@ import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
 import org.hpccsystems.eclguifeatures.CreateTable;
+import org.hpccsystems.eclguifeatures.ErrorNotices;
 import org.hpccsystems.eclguifeatures.RecordBO;
 import org.hpccsystems.eclguifeatures.RecordList;
 
@@ -356,7 +357,31 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
         return combo;
     }
 
+    private boolean validate(){
+    	boolean isValid = true;
+    	String errors = "";
+    	
+    	//if manual entry disallow fields and record name and file type
+    	
+    	if(!recordSet.getText().equals("")){
+    		
+    	}
+    	
+    	if(!isValid){
+    		ErrorNotices en = new ErrorNotices();
+    		errors += "\r\n";
+    		errors += "If you continue to save with errors you may encounter compile errors if you try to execute the job.\r\n\r\n";
+    		isValid = en.openValidateDialog(getParent(),errors);
+    	}
+    	return isValid;
+    	
+    }
+    
     private void ok() {
+    	if(!validate()){
+    		return;
+    	}
+    	
         jobEntry.setName(jobEntryName.getText());
         jobEntry.setLogicalFileName(fileName.getText());
         jobEntry.setDatasetName(datasetName.getText());

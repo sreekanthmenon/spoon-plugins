@@ -28,7 +28,7 @@ import org.w3c.dom.Node;
  */
 public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterface {
 	
-	private String name;
+	
 	private String recordsetName;
 	private String recordset;
 	private String breakCriteria;
@@ -36,13 +36,7 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
 	private Boolean runLocal = false;
 	
 	
-	public String getName() {
-		return name;
-	}
 	
-	public void setName(String name) {
-		this.name = name;
-	}
 	
 	public String getRecordSetName() {
 		return recordsetName;
@@ -177,12 +171,12 @@ public class ECLGroup extends JobEntryBase implements Cloneable, JobEntryInterfa
         String retval = "";
         
         retval += super.getXML();
-        
-        retval += "             <recordset_name>"+this.recordsetName+"</recordset_name>"+Const.CR;
-        retval += "             <recordset>"+this.recordset+"</recordset>"+Const.CR;
-        retval += "             <breakCriteria>"+this.breakCriteria+"</breakCriteria>"+Const.CR;
-        retval += "             <isAll>"+this.getIsAllString()+"</isAll>"+Const.CR;
-        retval += "             <runLocal>"+this.getIsRunLocalString()+"</runLocal>"+Const.CR;
+      
+        retval += "             <recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA["+this.recordsetName+"]]></recordset_name>"+Const.CR;
+        retval += "             <recordset><![CDATA["+this.recordset+"]]></recordset>"+Const.CR;
+        retval += "             <breakCriteria><![CDATA["+this.breakCriteria+"]]></breakCriteria>"+Const.CR;
+        retval += "             <isAll><![CDATA["+this.getIsAllString()+"]]></isAll>"+Const.CR;
+        retval += "             <runLocal><![CDATA["+this.getIsRunLocalString()+"]]></runLocal>"+Const.CR;
 
         return retval;
 

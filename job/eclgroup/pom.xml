@@ -12,8 +12,6 @@
         <artifactId>job</artifactId>
         <version>0.1-SNAPSHOT</version>
     </parent>
-
-
     <properties>
         <iconfile>group.png</iconfile>
     </properties>
