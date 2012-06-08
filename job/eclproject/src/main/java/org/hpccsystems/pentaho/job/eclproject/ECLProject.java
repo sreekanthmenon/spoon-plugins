@@ -311,7 +311,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         retval += super.getXML();
         //System.out.println(" ------------ getXML ------------- ");
         
-<<<<<<< HEAD
+
         retval += "		<name>" + name + "</name>" + Const.CR;
         retval += "		<declareCounter>" + this.getDeclareCounterString() + "</declareCounter>" + Const.CR;
         retval += "		<recordset_name>" + recordsetName + "</recordset_name>" + Const.CR;
@@ -322,20 +322,10 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         retval += "		<transformFormat>" + transformFormat + "</transformFormat>" + Const.CR;
         retval += "		<parameterName>" + parameterName + "</parameterName>" + Const.CR;
         retval += "		<recordList>" + this.saveRecordList() + "</recordList>" + Const.CR;
-=======
-        //retval += "		<name>" + name + "</name>" + Const.CR;
-        
+
+       //add cdata above see below for example
+       // retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
        
-        retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
-        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + recordsetName + "]]></recordset_name>" + Const.CR;
-        retval += "		<inRecordName><![CDATA[" + inRecordName + "]]></inRecordName>" + Const.CR;
-        retval += "		<outRecordName eclIsDef=\"true\" eclType=\"record\"><![CDATA[" + outRecordName + "]]></outRecordName>" + Const.CR;
-        retval += "		<outRecordFormat><![CDATA[" + outRecordFormat + "]]></outRecordFormat>" + Const.CR;
-        retval += "		<transformName eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + transformName + "]]></transformName>" + Const.CR;
-        retval += "		<transformFormat><![CDATA[" + transformFormat + "]]></transformFormat>" + Const.CR;
-        retval += "		<parameterName><![CDATA[" + parameterName + "]]></parameterName>" + Const.CR;
-        
->>>>>>> upstream/master
        
        //System.out.println(" end getXML ");
        
