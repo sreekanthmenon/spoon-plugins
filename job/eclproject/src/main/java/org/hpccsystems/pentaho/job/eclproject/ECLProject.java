@@ -299,8 +299,6 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 
         retval += super.getXML();
 
-
-        retval += "		<name>" + name + "</name>" + Const.CR;
         retval += "		<declareCounter>" + this.getDeclareCounterString() + "</declareCounter>" + Const.CR;
         retval += "		<recordset_name>" + recordsetName + "</recordset_name>" + Const.CR;
         retval += "		<inRecordName>" + inRecordName + "</inRecordName>" + Const.CR;

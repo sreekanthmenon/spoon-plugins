@@ -6,14 +6,8 @@ package org.hpccsystems.eclguifeatures;
 
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
 
 import org.pentaho.di.core.exception.KettleXMLException;
-=======
-import java.util.Map;
-import java.util.TreeMap;
-
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.job.entry.JobEntryCopy;
 import org.w3c.dom.Node;
@@ -33,38 +27,6 @@ public class AutoPopulate {
     private RecordList datasetFields = new RecordList();
 
     
-public static Map<String, List<String>> getDefFields(List<JobEntryCopy> jobs){
-	
-		//each tree parent will be a job node
-		//each tree child will be a field as defined with isdef=true
-		
-		Map<String, List<String>> mapFunctions = new TreeMap<String, List<String>>();
-		List<String> arlListMath = new ArrayList<String>();
-		arlListMath.add("child 1");
-		arlListMath.add("child 2");
-		arlListMath.add("child 3");
-		arlListMath.add("child 4");
-		arlListMath.add("child 5");
-		arlListMath.add("child 6");
-		
-		mapFunctions.put("Root Item 0a", arlListMath);
-		
-		List<String> arlListLogical = new ArrayList<String>();
-		arlListLogical.add("child 1");
-		arlListLogical.add("child 2");
-		
-		mapFunctions.put("Root Item 1a", arlListLogical);
-		
-		List<String> arlListString = new ArrayList<String>();
-		arlListString.add("c1");
-		arlListString.add("c2");
-		
-		mapFunctions.put("Root Item 2a", arlListString);
-		
-		
-		
-		return mapFunctions;
-	}
     
     
     

@@ -32,12 +32,7 @@ public class MainMapper {
 	// The table viewer
 	private TableViewer tableViewer;
 	// Create a RecordList and assign it to an instance variable
-<<<<<<< HEAD
-	private MapperRecordList mapperRecList = new MapperRecordList();
-=======
-	private RecordList recordList = new RecordList();
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
-	
+	private MapperRecordList mapperRecList = new MapperRecordList();	
 	private Text txtVariableName;
 	private Text txtExpression;
 	
@@ -135,11 +130,7 @@ public class MainMapper {
 		tableViewer.setContentProvider(new MapperContentProvider());	//Set the Content Provider for the table	
 		tableViewer.setLabelProvider(new MapperLabelsProvider());	//Set the Label Provider for the table
 		
-<<<<<<< HEAD
 		tableViewer.setInput(mapperRecList);	//Add an empty MapperRecordList to the TableViewer
-=======
-		tableViewer.setInput(recordList);	//Add an empty RecordList to the TableViewer
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 		
 		tableColumn0.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -189,11 +180,7 @@ public class MainMapper {
 						}
 					}
 					if(tableViewer.getTable().getItem(selectionIndex).getChecked()){
-<<<<<<< HEAD
 						MapperBO objRecord = mapperRecList.getRecord(selectionIndex);
-=======
-						MapperBO objRecord = recordList.getRecord(selectionIndex);
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 						txtVariableName.setText(objRecord.getOpVariable());
 						txtExpression.setText(objRecord.getExpression());
 						txtExpression.setFocus();
@@ -222,11 +209,7 @@ public class MainMapper {
 						
 				Integer[] arrSortedIndexes = arlCheckedIndexes.toArray(new Integer[arlCheckedIndexes.size()]);
 				for (int j = arrSortedIndexes.length - 1 ; j>=0; j--) {
-<<<<<<< HEAD
 					mapperRecList.removeRecord(arrSortedIndexes[j]);
-=======
-					recordList.removeRecord(arrSortedIndexes[j]);
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 				}
 				tableViewer.refresh();
 				tableViewer.getTable().getColumns()[0].setImage(MapperLabelsProvider.getImage("unchecked"));
@@ -460,19 +443,11 @@ public class MainMapper {
 						}
 					}
 					if(tableViewer.getTable().getItem(selectionIndex).getChecked()){
-<<<<<<< HEAD
 						MapperBO objRecord = mapperRecList.getRecord(selectionIndex);
 						objRecord.setOpVariable(txtVariableName.getText());
 						objRecord.setExpression(txtExpression.getText());
 						mapperRecList.removeRecord(selectionIndex);
 						mapperRecList.addRecordAtIndex(selectionIndex, objRecord);
-=======
-						MapperBO objRecord = recordList.getRecord(selectionIndex);
-						objRecord.setOpVariable(txtVariableName.getText());
-						objRecord.setExpression(txtExpression.getText());
-						recordList.removeRecord(selectionIndex);
-						recordList.addRecordAtIndex(selectionIndex, objRecord);
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 						txtVariableName.setText("");
 						txtExpression.setText("");
 						uncheckAll();
@@ -499,11 +474,7 @@ public class MainMapper {
 					record.setExpression(txtExpression.getText());
 					txtVariableName.setText("");
 					txtExpression.setText("");
-<<<<<<< HEAD
 					mapperRecList.addRecord(record);
-=======
-					recordList.addRecord(record);
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 					uncheckAll();
 					tableViewer.refresh();
 				}
@@ -527,11 +498,7 @@ public class MainMapper {
 		btnOk.addSelectionListener(new SelectionAdapter() {
 	   		// Add a record and refresh the view
 			public void widgetSelected(SelectionEvent e) {
-<<<<<<< HEAD
 				//mapperRecList.addRecord(table.getSelectionIndex());
-=======
-				//recordList.addRecord(table.getSelectionIndex());
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 			}
 		});
 		

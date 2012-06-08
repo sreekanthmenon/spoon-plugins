@@ -19,11 +19,7 @@ public class MapperContentProvider implements IStructuredContentProvider{
 
 	@Override
 	public Object[] getElements(Object arg0) {
-<<<<<<< HEAD
 		return ((MapperRecordList)arg0).getRecords().toArray();
-=======
-		return ((RecordList)arg0).getRecords().toArray();
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 	}
 
 }
