@@ -5,6 +5,7 @@
 package org.hpccsystems.pentaho.job.eclproject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import org.hpccsystems.ecldirect.Project;
 import org.pentaho.di.cluster.SlaveServer;
@@ -21,6 +22,9 @@ import org.pentaho.di.job.entry.JobEntryInterface;
 import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
+import org.hpccsystems.ecldirect.Dataset;
+import org.hpccsystems.eclguifeatures.RecordBO;
+import org.hpccsystems.eclguifeatures.RecordList;
 
 /**
  *
@@ -38,6 +42,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
     private String transformName = "";
     private String transformFormat = "";
     private String parameterName = "";
+    private RecordList recordList = new RecordList();
 
     public String getRecordsetName() {
         return recordsetName;
@@ -140,9 +145,79 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         this.parameterName = parameterName;
     }
 
-   
+    public RecordList getRecordList() {
+        return recordList;
+    }
+
+    public void setRecordList(RecordList recordList) {
+        this.recordList = recordList;
+    }
     
+	public String resultListToString() {
+		String out = "";
+		if (recordList != null) {
+			if (recordList.getRecords() != null && recordList.getRecords().size() > 0) {
+				System.out.println("Size: " + recordList.getRecords().size());
+				for (Iterator<RecordBO> iterator = recordList.getRecords().iterator(); iterator.hasNext();) {
+					RecordBO record = (RecordBO) iterator.next();
+					int rLen = record.getColumnWidth();
+					if (rLen != 0) {
+						if (record.getColumnName() != null && !record.getColumnName().equals("")) {
+							out += record.getColumnType() + rLen + " " + record.getColumnName();
+							if (record.getDefaultValue() != "") {
+								out += " := " + record.getDefaultValue();
+							}
+							out += ";\r\n";
+						}
+					} else {
+						if (record.getColumnName() != null && !record.getColumnName().equals("")) {
+							out += record.getColumnType() + " " + record.getColumnName();
+							if (record.getDefaultValue() != "") {
+								out += " := " + record.getDefaultValue();
+							}
+							out += ";\r\n";
+						}
+					}
+
+				}
+			}
+		}
+
+		return out;
+	}
     
+	public String saveRecordList() {
+		String out = "";
+		ArrayList list = recordList.getRecords();
+		Iterator<RecordBO> itr = list.iterator();
+		boolean isFirst = true;
+		while (itr.hasNext()) {
+			if (!isFirst) {
+				out += "|";
+			}
+
+			out += itr.next().toCSV();
+			isFirst = false;
+		}
+		return out;
+	}
+
+	public void openRecordList(String in) {
+		String[] strLine = in.split("[|]");
+
+		int len = strLine.length;
+		if (len > 0) {
+			recordList = new RecordList();
+			System.out.println("Open Record List");
+			for (int i = 0; i < len; i++) {
+				System.out.println("++++++++++++" + strLine[i]);
+				// this.recordDef.addRecord(new RecordBO(strLine[i]));
+				RecordBO rb = new RecordBO(strLine[i]);
+				System.out.println(rb.getColumnName());
+				recordList.addRecordBO(rb);
+			}
+		}
+	}
 
     @Override
     public Result execute(Result prevResult, int k) throws KettleException {
@@ -165,7 +240,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         project.setTransformName(this.getTransformName());
         project.setTransformFormat(this.getTransformFormat());
         project.setParameterName(this.getParameterName());
-        
+        project.setRecordFormatString(resultListToString());
         
         
 
@@ -226,6 +301,8 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
                 setTransformFormat(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "transformFormat")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"parameterName")) != null)
                 setParameterName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"parameterName")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")) != null)
+                openRecordList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")));
             
         } catch (Exception e) {
             throw new KettleXMLException("ECL Project Job Plugin Unable to read step info from XML node", e);
@@ -248,7 +325,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         retval += "		<transformName>" + transformName + "</transformName>" + Const.CR;
         retval += "		<transformFormat>" + transformFormat + "</transformFormat>" + Const.CR;
         retval += "		<parameterName>" + parameterName + "</parameterName>" + Const.CR;
-        
+        retval += "		<recordList>" + this.saveRecordList() + "</recordList>" + Const.CR;
        
        //System.out.println(" end getXML ");
        
@@ -280,6 +357,8 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
                 transformFormat = rep.getStepAttributeString(id_jobentry, "transformFormat"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_jobentry, "parameterName") != null)
                 parameterName = rep.getStepAttributeString(id_jobentry, "parameterName"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "recordList") != null)
+                this.openRecordList(rep.getStepAttributeString(id_jobentry, "recordList")); //$NON-NLS-1$
             
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -300,6 +379,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
             rep.saveStepAttribute(id_job, getObjectId(), "transformName", transformName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "transformFormat", transformFormat); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "parameterName", parameterName); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "recordList", this.saveRecordList()); //$NON-NLS-1$
             
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);

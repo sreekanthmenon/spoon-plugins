@@ -7,10 +7,6 @@ public class ColumnCellModifiers implements ICellModifier{
 
 	private CreateTable createTableObject;
 	
-	/**
-	 * Constructor 
-	 * @param TableViewerExample an instance of a TableViewerExample 
-	 */
 	public ColumnCellModifiers(CreateTable createTableObject) {
 		super();
 		this.createTableObject = createTableObject;
