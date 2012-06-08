@@ -298,9 +298,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         String retval = "";
 
         retval += super.getXML();
-        //System.out.println(" ------------ getXML ------------- ");
-<<<<<<< HEAD
-        
+
 
         retval += "		<name>" + name + "</name>" + Const.CR;
         retval += "		<declareCounter>" + this.getDeclareCounterString() + "</declareCounter>" + Const.CR;
@@ -316,24 +314,8 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
        //add cdata above see below for example
        // retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
        
-       
-       //System.out.println(" end getXML ");
-       
-       
-=======
 
-        
-       
-        retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
-        retval += "		<recordset_name eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + recordsetName + "]]></recordset_name>" + Const.CR;
-        retval += "		<inRecordName><![CDATA[" + inRecordName + "]]></inRecordName>" + Const.CR;
-        retval += "		<outRecordName eclIsDef=\"true\" eclType=\"record\"><![CDATA[" + outRecordName + "]]></outRecordName>" + Const.CR;
-        retval += "		<outRecordFormat><![CDATA[" + outRecordFormat + "]]></outRecordFormat>" + Const.CR;
-        retval += "		<transformName eclIsDef=\"true\" eclType=\"recordset\"><![CDATA[" + transformName + "]]></transformName>" + Const.CR;
-        retval += "		<transformFormat><![CDATA[" + transformFormat + "]]></transformFormat>" + Const.CR;
-        retval += "		<parameterName><![CDATA[" + parameterName + "]]></parameterName>" + Const.CR;
 
->>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         return retval;
 
     }
