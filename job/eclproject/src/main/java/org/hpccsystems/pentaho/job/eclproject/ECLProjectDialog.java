@@ -9,7 +9,10 @@ import java.util.Iterator;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
+<<<<<<< HEAD
 import org.eclipse.swt.custom.ScrolledComposite;
+=======
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -90,7 +93,10 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         Display display = parentShell.getDisplay();
 
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
+<<<<<<< HEAD
         tblOutput = new CreateTable(shell); //Instantiate the Table to be used in "Output Format" tab
+=======
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         
         props.setLook(shell);
         JobDialog.setShellImage(shell, jobEntry);
@@ -130,6 +136,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         shell.setLayout(formLayout);
         shell.setText("Define an ECL Project");
         
+<<<<<<< HEAD
         //Create CTabfolder and set layout
         /*CTabFolder tabFolder = new CTabFolder (shell, SWT.BORDER);
         tabFolder.setSimple(false);
@@ -137,6 +144,11 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         
         TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
         
+=======
+        //Start of code for Tabs
+        CTabFolder tabFolder = new CTabFolder (shell, SWT.BORDER);
+        tabFolder.setSimple(false);
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         FormData tabFolderData = new FormData();
         tabFolderData.height = 500;
         tabFolderData.width = 700;
@@ -146,6 +158,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         tabFolderData.bottom = new FormAttachment(100, 0);
         tabFolder.setLayoutData(tabFolderData);
         
+<<<<<<< HEAD
         //Tab Item 1 for "General" Tab
         //CTabItem item1 = new CTabItem(tabFolder, SWT.NONE);
         TabItem item1 = new TabItem(tabFolder, SWT.NULL);
@@ -166,6 +179,16 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         
         item1.setText ("General");
         item1.setControl(sc);
+=======
+        CTabItem item1 = new CTabItem(tabFolder, SWT.NONE);
+        Composite compForGrp = new Composite(tabFolder, SWT.NONE);
+        compForGrp.setLayout(new FormLayout());
+        
+        item1.setText ("General");
+        item1.setControl(compForGrp);
+        
+        //End of code for Tabs
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         
         //Define buttons since they are used for component alignment 
         wOK = new Button(compForGrp, SWT.PUSH);
@@ -184,7 +207,16 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         generalGroup.setLayout(groupLayout);
         
         FormData generalGroupFormat = new FormData();
+<<<<<<< HEAD
         generalGroupFormat.height = 65;
+=======
+        /*generalGroupFormat.top = new FormAttachment(0, margin);
+        generalGroupFormat.width = 400;
+        generalGroupFormat.height = 65;
+        generalGroupFormat.left = new FormAttachment(middle, 0);*/
+        
+        generalGroupFormat.height = 65;
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         generalGroupFormat.left = new FormAttachment(0, 5);
         generalGroupFormat.right = new FormAttachment(100, -5);
         generalGroup.setLayoutData(generalGroupFormat);
@@ -197,6 +229,15 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         props.setLook(distributeGroup);
         distributeGroup.setText("Project Details");
         distributeGroup.setLayout(groupLayout);
+<<<<<<< HEAD
+=======
+        /*FormData datasetGroupFormat = new FormData();
+        datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
+        datasetGroupFormat.width = 400;
+        datasetGroupFormat.height = 400;
+        datasetGroupFormat.left = new FormAttachment(middle, 0);
+        distributeGroup.setLayoutData(datasetGroupFormat);*/
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, 5);
@@ -274,6 +315,28 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
 		String[] TransDataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
 		MainMapper transFormatMapper = new MainMapper(compForGrp3, TransDataSetList);
         
+<<<<<<< HEAD
+=======
+        //Code for second tab for Mapper
+        CTabItem item2 = new CTabItem(tabFolder, SWT.NONE);
+        Composite compForGrp2 = new Composite(tabFolder, SWT.NONE);
+        //compForGrp2.setLayout(new FormLayout());
+        
+        item2.setText ("Public");
+        item2.setControl(compForGrp2);
+        
+        GridLayout mapperCompLayout = new GridLayout();
+        mapperCompLayout.numColumns = 1;
+		GridData mapperCompData = new GridData();
+		mapperCompData.grabExcessHorizontalSpace = true;
+		compForGrp2.setLayout(mapperCompLayout);
+		compForGrp2.setLayoutData(mapperCompData);
+		
+		//Create a DataSet
+		String[] dataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
+		MainMapper objMainMapper = new MainMapper(compForGrp2, dataSetList);
+        
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         // Add listeners
         Listener cancelListener = new Listener() {
 

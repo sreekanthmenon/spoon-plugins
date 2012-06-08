@@ -156,7 +156,11 @@ public class ECLGlobalVariablesStepMeta extends BaseStepMeta implements StepMeta
     	String retval = "";
         
     	retval += "				<stepName>" + stepName + "</stepName>" + Const.CR;
+<<<<<<< HEAD
     	retval += "		<outputfield>" + outputField + "</outputfield>" + Const.CR;
+=======
+    	retval += "				<outputfield>" + outputField + "</outputfield>" + Const.CR;
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     	retval += "             <server_ip>"+this.serverIP+"</server_ip>"+Const.CR;
         
         retval += "             <server_port>"+this.serverPort+"</server_port>"+Const.CR;
@@ -260,7 +264,11 @@ public class ECLGlobalVariablesStepMeta extends BaseStepMeta implements StepMeta
     	try {
     		if(rep.getStepAttributeString(id_step, "stepName") != null)
     			stepName = rep.getStepAttributeString(id_step, "stepName"); //$NON-NLS-1$ 
+<<<<<<< HEAD
     		 outputField = rep.getStepAttributeString(id_step, "otuputField"); //$NON-NLS-1$
+=======
+    		 	outputField = rep.getStepAttributeString(id_step, "otuputField"); //$NON-NLS-1$
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     		 
     			serverIP = rep.getStepAttributeString(id_step, "server_ip");
             

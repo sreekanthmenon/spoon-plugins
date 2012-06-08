@@ -26,6 +26,7 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
     public boolean processRow(StepMetaInterface smi, StepDataInterface sdi) throws KettleException {
     	meta = (ECLOutputStepMeta) smi;
         data = (ECLOutputStepData) sdi;
+<<<<<<< HEAD
         System.out.println("-------------------------------------");
     	System.out.println("Started ecloutputstep processrow");
         logBasic("Rendered Output ECL Code processRow: ");
@@ -35,11 +36,23 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
         if (r == null) 
         {
         	logBasic("r is null");
+=======
+        
+        
+        Object[] r = getRow(); 
+        String input = "";
+        if (r == null) 
+        {
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         } else {
             logBasic("Found Row = " + r[r.length-1]);
             input = r[r.length-1].toString() + "\r\n";
         }
+<<<<<<< HEAD
          */
+=======
+        
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         Object[] newRow = new Object[1]; 
         
         Output op = new Output();
@@ -65,6 +78,7 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
         op.setRepeat(meta.getRepeat());
         op.setPipeType(meta.getPipeType());
         op.setName(meta.getName());
+<<<<<<< HEAD
         logBasic("done with direct");
 		newRow[0] = op.ecl();
 		//meta.setOutputField(op.ecl()); 
@@ -74,10 +88,20 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
 		//should change this to catch errors
 		System.out.println("done processRow Outputstep");
 		return false;
+=======
+        newRow[0] = input + op.ecl();
+        
+        putRow(data.outputRowMeta, newRow);
+        
+        logBasic("{Dataset Step} Output = " + newRow[0]);
+        
+        return false;
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     }
 
     
     
+<<<<<<< HEAD
     
     
     
@@ -88,6 +112,13 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
         meta = (ECLOutputStepMeta) smi;
         data = (ECLOutputStepData) sdi;
 
+=======
+    public boolean init(StepMetaInterface smi, StepDataInterface sdi) {
+        meta = (ECLOutputStepMeta) smi;
+        data = (ECLOutputStepData) sdi;
+        super.setStepname(meta.getStepName());
+        
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         return super.init(smi, sdi);
     }
 
@@ -98,6 +129,7 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
         super.dispose(smi, sdi);
     }
 
+<<<<<<< HEAD
     //
     // Run is were the action happens!
     /*
@@ -127,4 +159,7 @@ public class ECLOutputStep extends BaseStep implements StepInterface {
         }
     }
     */
+=======
+   
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 }

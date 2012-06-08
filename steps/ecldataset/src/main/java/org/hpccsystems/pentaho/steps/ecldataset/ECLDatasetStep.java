@@ -20,13 +20,21 @@ public class ECLDatasetStep extends BaseStep implements StepInterface {
 
     public ECLDatasetStep(StepMeta s, StepDataInterface stepDataInterface, int c, TransMeta t, Trans dis) {
         super(s, stepDataInterface, c, t, dis);
+<<<<<<< HEAD
+=======
+        
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     }
 
     public boolean processRow(StepMetaInterface smi, StepDataInterface sdi) throws KettleException {
     	meta = (ECLDatasetStepMeta) smi;
         data = (ECLDatasetStepData) sdi;
         
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         Object[] r = getRow(); 
         String input = "";
         if (r == null) 
@@ -55,6 +63,7 @@ public class ECLDatasetStep extends BaseStep implements StepInterface {
          
          return false;
     }
+<<<<<<< HEAD
 
     
     
@@ -62,12 +71,19 @@ public class ECLDatasetStep extends BaseStep implements StepInterface {
     
     
     
+=======
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     
     
     public boolean init(StepMetaInterface smi, StepDataInterface sdi) {
         meta = (ECLDatasetStepMeta) smi;
         data = (ECLDatasetStepData) sdi;
+<<<<<<< HEAD
 
+=======
+        super.setStepname(meta.getStepName());
+        
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         return super.init(smi, sdi);
     }
 

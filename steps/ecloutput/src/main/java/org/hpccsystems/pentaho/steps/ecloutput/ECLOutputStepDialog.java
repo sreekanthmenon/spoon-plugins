@@ -53,7 +53,11 @@ import java.util.List;
 public class ECLOutputStepDialog extends BaseStepDialog implements StepDialogInterface {
 	private ECLOutputStepMeta input;
 
+<<<<<<< HEAD
     private Text inputName;
+=======
+    private Text stepnameField;
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 
     private Button wOK, wCancel, fileOpenButton;
     private boolean backupChanged;
@@ -114,6 +118,14 @@ public class ECLOutputStepDialog extends BaseStepDialog implements StepDialogInt
     public ECLOutputStepDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
         super(parent, (BaseStepMeta) in, transMeta, stepName);
         input = (ECLOutputStepMeta) in;
+<<<<<<< HEAD
+=======
+        if(stepName != null && !stepName.equals("")){
+        	input.setStepName(stepName);
+        }else{
+        	input.setStepName("Output");
+        }
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     }
 
     public String open() {
@@ -303,7 +315,11 @@ public class ECLOutputStepDialog extends BaseStepDialog implements StepDialogInt
             this.createOutputGroup(c1, groupLayout, lsMod);
        }
         if (input.getStepName() != null) {
+<<<<<<< HEAD
             inputName.setText(input.getStepName());
+=======
+        	stepnameField.setText(input.getStepName());
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         }
          if (input.getIsDef() != null) {
             
@@ -370,8 +386,13 @@ public class ECLOutputStepDialog extends BaseStepDialog implements StepDialogInt
         generalGroup.setSize(generalGroup.computeSize(SWT.DEFAULT, SWT.DEFAULT));
         generalGroup.layout();
 
+<<<<<<< HEAD
         inputName = buildText("Step Name", null, lsMod, middle, margin, generalGroup);
         this.isDef = buildCombo("Is definition", inputName, lsMod, middle, margin, generalGroup, new String[]{"", "Yes", "No"});
+=======
+        stepnameField = buildText("Step Name", null, lsMod, middle, margin, generalGroup);
+        this.isDef = buildCombo("Is definition", stepnameField, lsMod, middle, margin, generalGroup, new String[]{"", "Yes", "No"});
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         this.inputType = buildCombo("Input Type", isDef, lsMod, middle, margin, generalGroup, new String[]{"", "Recordset", "Expression"});
        // this.includeFormat = buildCombo("Include Format", inputType, lsMod, middle, margin, generalGroup, new String[]{"", "Yes", "No"});
         
@@ -742,6 +763,10 @@ public class ECLOutputStepDialog extends BaseStepDialog implements StepDialogInt
     // let the plugin know about the entered data
     private void ok() {
     	 //input.setName(inputName.getText());
+<<<<<<< HEAD
+=======
+    	super.stepname = stepnameField.getText();
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
          AutoPopulateSteps ap = new AutoPopulateSteps();
          String serverHost = "";
          String serverPort = "";
@@ -758,8 +783,13 @@ public class ECLOutputStepDialog extends BaseStepDialog implements StepDialogInt
              
 ////         input.setServerAddress(serverHost);
 ////         input.setServerPort(serverPort);
+<<<<<<< HEAD
          if(this.inputName != null && !this.inputName.isDisposed()){
              input.setStepName(this.inputName.getText());
+=======
+         if(this.stepnameField != null && !this.stepnameField.isDisposed()){
+             input.setStepName(this.stepnameField.getText());
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
          }else{
              input.setStepName("");
          }

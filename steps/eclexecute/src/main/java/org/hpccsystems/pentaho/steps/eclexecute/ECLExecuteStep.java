@@ -37,6 +37,7 @@ public class ECLExecuteStep extends BaseStep implements StepInterface {
     public boolean processRow(StepMetaInterface smi, StepDataInterface sdi) throws KettleException {
     	meta = (ECLExecuteStepMeta) smi;
         data = (ECLExecuteStepData) sdi;
+<<<<<<< HEAD
         /*
         AutoPopulateSteps ap2 = new AutoPopulateSteps();
         System.out.println("______________________________________________________==");
@@ -66,6 +67,22 @@ public class ECLExecuteStep extends BaseStep implements StepInterface {
         }
         System.out.println("==______________________________________________________==");
         */
+=======
+        
+        
+        Object[] row = getRow(); 
+        String input = "";
+        if (row == null) 
+        {
+        } else {
+            logBasic("Found Row = " + row[row.length-1]);
+            input = row[row.length-1].toString() + "\r\n";
+        }
+
+
+        String eclCode = input;
+        
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         //Result result = prevResult;
         if(false){//result.isStopped()){
             logBasic("{Output Job is Stopped}");
@@ -141,7 +158,11 @@ public class ECLExecuteStep extends BaseStep implements StepInterface {
 
            // List list = result.getRows();
           //  list.add(data);
+<<<<<<< HEAD
             String eclCode = "";
+=======
+            //String eclCode = "";
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
            // if (list == null) {
             List list = new ArrayList();
           /*  } else {
@@ -390,7 +411,12 @@ public class ECLExecuteStep extends BaseStep implements StepInterface {
     public boolean init(StepMetaInterface smi, StepDataInterface sdi) {
         meta = (ECLExecuteStepMeta) smi;
         data = (ECLExecuteStepData) sdi;
+<<<<<<< HEAD
 
+=======
+        super.setStepname(meta.getStepName()); 
+        
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         return super.init(smi, sdi);
     }
 

@@ -157,7 +157,7 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         int margin = Const.MARGIN;
 
         shell.setLayout(formLayout);
-        shell.setText("Define an ECL Dataset");
+        shell.setText("Define an ECL Spray");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -196,7 +196,11 @@ public class ECLSprayFileDialog extends JobEntryDialog implements JobEntryDialog
         filePath = buildText("File Name", jobEntryName, lsMod, middle, margin, sourceGroup);
         logicalFileName = buildText("Logical File Name", filePath, lsMod, middle, margin, sourceGroup);
         fileType = buildCombo("File Type", logicalFileName, lsMod, middle, margin, sourceGroup, new String[]{"Fixed", "Variable"});
+<<<<<<< HEAD
         allowOverwrite = buildCombo("Allow Overwrite", fileType, lsMod, middle, margin, sourceGroup, new String[]{"True", "False"});
+=======
+
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         
         Group defGroup = new Group(shell, SWT.SHADOW_NONE);
         props.setLook(defGroup);

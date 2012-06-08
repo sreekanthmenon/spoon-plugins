@@ -400,7 +400,11 @@ public class ECLOutputStepMeta extends BaseStepMeta implements StepMetaInterface
 
     
     public void setDefault() {
+<<<<<<< HEAD
         outputField = "";
+=======
+        outputField = "template_outfield";
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     }
 
     public void check(List<CheckResultInterface> remarks, TransMeta transmeta, StepMeta stepMeta, RowMetaInterface prev, String input[], String output[], RowMetaInterface info) {

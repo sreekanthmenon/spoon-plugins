@@ -33,7 +33,11 @@ import org.hpccsystems.eclguifeatures.RecordList;
 
 public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterface {
 	 private String stepName;
+<<<<<<< HEAD
 	 
+=======
+	 private String outputField;
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 
     
   
@@ -44,7 +48,17 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     public void setStepName(String stepName) {
         this.stepName = stepName;
     }
+<<<<<<< HEAD
 
+=======
+    public String getOutputField() {
+        return outputField;
+    }
+
+    public void setOutputField(String outputField) {
+        this.outputField = outputField;
+    }
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     
     
     
@@ -65,7 +79,11 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     	String retval = "";
         
     	retval += "		<stepName>" + stepName + "</stepName>" + Const.CR;
+<<<<<<< HEAD
         
+=======
+    	retval += "		<outputfield>" + outputField + "</outputfield>" + Const.CR;
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         
         
         return retval;
@@ -76,8 +94,14 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     public void loadXML(Node node, List<DatabaseMeta> databases, Map<String, Counter> counters) throws KettleXMLException {
     	 try {
     		 if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "stepName")) != null)
+<<<<<<< HEAD
     			 setStepName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "stepName")));
     		 
+=======
+    			setStepName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "stepName")));
+    		 if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")) != null)
+   		  		setOutputField(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "outputfield")));
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
 
          } catch (Exception e) {
              throw new KettleXMLException("ECL Dataset Job Plugin Unable to read step info from XML node", e);
@@ -94,7 +118,11 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
 
     
     public void setDefault() {
+<<<<<<< HEAD
        // outputField = "template_outfield";
+=======
+        outputField = "template_outfield";
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     }
 
     public void check(List<CheckResultInterface> remarks, TransMeta transmeta, StepMeta stepMeta, RowMetaInterface prev, String input[], String output[], RowMetaInterface info) {
@@ -120,15 +148,25 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     }
 
     public StepDataInterface getStepData() {
+<<<<<<< HEAD
         //return new ECLDatasetStepData(outputField);
     	return null;
+=======
+        return new ECLDatasetStepData(outputField);
+    	
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     }
 
     public void readRep(Repository rep, ObjectId id_step, List<DatabaseMeta> databases, Map<String, Counter> counters) throws KettleException {
     	try {
     		if(rep.getStepAttributeString(id_step, "stepName") != null)
     			stepName = rep.getStepAttributeString(id_step, "stepName"); //$NON-NLS-1$ 
+<<<<<<< HEAD
             
+=======
+    		if(rep.getStepAttributeString(id_step, "outputField") != null)
+        		outputField = rep.getStepAttributeString(id_step, "outputField"); //$NON-NLS-1$
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -138,7 +176,11 @@ public class ECLDatasetStepMeta extends BaseStepMeta implements StepMetaInterfac
     public void saveRep(Repository rep, ObjectId id_transformation, ObjectId id_step) throws KettleException {
     	try {
     		rep.saveStepAttribute(id_transformation, id_step, "stepName", stepName); //$NON-NLS-1$
+<<<<<<< HEAD
             
+=======
+    		rep.saveStepAttribute(id_transformation, id_step, "outputField", outputField); //$NON-NLS-1$
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
             
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_step, e);

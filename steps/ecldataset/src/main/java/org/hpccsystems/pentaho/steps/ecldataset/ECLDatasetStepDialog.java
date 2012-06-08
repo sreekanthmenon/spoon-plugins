@@ -67,6 +67,12 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
     public ECLDatasetStepDialog(Shell parent, Object in, TransMeta transMeta, String stepName) {
         super(parent, (BaseStepMeta) in, transMeta, stepName);
         input = (ECLDatasetStepMeta) in;
+<<<<<<< HEAD
+=======
+        if(stepName != null && !stepName.equals("")){
+        	input.setStepName(stepName);
+        }
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     }
 
     public String open() {
@@ -280,6 +286,10 @@ public class ECLDatasetStepDialog extends BaseStepDialog implements StepDialogIn
     // let the plugin know about the entered data
     private void ok() {
     	//input.setName(jobEntryName.getText());
+<<<<<<< HEAD
+=======
+    	super.stepname = wlStepname.getText();
+>>>>>>> e3817dab9afa0cee261ee0d81604e8c6f414dd6a
     	input.setStepName(wlStepname.getText());
     	input.setLogicalFileName(fileName.getText());
     	input.setDatasetName(datasetName.getText());
