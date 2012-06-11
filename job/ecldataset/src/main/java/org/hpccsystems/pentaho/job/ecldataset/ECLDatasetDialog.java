@@ -363,8 +363,24 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
     	
     	//if manual entry disallow fields and record name and file type
     	
+    	//datasetname
+    	//logical file name or manual entry fileName
+    	//recordname
+    	//filetype
+    	
+    	
+    	
+    	//if file then need fields
+    	
+    	//if(!datasetname.getText().equals("")){
+    	//	isValid = false;
+    	//	errors += "\"Job Entry Name\" is a required field!\r\n";
+    	//}
+    	
+    	
     	if(!recordSet.getText().equals("")){
-    		
+    		isValid = false;
+    		errors += "\"Job Entry Name\" is a required field!\r\n";
     	}
     	
     	if(!isValid){
