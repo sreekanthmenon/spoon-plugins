@@ -2,6 +2,7 @@ package org.hpccsystems.pentaho.job.eclproject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -42,6 +43,28 @@ public class MainMapper {
 	private String[] functionList = null;
 	private String[] dataSetList = null;
 	private String[] operatorList = null;
+	
+	
+	/**
+	 * This method redraws the table with 3 or columns depending upon the flag(status) value.
+	 */
+	public void reDrawTable(){
+		MapperRecordList oldRL = mapperRecList;
+		mapperRecList = new MapperRecordList();
+                
+                if(oldRL.getRecords() != null && oldRL.getRecords().size() > 0) {
+                        System.out.println("Size: "+oldRL.getRecords().size());
+                        for (Iterator<MapperBO> iterator = oldRL.getRecords().iterator(); iterator.hasNext();) {
+                        	MapperBO obj = (MapperBO) iterator.next();
+                        	mapperRecList.addRecord(obj);
+                        }
+                }
+                oldRL = null;
+		tableViewer.setInput(mapperRecList);
+		tableViewer.getTable().setRedraw(true);
+               
+	}
+	
 	
 	//The Constructor has input as 
 	public MainMapper(Composite parentComp, String[] dataSetList){
@@ -96,7 +119,27 @@ public class MainMapper {
 	public void setOperatorList(String[] operatorList) {
 		this.operatorList = operatorList;
 	}
+	
+	public MapperRecordList getMapperRecList() {
+		return mapperRecList;
+	}
 
+	public void setMapperRecList(MapperRecordList mapperRecList) {
+		this.mapperRecList = mapperRecList;
+	}
+	
+	public TableViewer getTableViewer() {
+		return tableViewer;
+	}
+
+	public void setTableViewer(TableViewer tableViewer) {
+		this.tableViewer = tableViewer;
+	}
+	
+	/*public void reDrawTable(){
+		tableViewer.getTable().redraw();
+	}*/
+	
 	private void createTable(Composite tblComposite) {
 		
 		GridLayout layout = new GridLayout();

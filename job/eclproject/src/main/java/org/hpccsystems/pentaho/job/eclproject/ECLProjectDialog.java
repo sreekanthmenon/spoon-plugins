@@ -71,7 +71,9 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
     private Text transformFormat;
     private Text parameterName;
     private CreateTable tblOutput = null;
+    private MainMapper tblMapper = null;
     private RecordList recordList = new RecordList();
+    private MapperRecordList mapperRecList = new MapperRecordList();
     
     private Button wOK, wCancel;
     private boolean backupChanged;
@@ -234,7 +236,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         
         //transformFormat = buildMultiText("Transform Format", parameterName, lsMod, middle, margin, distributeGroup);
         
-        
+        //Add the existing RecordList
         if(jobEntry.getRecordList() != null){
             recordList = jobEntry.getRecordList();
             tblOutput.setRecordList(jobEntry.getRecordList());
@@ -278,7 +280,15 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
 		
 		//Create a DataSet
 		String[] TransDataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
-		MainMapper transFormatMapper = new MainMapper(compForGrp3, TransDataSetList);
+		tblMapper = new MainMapper(compForGrp3, TransDataSetList);
+		
+		//Add the existing Mapper RecordList
+        if(jobEntry.getMapperRecList() != null){
+        	mapperRecList = jobEntry.getMapperRecList();
+            tblMapper.setMapperRecList(jobEntry.getMapperRecList());
+        }
+		
+        tblMapper.reDrawTable();
         
         // Add listeners
         Listener cancelListener = new Listener() {
@@ -452,6 +462,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         //jobEntry.setTransformFormat(transformFormat.getText());
         jobEntry.setParameterName(parameterName.getText());
         jobEntry.setRecordList(tblOutput.getRecordList());
+        jobEntry.setMapperRecList(tblMapper.getMapperRecList());
         dispose();
     }
 

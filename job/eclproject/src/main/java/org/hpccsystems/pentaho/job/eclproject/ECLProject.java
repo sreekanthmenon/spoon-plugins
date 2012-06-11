@@ -41,6 +41,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
     private String transformFormat = "";
     private String parameterName = "";
     private RecordList recordList = new RecordList();
+    private MapperRecordList mapperRecList = new MapperRecordList();
 
     public String getRecordsetName() {
         return recordsetName;
@@ -49,8 +50,6 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
     public void setRecordsetName(String recordsetName) {
         this.recordsetName = recordsetName;
     }
-    
-
 
     public boolean getDeclareCounter() {
         return declareCounter;
@@ -139,6 +138,14 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         this.recordList = recordList;
     }
     
+    public MapperRecordList getMapperRecList() {
+		return mapperRecList;
+	}
+
+	public void setMapperRecList(MapperRecordList mapperRecList) {
+		this.mapperRecList = mapperRecList;
+	}
+    
 	public String resultListToString() {
 		String out = "";
 		if (recordList != null) {
@@ -168,7 +175,9 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 				}
 			}
 		}
-
+		
+		System.out.println("RESULT of resultListToString() ........... "+out);
+		
 		return out;
 	}
     
@@ -185,10 +194,14 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 			out += itr.next().toCSV();
 			isFirst = false;
 		}
+		
+		System.out.println("RESULT of saveRecordList() ........... "+out);
+		
 		return out;
 	}
 
 	public void openRecordList(String in) {
+		System.out.println("Inside Method openRecordList .........."+in);
 		String[] strLine = in.split("[|]");
 
 		int len = strLine.length;
@@ -204,6 +217,63 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 			}
 		}
 	}
+	
+	public String resultListToStringForMapper() {
+		String out = "";
+		if (mapperRecList != null) {
+			if (mapperRecList.getRecords() != null && mapperRecList.getRecords().size() > 0) {
+				System.out.println("mapperRecList size ---->>>> : " + mapperRecList.getRecords().size());
+				for (Iterator<MapperBO> iterator = mapperRecList.getRecords().iterator(); iterator.hasNext();) {
+					MapperBO record = (MapperBO) iterator.next();
+					out += record.getOpVariable() + " := " + record.getExpression();
+					out += ";\r\n";
+
+				}
+			}
+		}
+		
+		System.out.println("RESULT of resultListToStringForMapper() ........... "+out);
+		
+		return out;
+	}
+    
+	public String saveRecordListForMapper() {
+		String out = "";
+		ArrayList list = mapperRecList.getRecords();
+		Iterator<MapperBO> itr = list.iterator();
+		boolean isFirst = true;
+		while (itr.hasNext()) {
+			System.out.println("loop");
+			if (!isFirst) {
+				out += "|";
+			}
+
+			out += itr.next().toCSV();
+			isFirst = false;
+		}
+		
+		System.out.println("RESULT of saveRecordListForMapper() ........... "+out);
+		
+		return out;
+	}
+
+	public void openRecordListForMapper(String in) {
+		System.out.println("Inside Method openRecordListForMapper .........."+in);
+		String[] strLine = in.split("[|]");
+
+		int len = strLine.length;
+		if (len > 0) {
+			mapperRecList = new MapperRecordList();
+			System.out.println("Open Record List");
+			for (int i = 0; i < len; i++) {
+				System.out.println("++++++++++++" + strLine[i]);
+				// this.recordDef.addRecord(new RecordBO(strLine[i]));
+				MapperBO rb = new MapperBO(strLine[i]);
+				mapperRecList.addRecord(rb);
+			}
+		}
+	}
+	
 
     @Override
     public Result execute(Result prevResult, int k) throws KettleException {
@@ -231,6 +301,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         
 
         logBasic("{Project Job} Execute = " + project.ecl());
+        System.out.println("PROJECT JOB ---->>>> : "+project.ecl());
         
         logBasic("{Project Job} Previous =" + result.getLogText());
         
@@ -287,6 +358,8 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
                 setParameterName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"parameterName")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")) != null)
                 openRecordList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "mapperRecList")) != null)
+            	openRecordListForMapper(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "mapperRecList")));
             
         } catch (Exception e) {
             throw new KettleXMLException("ECL Project Job Plugin Unable to read step info from XML node", e);
@@ -308,7 +381,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         retval += "		<transformFormat>" + transformFormat + "</transformFormat>" + Const.CR;
         retval += "		<parameterName>" + parameterName + "</parameterName>" + Const.CR;
         retval += "		<recordList>" + this.saveRecordList() + "</recordList>" + Const.CR;
-
+        retval += "		<mapperRecList>" + this.saveRecordListForMapper() + "</mapperRecList>" + Const.CR;
        //add cdata above see below for example
        // retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
        
@@ -342,6 +415,8 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
                 parameterName = rep.getStepAttributeString(id_jobentry, "parameterName"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_jobentry, "recordList") != null)
                 this.openRecordList(rep.getStepAttributeString(id_jobentry, "recordList")); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "mapperRecList") != null)
+                this.openRecordListForMapper(rep.getStepAttributeString(id_jobentry, "mapperRecList")); //$NON-NLS-1$
             
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -361,6 +436,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
             rep.saveStepAttribute(id_job, getObjectId(), "transformFormat", transformFormat); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "parameterName", parameterName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "recordList", this.saveRecordList()); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "mapperRecList", this.saveRecordListForMapper()); //$NON-NLS-1$
             
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
