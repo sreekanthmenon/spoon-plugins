@@ -108,7 +108,7 @@ public class ECLDataset extends JobEntryBase implements Cloneable, JobEntryInter
             	int i = 1;
                     for (Iterator<RecordBO> iterator = recordList.getRecords().iterator(); iterator.hasNext();) {
                             RecordBO record = (RecordBO) iterator.next();
-                            int rLen = record.getColumnWidth();
+                            
                             //name type required
                             if(!(record.getColumnName() != null && !record.getColumnName().equals(""))){
                             	errors += "On the Fields Tab Row " + i + " is missing \"Column Name \"!\r\n";
