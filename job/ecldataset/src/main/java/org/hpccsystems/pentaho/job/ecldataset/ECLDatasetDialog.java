@@ -157,14 +157,15 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 200;
+        datasetGroupFormat.height = 220;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         datasetGroup.setLayoutData(datasetGroupFormat);
 
         datasetName = buildText("Dataset Name", null, lsMod, middle, margin, datasetGroup);
         fileName = buildText("Logical File Name", datasetName, lsMod, middle, margin, datasetGroup);
-        
-        recordSet = buildMultiText("Manual Record Entry", fileName, lsMod, middle, margin, datasetGroup);
+        fileType = buildCombo("File Type", fileName, lsMod, middle, margin, datasetGroup,new String[]{"", "CSV", "THOR"});
+
+        recordSet = buildMultiText("Manual Record Entry", fileType, lsMod, middle, margin, datasetGroup);
 
         //Record Declaration
         Group recordGroup = new Group(compForGrp, SWT.SHADOW_NONE);
@@ -173,14 +174,13 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
         recordGroup.setLayout(groupLayout);
         FormData recordGroupFormat = new FormData();
         recordGroupFormat.top = new FormAttachment(datasetGroup, margin);
-        recordGroupFormat.height = 65;
+        recordGroupFormat.height = 45;
         recordGroupFormat.width = 400;
         recordGroupFormat.left = new FormAttachment(middle, 0);
         recordGroup.setLayoutData(recordGroupFormat);
 
         recordName = buildText("Record Name", null, lsMod, middle, margin, recordGroup);
-        fileType = buildCombo("File Type", recordName, lsMod, middle, margin, recordGroup,new String[]{"", "CSV", "THOR"});
-
+        
        // recordDef = buildMultiText("Record Definition", recordName, lsMod, middle, margin, recordGroup);
         
         
@@ -377,10 +377,57 @@ public class ECLDatasetDialog extends JobEntryDialog implements JobEntryDialogIn
     	//	errors += "\"Job Entry Name\" is a required field!\r\n";
     	//}
     	
-    	
-    	if(!recordSet.getText().equals("")){
+    	if(this.jobEntryName.getText().equals("")){
     		isValid = false;
     		errors += "\"Job Entry Name\" is a required field!\r\n";
+    	}
+    	
+    	if(this.datasetName.getText().equals("")){
+    		isValid = false;
+    		errors += "\"Dataset Name\" is a required field!\r\n";
+    	}
+    	String fields = jobEntry.resultListToString(ct.getRecordList());
+    	if(!this.recordSet.getText().equals("")){
+    		//manual entry
+    		
+    		//we can't have fields or logical file name or File Type
+    		if(!this.fileName.getText().equals("")){
+    			isValid = false;
+        		errors += "\"Logical File Name\" is not allowed for manual entry!\r\n";
+    		}
+    		if(!this.fileType.getText().equals("")){
+    			isValid = false;
+        		errors += "\"File Type\" is not allowed for manual entry!\r\n";
+    		}
+    		if(!fields.equals("")){
+    			isValid = false;
+        		errors += "Values on the \"Fields Tab\" is not allowed for manual entry!\r\n";
+    		}
+    	}else{
+    		//using fields
+    		if(this.fileName.getText().equals("")){
+    			isValid = false;
+        		errors += "\"Logical File Name\" is a required field!\r\n";
+    		}
+    		if(this.fileType.getText().equals("")){
+    			isValid = false;
+        		errors += "\"File Type\" is a required field!\r\n";
+    		}
+    		if(this.recordName.getText().equals("")){
+    			isValid = false;
+        		errors += "\"Record Name\" is a required field!\r\n";
+    		}
+    		if(fields.equals("")){
+    			isValid = false;
+        		errors += "Values on the \"Fields Tab\" is a required!\r\n";
+    		}else{
+    			//we need to validate the fields
+    			String e = jobEntry.fieldsValid(ct.getRecordList());
+    			if(!e.equals("")){
+    				errors += e;
+    				isValid = false;
+    			}
+    		}
     	}
     	
     	if(!isValid){

@@ -15,6 +15,7 @@
 		<module>ecldedup</module>
 		<module>ecldistribute</module>
 		<module>eclexecute</module>
+		<module>eclerror</module>
 		<module>eclgeneric</module>
 		<module>eclglobalvariables</module>
 		<module>eclgroup</module>
