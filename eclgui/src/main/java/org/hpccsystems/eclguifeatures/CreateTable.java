@@ -418,7 +418,9 @@ public class CreateTable {
                 if(columnNames.length >= 4){
                     // Column 4 : Column Width (Text with digits only)
                     TextCellEditor colWidthTextEditor = new TextCellEditor(table);
-                    ((Text) colWidthTextEditor.getControl()).addVerifyListener(
+                    ((Text) colWidthTextEditor.getControl()).setTextLimit(10);
+                    editors[3] = colWidthTextEditor;
+                    /*((Text) colWidthTextEditor.getControl()).addVerifyListener(
 
                             new VerifyListener() {
                                     public void verifyText(VerifyEvent e) {
@@ -427,7 +429,7 @@ public class CreateTable {
                                             e.doit = "0123456789".indexOf(e.text) >= 0 ;
                                     }
                             });
-                    editors[3] = colWidthTextEditor;
+                    editors[3] = colWidthTextEditor;*/
                 }
 		// Assign the cell editors to the viewer 
 		tableViewer.setCellEditors(editors);
@@ -505,8 +507,7 @@ public class CreateTable {
 						System.out.println("*******************");
 						System.out.println("Column Name: "+obj.getColumnName());
 						System.out.println("Column Type: "+obj.getColumnType());
-						if(obj.getColumnWidth() > 0)
-							System.out.println("Height: "+obj.getColumnWidth());
+						System.out.println("Height: "+obj.getColumnWidth());
 						System.out.println("*******************");
 						
 					}

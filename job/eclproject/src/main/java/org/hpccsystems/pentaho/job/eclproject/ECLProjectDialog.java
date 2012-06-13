@@ -4,7 +4,9 @@
  */
 package org.hpccsystems.pentaho.job.eclproject;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -34,6 +36,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.widgets.TreeItem;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.job.entry.JobEntryDialogInterface;
@@ -51,6 +54,7 @@ import org.hpccsystems.eclguifeatures.CreateTable;
 import org.hpccsystems.eclguifeatures.RecordBO;
 import org.hpccsystems.eclguifeatures.RecordList;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
+import org.hpccsystems.mapper.*;
 /**
  *
  * @author ChalaAX
@@ -126,7 +130,7 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         //formLayout.marginHeight = Const.FORM_MARGIN; //5
         
         shell.setLayout(formLayout);
-        shell.setSize(750,550); //800 X 600 (width X Height)
+        shell.setSize(800,600); //800 X 600 (width X Height)
 
         int middle = props.getMiddlePct(); //35. This value is defined in org.pentaho.di.core.Const.
         int margin = Const.MARGIN; //4. This value is defined in org.pentaho.di.core.Const.
@@ -134,14 +138,26 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
         shell.setLayout(formLayout);
         shell.setText("Define an ECL Project");
         
-
-        //Create CTabfolder and set layout
-        /*CTabFolder tabFolder = new CTabFolder (shell, SWT.BORDER);
-        tabFolder.setSimple(false);
-        tabFolder.setSelectionBackground(new Color[]{new Color(display, new RGB(242, 244, 247)), new Color(display, new RGB(153, 186, 243))}, new int[]{100}, true);*/
-        
-        TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
-        
+        //Create a Tab folder and add an event which gets the updated recordlist and populates the Variable Name drop down. 
+        final TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
+        tabFolder.addSelectionListener(new SelectionAdapter() {
+        	public void widgetSelected(org.eclipse.swt.events.SelectionEvent event) {
+        		if(tabFolder.getSelectionIndex() == 2){
+        			if(tblOutput.getRecordList() != null && tblOutput.getRecordList().getRecords().size() > 0) {
+        				String[] cmbValues = new String[tblOutput.getRecordList().getRecords().size()];
+        				int count = 0;
+        				for (Iterator<RecordBO> iterator = tblOutput.getRecordList().getRecords().iterator(); iterator.hasNext();) {
+        					RecordBO obj = (RecordBO) iterator.next();
+        					cmbValues[count] = obj.getColumnName();
+        					count++;
+        				}
+                      
+        				tblMapper.getCmbVariableName().removeAll();
+        				tblMapper.getCmbVariableName().setItems(cmbValues);
+        			}
+        		}
+            }
+        });
 
         //Start of code for Tabs
 
@@ -278,9 +294,16 @@ public class ECLProjectDialog extends JobEntryDialog implements JobEntryDialogIn
 		compForGrp3.setLayout(mapperCompLayout);
 		compForGrp3.setLayoutData(mapperCompData);
 		
-		//Create a DataSet
-		String[] TransDataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
-		tblMapper = new MainMapper(compForGrp3, TransDataSetList);
+		Map<String, String[]> mapDataSets = null;
+		try {
+			mapDataSets = ap.parseDefExpressionBuilder(this.jobMeta.getJobCopies());
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+		 
+		//Create a Mapper
+		String[] cmbValues = {"FirstName", "LastName", "Zip", "City"};
+		tblMapper = new MainMapper(compForGrp3, mapDataSets, cmbValues);
 		
 		//Add the existing Mapper RecordList
         if(jobEntry.getMapperRecList() != null){

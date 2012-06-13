@@ -25,6 +25,7 @@ import org.w3c.dom.Node;
 import org.hpccsystems.ecldirect.Dataset;
 import org.hpccsystems.eclguifeatures.RecordBO;
 import org.hpccsystems.eclguifeatures.RecordList;
+import org.hpccsystems.mapper.*;
 
 /**
  *
@@ -153,8 +154,8 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 				System.out.println("Size: " + recordList.getRecords().size());
 				for (Iterator<RecordBO> iterator = recordList.getRecords().iterator(); iterator.hasNext();) {
 					RecordBO record = (RecordBO) iterator.next();
-					int rLen = record.getColumnWidth();
-					if (rLen != 0) {
+					String rLen = record.getColumnWidth();
+					if (rLen != null && rLen.trim().length() >0) {
 						if (record.getColumnName() != null && !record.getColumnName().equals("")) {
 							out += record.getColumnType() + rLen + " " + record.getColumnName();
 							if (record.getDefaultValue() != "") {
@@ -176,11 +177,11 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 			}
 		}
 		
-		System.out.println("RESULT of resultListToString() ........... "+out);
+		//System.out.println("RESULT of resultListToString() ........... "+out);
 		
 		return out;
 	}
-    
+	
 	public String saveRecordList() {
 		String out = "";
 		ArrayList list = recordList.getRecords();
@@ -195,13 +196,13 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 			isFirst = false;
 		}
 		
-		System.out.println("RESULT of saveRecordList() ........... "+out);
+		//System.out.println("RESULT of saveRecordList() ........... "+out);
 		
 		return out;
 	}
 
 	public void openRecordList(String in) {
-		System.out.println("Inside Method openRecordList .........."+in);
+		//System.out.println("Inside Method openRecordList .........."+in);
 		String[] strLine = in.split("[|]");
 
 		int len = strLine.length;
@@ -209,7 +210,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 			recordList = new RecordList();
 			System.out.println("Open Record List");
 			for (int i = 0; i < len; i++) {
-				System.out.println("++++++++++++" + strLine[i]);
+				//System.out.println("++++++++++++" + strLine[i]);
 				// this.recordDef.addRecord(new RecordBO(strLine[i]));
 				RecordBO rb = new RecordBO(strLine[i]);
 				System.out.println(rb.getColumnName());
@@ -218,24 +219,28 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 		}
 	}
 	
-	public String resultListToStringForMapper() {
+	/**
+	 * This method is used to generate ECl for the Mapper Grid values
+	 * @param arlRecords
+	 * @return String containing ECL Code 
+	 */
+	public String generateEclForMapperGrid() {
 		String out = "";
 		if (mapperRecList != null) {
 			if (mapperRecList.getRecords() != null && mapperRecList.getRecords().size() > 0) {
-				System.out.println("mapperRecList size ---->>>> : " + mapperRecList.getRecords().size());
+				System.out.println("Size: " + mapperRecList.getRecords().size());
 				for (Iterator<MapperBO> iterator = mapperRecList.getRecords().iterator(); iterator.hasNext();) {
 					MapperBO record = (MapperBO) iterator.next();
 					out += record.getOpVariable() + " := " + record.getExpression();
 					out += ";\r\n";
-
 				}
 			}
 		}
-		
-		System.out.println("RESULT of resultListToStringForMapper() ........... "+out);
+		//System.out.println("RESULT of generateEclForMapperGrid() ........... "+out);
 		
 		return out;
 	}
+	
     
 	public String saveRecordListForMapper() {
 		String out = "";
@@ -252,13 +257,13 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 			isFirst = false;
 		}
 		
-		System.out.println("RESULT of saveRecordListForMapper() ........... "+out);
+		//System.out.println("RESULT of saveRecordListForMapper() ........... "+out);
 		
 		return out;
 	}
 
 	public void openRecordListForMapper(String in) {
-		System.out.println("Inside Method openRecordListForMapper .........."+in);
+		//System.out.println("Inside Method openRecordListForMapper .........."+in);
 		String[] strLine = in.split("[|]");
 
 		int len = strLine.length;
@@ -266,7 +271,7 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 			mapperRecList = new MapperRecordList();
 			System.out.println("Open Record List");
 			for (int i = 0; i < len; i++) {
-				System.out.println("++++++++++++" + strLine[i]);
+				//System.out.println("++++++++++++" + strLine[i]);
 				// this.recordDef.addRecord(new RecordBO(strLine[i]));
 				MapperBO rb = new MapperBO(strLine[i]);
 				mapperRecList.addRecord(rb);
@@ -292,11 +297,12 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
         project.setDeclareCounter(this.getDeclareCounter());
         project.setInRecordName(this.getInRecordName());
         project.setOutRecordName(this.getOutRecordName());
-        project.setOutRecordFormat(this.getOutRecordFormat());
+        project.setOutRecordFormat(resultListToString());
         project.setTransformName(this.getTransformName());
-        project.setTransformFormat(this.getTransformFormat());
+        //project.setTransformFormat(this.getTransformFormat());
+        project.setTransformFormat(generateEclForMapperGrid());
         project.setParameterName(this.getParameterName());
-        project.setRecordFormatString(resultListToString());
+        //project.setRecordFormatString(resultListToString());
         
         
 
@@ -372,16 +378,16 @@ public class ECLProject extends JobEntryBase implements Cloneable, JobEntryInter
 
         retval += super.getXML();
 
-        retval += "		<declareCounter>" + this.getDeclareCounterString() + "</declareCounter>" + Const.CR;
-        retval += "		<recordset_name>" + recordsetName + "</recordset_name>" + Const.CR;
-        retval += "		<inRecordName>" + inRecordName + "</inRecordName>" + Const.CR;
-        retval += "		<outRecordName>" + outRecordName + "</outRecordName>" + Const.CR;
-        retval += "		<outRecordFormat>" + outRecordFormat + "</outRecordFormat>" + Const.CR;
-        retval += "		<transformName>" + transformName + "</transformName>" + Const.CR;
-        retval += "		<transformFormat>" + transformFormat + "</transformFormat>" + Const.CR;
-        retval += "		<parameterName>" + parameterName + "</parameterName>" + Const.CR;
-        retval += "		<recordList>" + this.saveRecordList() + "</recordList>" + Const.CR;
-        retval += "		<mapperRecList>" + this.saveRecordListForMapper() + "</mapperRecList>" + Const.CR;
+        retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
+        retval += "		<recordset_name><![CDATA[" + recordsetName + "]]></recordset_name>" + Const.CR;
+        retval += "		<inRecordName><![CDATA[" + inRecordName + "]]></inRecordName>" + Const.CR;
+        retval += "		<outRecordName><![CDATA[" + outRecordName + "]]></outRecordName>" + Const.CR;
+        retval += "		<outRecordFormat><![CDATA[" + outRecordFormat + "]]></outRecordFormat>" + Const.CR;
+        retval += "		<transformName><![CDATA[" + transformName + "]]></transformName>" + Const.CR;
+        retval += "		<transformFormat><![CDATA[" + transformFormat + "]]></transformFormat>" + Const.CR;
+        retval += "		<parameterName><![CDATA[" + parameterName + "]]></parameterName>" + Const.CR;
+        retval += "		<recordList><![CDATA[" + this.saveRecordList() + "]]></recordList>" + Const.CR;
+        retval += "		<mapperRecList><![CDATA[" + this.saveRecordListForMapper() + "]]></mapperRecList>" + Const.CR;
        //add cdata above see below for example
        // retval += "		<declareCounter><![CDATA[" + this.getDeclareCounterString() + "]]></declareCounter>" + Const.CR;
        

@@ -1,7 +1,8 @@
-package org.hpccsystems.mapper;
+package org.hpccsystems.pentaho.job.eclproject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -14,6 +15,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -32,35 +34,56 @@ public class MainMapper {
 	// The table viewer
 	private TableViewer tableViewer;
 	// Create a RecordList and assign it to an instance variable
-	private RecordList recordList = new RecordList();
-	
-	private Text txtVariableName;
+	private MapperRecordList mapperRecList = new MapperRecordList();	
+	//private Text txtVariableName;
+	private Combo cmbVariableName;
 	private Text txtExpression;
 	
 	private Button btnSaveExpression;
 	private Button btnAddExpression;
 	
 	private String[] functionList = null;
-	private Map<String, List<String>> inputMap = null;
 	private String[] operatorList = null;
+	private String[] cmbListValues = null;
+	
+	/**
+	 * This method redraws the table.
+	 */
+	public void reDrawTable(){
+		MapperRecordList oldRL = mapperRecList;
+		mapperRecList = new MapperRecordList();
+                
+		if(oldRL.getRecords() != null && oldRL.getRecords().size() > 0) {
+			System.out.println("Size: "+oldRL.getRecords().size());
+			for (Iterator<MapperBO> iterator = oldRL.getRecords().iterator(); iterator.hasNext();) {
+				MapperBO obj = (MapperBO) iterator.next();
+				mapperRecList.addRecord(obj);
+			}
+		}
+		oldRL = null;
+		tableViewer.setInput(mapperRecList);
+		tableViewer.getTable().setRedraw(true);
+               
+	}
+	
 	
 	//The Constructor has input as 
-	public MainMapper(Shell shell, Map<String, List<String>> inputMap){
-		setDataSetList(inputMap);
+	public MainMapper(Composite parentComp, Map<String, String[]> mapDataSets, String[] arrCmbValues){
+		setCmbListValues(arrCmbValues);
 		populateFunctionList();
 		populateOperatorList();
-		this.addChildControls(shell);
+		this.addChildControls(parentComp, mapDataSets);
 	}
 	
 	/**
 	 * Create a new shell, add the widgets, open the shell
 	 * @return the shell that was created	 
 	 */
-	private void addChildControls(Shell shell) {
-		Composite tblComposite = new Composite(shell, SWT.NONE);
+	private void addChildControls(Composite parentComp, Map<String, String[]> mapDataSets) {
+		Composite tblComposite = new Composite(parentComp, SWT.NONE);
 		createTable(tblComposite);		// Create the table
 		createButtons(tblComposite);
-		buildExpressionPanel(shell);	// Add the widgets needed to build a Expression Panel
+		buildExpressionPanel(parentComp, mapDataSets);	// Add the widgets needed to build a Expression Panel
 		
 	}
 	
@@ -82,14 +105,6 @@ public class MainMapper {
 		this.functionList = functionList;
 	}
 
-	public Map<String, List<String>> getDataSetList() {
-		return inputMap;
-	}
-
-	public void setDataSetList(Map<String, List<String>> dataSetList) {
-		this.inputMap = dataSetList;
-	}
-	
 	public String[] getOperatorList() {
 		return operatorList;
 	}
@@ -97,7 +112,39 @@ public class MainMapper {
 	public void setOperatorList(String[] operatorList) {
 		this.operatorList = operatorList;
 	}
+	
+	public MapperRecordList getMapperRecList() {
+		return mapperRecList;
+	}
 
+	public void setMapperRecList(MapperRecordList mapperRecList) {
+		this.mapperRecList = mapperRecList;
+	}
+	
+	public TableViewer getTableViewer() {
+		return tableViewer;
+	}
+
+	public void setTableViewer(TableViewer tableViewer) {
+		this.tableViewer = tableViewer;
+	}
+	
+	public String[] getCmbListValues() {
+		return cmbListValues;
+	}
+
+	public void setCmbListValues(String[] cmbListValues) {
+		this.cmbListValues = cmbListValues;
+	}
+	
+	public Combo getCmbVariableName() {
+		return cmbVariableName;
+	}
+
+	public void setCmbVariableName(Combo cmbVariableName) {
+		this.cmbVariableName = cmbVariableName;
+	}
+	
 	private void createTable(Composite tblComposite) {
 		
 		GridLayout layout = new GridLayout();
@@ -131,7 +178,7 @@ public class MainMapper {
 		tableViewer.setContentProvider(new MapperContentProvider());	//Set the Content Provider for the table	
 		tableViewer.setLabelProvider(new MapperLabelsProvider());	//Set the Label Provider for the table
 		
-		tableViewer.setInput(recordList);	//Add an empty RecordList to the TableViewer
+		tableViewer.setInput(mapperRecList);	//Add an empty MapperRecordList to the TableViewer
 		
 		tableColumn0.addListener(SWT.Selection, new Listener() {
 			@Override
@@ -181,8 +228,9 @@ public class MainMapper {
 						}
 					}
 					if(tableViewer.getTable().getItem(selectionIndex).getChecked()){
-						MapperBO objRecord = recordList.getRecord(selectionIndex);
-						txtVariableName.setText(objRecord.getOpVariable());
+						MapperBO objRecord = mapperRecList.getRecord(selectionIndex);
+						//txtVariableName.setText(objRecord.getOpVariable());
+						cmbVariableName.setText(objRecord.getOpVariable());
 						txtExpression.setText(objRecord.getExpression());
 						txtExpression.setFocus();
 						btnSaveExpression.setEnabled(true);
@@ -210,7 +258,7 @@ public class MainMapper {
 						
 				Integer[] arrSortedIndexes = arlCheckedIndexes.toArray(new Integer[arlCheckedIndexes.size()]);
 				for (int j = arrSortedIndexes.length - 1 ; j>=0; j--) {
-					recordList.removeRecord(arrSortedIndexes[j]);
+					mapperRecList.removeRecord(arrSortedIndexes[j]);
 				}
 				tableViewer.refresh();
 				tableViewer.getTable().getColumns()[0].setImage(MapperLabelsProvider.getImage("unchecked"));
@@ -234,9 +282,9 @@ public class MainMapper {
 		return result;
 	}
 	
-	public void buildExpressionPanel(Shell shell){
+	public void buildExpressionPanel(Composite parentComp, Map<String, String[]> mapDataSets){
 		
-		Composite comp2 = new Composite(shell, SWT.NONE);
+		Composite comp2 = new Composite(parentComp, SWT.NONE);
 		GridLayout layout = new GridLayout();
 		layout.numColumns = 1;
 		GridData data = new GridData(GridData.FILL_BOTH);
@@ -266,10 +314,17 @@ public class MainMapper {
 		GridData gridData = new GridData (GridData.HORIZONTAL_ALIGN_BEGINNING);
 		lblVariableName.setLayoutData(gridData);
 		
-		txtVariableName = new Text(compVariable, SWT.SINGLE | SWT.BORDER );
+		/*txtVariableName = new Text(compVariable, SWT.SINGLE | SWT.BORDER );
 		gridData = new GridData (GridData.FILL_HORIZONTAL);
 		gridData.widthHint = 280;
-		txtVariableName.setLayoutData(gridData);
+		txtVariableName.setLayoutData(gridData);*/
+		
+		cmbVariableName = new Combo(compVariable, SWT.DROP_DOWN);
+		gridData = new GridData (GridData.FILL_HORIZONTAL);
+		gridData.widthHint = 280;
+		cmbVariableName.setLayoutData(gridData);
+		
+		cmbVariableName.setItems(getCmbListValues()); //Set the Combo Values
 		
 		Composite compTreePanel = new Composite(group1, SWT.NONE);
 		layout = new GridLayout();
@@ -298,7 +353,7 @@ public class MainMapper {
 		gridData = new GridData(GridData.FILL_HORIZONTAL);
 	    gridData.heightHint = 100;
 	    treeInputDataSet.setLayoutData(gridData);
-	    Utils.fillTree(treeInputDataSet, inputMap);
+	    Utils.fillTree(treeInputDataSet, mapDataSets); //Get the values from the HashMap passed as an argument
 	    treeInputDataSet.addMouseListener(new MouseListener() {
 			
 			@Override
@@ -444,12 +499,15 @@ public class MainMapper {
 						}
 					}
 					if(tableViewer.getTable().getItem(selectionIndex).getChecked()){
-						MapperBO objRecord = recordList.getRecord(selectionIndex);
-						objRecord.setOpVariable(txtVariableName.getText());
+						MapperBO objRecord = mapperRecList.getRecord(selectionIndex);
+						//objRecord.setOpVariable(txtVariableName.getText());
+						objRecord.setOpVariable(cmbVariableName.getText());
 						objRecord.setExpression(txtExpression.getText());
-						recordList.removeRecord(selectionIndex);
-						recordList.addRecordAtIndex(selectionIndex, objRecord);
-						txtVariableName.setText("");
+						mapperRecList.removeRecord(selectionIndex);
+						mapperRecList.addRecordAtIndex(selectionIndex, objRecord);
+						//txtVariableName.setText("");
+						
+						cmbVariableName.setText("");
 						txtExpression.setText("");
 						uncheckAll();
 						tableViewer.refresh();
@@ -468,21 +526,33 @@ public class MainMapper {
 		btnAddExpression.addSelectionListener(new SelectionAdapter() {
 	   		// Add a record and refresh the view
 			public void widgetSelected(SelectionEvent e) {
-				if( (txtVariableName.getText()!= null && txtVariableName.getText().trim().length() > 0 ) 
+				/*if( (txtVariableName.getText()!= null && txtVariableName.getText().trim().length() > 0 ) 
 						|| (txtExpression.getText()!= null && txtExpression.getText().trim().length() > 0 ) ) {
 					MapperBO record = new MapperBO();
 					record.setOpVariable(txtVariableName.getText());
 					record.setExpression(txtExpression.getText());
 					txtVariableName.setText("");
 					txtExpression.setText("");
-					recordList.addRecord(record);
+					mapperRecList.addRecord(record);
+					uncheckAll();
+					tableViewer.refresh();
+				}*/
+				
+				if( (cmbVariableName.getText()!= null && cmbVariableName.getText().trim().length() > 0 ) 
+						|| (txtExpression.getText()!= null && txtExpression.getText().trim().length() > 0 ) ) {
+					MapperBO record = new MapperBO();
+					record.setOpVariable(cmbVariableName.getText());
+					record.setExpression(txtExpression.getText());
+					cmbVariableName.setText("");
+					txtExpression.setText("");
+					mapperRecList.addRecord(record);
 					uncheckAll();
 					tableViewer.refresh();
 				}
 			}
 		});
 		
-		Composite comp3 = new Composite(shell, SWT.NONE);
+		/*Composite comp3 = new Composite(parentComp, SWT.NONE);
 		layout = new GridLayout();
 		layout.numColumns = 3;
 		layout.makeColumnsEqualWidth = true;
@@ -499,7 +569,7 @@ public class MainMapper {
 		btnOk.addSelectionListener(new SelectionAdapter() {
 	   		// Add a record and refresh the view
 			public void widgetSelected(SelectionEvent e) {
-				//recordList.addRecord(table.getSelectionIndex());
+				//mapperRecList.addRecord(table.getSelectionIndex());
 			}
 		});
 		
@@ -507,38 +577,8 @@ public class MainMapper {
 		btnClose.setText("Cancel");
 		gridData = new GridData (GridData.HORIZONTAL_ALIGN_BEGINNING);
 		gridData.widthHint = 80;
-		btnClose.setLayoutData(gridData);
+		btnClose.setLayoutData(gridData);*/
 		
-	}
-	
-	public static void main(String[] args) {
-		
-		
-		Display display = new Display();
-		Shell shell = new Shell(display);
-		shell.setText("HPCC Expression Builder");
-		shell.setSize(800, 700); //Sets the size of the main window
-		
-		GridLayout layout = new GridLayout();
-		layout.numColumns = 1;
-		GridData data = new GridData();
-		data.grabExcessHorizontalSpace = true;
-		shell.setLayout(layout);
-		shell.setLayoutData(data);
-		
-		//Create a DataSet
-		//String[] dataSetList = {"FirstName", "LastName", "Address", "City", "State", "Zip", "Telephone Number"};
-		Map<String, List<String>> mapFunctionValues = Utils.getDemoInputValueMap();
-		final MainMapper objMainMapper = new MainMapper(shell, mapFunctionValues);
-		
-		shell.open();
-		
-		while(!shell.isDisposed()) {
-			if(!display.readAndDispatch())	{
-				display.sleep();
-			}
-		}
-		display.dispose();
 	}
 	
 }

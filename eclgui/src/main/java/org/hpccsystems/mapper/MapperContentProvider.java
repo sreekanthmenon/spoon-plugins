@@ -1,4 +1,4 @@
-package org.hpccsystems.mapper;
+package org.hpccsystems.pentaho.job.eclproject;
 
 import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.Viewer;
@@ -19,7 +19,7 @@ public class MapperContentProvider implements IStructuredContentProvider{
 
 	@Override
 	public Object[] getElements(Object arg0) {
-		return ((RecordList)arg0).getRecords().toArray();
+		return ((MapperRecordList)arg0).getRecords().toArray();
 	}
 
 }

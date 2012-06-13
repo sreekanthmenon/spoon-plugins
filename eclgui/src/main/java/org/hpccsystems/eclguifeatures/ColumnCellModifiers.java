@@ -42,7 +42,7 @@ public class ColumnCellModifiers implements ICellModifier{
 				result = new Integer(i);					
 				break;
 			case 3 : // COLUMN_WIDTH 
-				result = record.getColumnWidth() + "";
+				result = record.getColumnWidth();
 				break;
 			default :
 				result = "";
@@ -79,9 +79,7 @@ public class ColumnCellModifiers implements ICellModifier{
 				break;
 			case 3 : // COLUMN_WIDTH
 				valueString = ((String) value).trim();
-				if (valueString.length() == 0)
-					valueString = "0";
-				record.setColumnWidth(Integer.parseInt(valueString));
+				record.setColumnWidth(valueString);
 				break;
 			default :
 			}
