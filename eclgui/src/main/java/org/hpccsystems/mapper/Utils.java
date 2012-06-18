@@ -16,7 +16,8 @@ public class Utils {
 	public static Map<String, List<String>> getFunctionValueMap(){
 		
 		Map<String, List<String>> mapFunctions = new TreeMap<String, List<String>>();
-		List<String> arlListMath = new ArrayList<String>();
+	
+List<String> arlListMath = new ArrayList<String>();
 		arlListMath.add("ABS");
 		arlListMath.add("ACOS");
 		arlListMath.add("ASIN");
@@ -25,6 +26,20 @@ public class Utils {
 		arlListMath.add("COS");
 		
 		mapFunctions.put("Math", arlListMath);
+
+
+		List<String> arlListDate = new ArrayList<String>();
+		arlListDate.add("STD.Date.Date_rec");
+		arlListDate.add("STD.Date.Date_t");
+		arlListDate.add("STD.Date.Days_t");
+		arlListDate.add("STD.Date.Year");
+		arlListDate.add("STD.Date.Month");
+		arlListDate.add("STD.Date.Day");
+		arlListDate.add("STD.Date.DateFromParts");
+		arlListDate.add("STD.Date.IsLeapYear");
+		arlListDate.add("STD.Date.FromGregorianYMD");
+		arlListDate.add("STD.Date.ToGregorianYMD");
+		mapFunctions.put("Date", arlListDate);
 		
 		List<String> arlListLogical = new ArrayList<String>();
 		arlListLogical.add("IF");
@@ -32,11 +47,76 @@ public class Utils {
 		
 		mapFunctions.put("Logical", arlListLogical);
 		
+		
 		List<String> arlListString = new ArrayList<String>();
-		arlListString.add("TRIM");
-		arlListString.add("TRUNCATE");
+		
+
+		arlListString.add("STD.Str.CleanSpaces");
+		arlListString.add("STD.Str.CompareIgnoreCase");
+		arlListString.add("STD.Str.Contains");
+		arlListString.add("STD.Str.CountWords");
+		arlListString.add("STD.Str.EditDistance");
+		arlListString.add("STD.Str.EditDistanceWithinRadius");
+		arlListString.add("STD.Str.EndsWith");
+		arlListString.add("STD.Str.EqualIgnoreCase");
+		arlListString.add("STD.Str.Extract");
+		arlListString.add("STD.Str.Filter");
+		arlListString.add("STD.Str.FilterOut");
+		arlListString.add("STD.Str.Find");
+		arlListString.add("STD.Str.FindCount");
+		arlListString.add("STD.Str.FindReplace");
+		arlListString.add("STD.Str.GetNthWord");
+		arlListString.add("STD.Str.RemoveSuffix");
+		arlListString.add("STD.Str.Reverse");
+		arlListString.add("STD.Str.SplitWords");
+		arlListString.add("STD.Str.SubstituteExcluded");
+		arlListString.add("STD.Str.SubstituteIncluded");
+		arlListString.add("STD.Str.StartsWith");
+		arlListString.add("STD.Str.ToLowerCase");
+		arlListString.add("STD.Str.ToTitleCase");
+		arlListString.add("STD.Str.ToUpperCase");
+		arlListString.add("STD.Str.WildMatch");
+		arlListString.add("STD.Str.WordCount");
+		
 		
 		mapFunctions.put("String", arlListString);
+		
+		List<String> arlListStringUni = new ArrayList<String>();
+		
+		arlListStringUni.add("STD.Uni.CleanAccents");
+		arlListStringUni.add("STD.Uni.CleanSpaces");
+		arlListStringUni.add("STD.Uni.CompareAtStrength");
+		arlListStringUni.add("STD.Uni.LocaleCompareAtStrength");
+		arlListStringUni.add("STD.Uni.CompareIgnoreCase");
+		arlListStringUni.add("STD.Uni.LocaleCompareIgnoreCase");
+		arlListStringUni.add("STD.Uni.Contains");
+		arlListStringUni.add("STD.Uni.EditDistance");
+		arlListStringUni.add("STD.Uni.EditDistanceWithinRadius");
+		arlListStringUni.add("STD.Uni.Extract");
+		arlListStringUni.add("STD.Uni.Filter");
+		arlListStringUni.add("STD.Uni.FilterOut");
+		arlListStringUni.add("STD.Uni.Find");
+		arlListStringUni.add("STD.Uni.LocaleFind");
+		arlListStringUni.add("STD.Uni.LocaleFindAtStrength");
+		arlListStringUni.add("STD.Uni.LocaleFindAtStrengthReplace");
+		arlListStringUni.add("STD.Uni.FindReplace");
+		arlListStringUni.add("STD.Uni.LocaleFindReplace");
+		arlListStringUni.add("STD.Uni.GetNthWord");
+		arlListStringUni.add("STD.Uni.Reverse");
+		arlListStringUni.add("STD.Uni.SubstituteExcluded");
+		arlListStringUni.add("STD.Uni.SubstituteIncluded");
+		arlListStringUni.add("STD.Uni.ToLowerCase");
+		arlListStringUni.add("STD.Uni.LocaleToLowerCase");
+		arlListStringUni.add("STD.Uni.ToTitleCase");
+		arlListStringUni.add("STD.Uni.LocaleToTitleCase");
+		arlListStringUni.add("STD.Uni.ToUpperCase");
+		arlListStringUni.add("STD.Uni.LocaleToUpperCase");
+		arlListStringUni.add("STD.Uni.WildMatch");
+		arlListStringUni.add("STD.Uni.WordCount");
+		
+		
+		
+		mapFunctions.put("String Unicode", arlListStringUni);
 		
 		
 		

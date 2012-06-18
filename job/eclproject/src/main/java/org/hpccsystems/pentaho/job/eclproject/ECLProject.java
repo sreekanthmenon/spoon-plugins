@@ -26,6 +26,7 @@ import org.hpccsystems.ecldirect.Dataset;
 import org.hpccsystems.eclguifeatures.RecordBO;
 import org.hpccsystems.eclguifeatures.RecordList;
 import org.hpccsystems.mapper.*;
+import org.hpccsystems.mapper.MapperRecordList;
 
 
 /**
