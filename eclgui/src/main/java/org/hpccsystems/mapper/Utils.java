@@ -17,6 +17,7 @@ public class Utils {
 		
 		Map<String, List<String>> mapFunctions = new TreeMap<String, List<String>>();
 	
+		/*TODO:  populate proper math functions
 List<String> arlListMath = new ArrayList<String>();
 		arlListMath.add("ABS");
 		arlListMath.add("ACOS");
@@ -26,7 +27,7 @@ List<String> arlListMath = new ArrayList<String>();
 		arlListMath.add("COS");
 		
 		mapFunctions.put("Math", arlListMath);
-
+		*/
 
 		List<String> arlListDate = new ArrayList<String>();
 		arlListDate.add("STD.Date.Date_rec");
@@ -41,12 +42,13 @@ List<String> arlListMath = new ArrayList<String>();
 		arlListDate.add("STD.Date.ToGregorianYMD");
 		mapFunctions.put("Date", arlListDate);
 		
+		/* TODO: populate logical functions
 		List<String> arlListLogical = new ArrayList<String>();
 		arlListLogical.add("IF");
 		arlListLogical.add("MAP");
 		
 		mapFunctions.put("Logical", arlListLogical);
-		
+		*/
 		
 		List<String> arlListString = new ArrayList<String>();
 		
@@ -134,6 +136,7 @@ List<String> arlListMath = new ArrayList<String>();
 			
 			List<String> arlList = entry.getValue();
 			for (String strValue : arlList) {
+				
 				TreeItem child = new TreeItem(item, SWT.NONE);
 				child.setText(strValue);
 				//child.setImage(new Image(tree.getDisplay(), "c:\\icons\\folder_open_blue.gif"));
@@ -150,11 +153,11 @@ List<String> arlListMath = new ArrayList<String>();
 		    String key = entry.getKey();
 		    TreeItem item = new TreeItem(tree, SWT.NONE);
 			item.setText(key);
-		    
+			//System.out.println("--------- " + key);
 			String[] value = entry.getValue();
 			for (int i = 0; i < value.length; i++) {
 				TreeItem child = new TreeItem(item, SWT.NONE);
-				child.setText(value[i]);
+				child.setText("input." + value[i]);
 			}
 		}
 		// Turn drawing back on!

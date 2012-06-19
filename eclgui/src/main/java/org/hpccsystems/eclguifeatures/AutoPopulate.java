@@ -53,8 +53,10 @@ public class AutoPopulate {
     	}
     }
     
-    
     public HashMap parseDefExpressionBuilder(List<JobEntryCopy> jobs) throws Exception{
+    	return parseDefExpressionBuilder(jobs,"");
+    }
+    public HashMap parseDefExpressionBuilder(List<JobEntryCopy> jobs, String datasetName) throws Exception{
 
         HashMap ds = new HashMap();
         String attributeName = "eclIsDef";
@@ -64,49 +66,56 @@ public class AutoPopulate {
         int k = 0;
         for(int j = 0; j<jec.length; j++){
             if(!((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("START") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("OUTPUT") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("SUCCESS")){
-               String xml = ((JobEntryCopy)jec[j]).getXML();
-               NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
-               for (int temp = 0; temp < nl.getLength(); temp++){
-                   Node nNode = nl.item(temp);
-                   
-                   
-                   NodeList children;
-                   Node childnode;
-                   String defValue = null;
-                   String type = null;
-                  
-                   children=nNode.getChildNodes();
-                   
-                   for (int i=0;i<children.getLength();i++)
-                   {
-                	   try{
-	                	  
-	                	   childnode=children.item(i);
-	                	   if(childnode != null){
-	                		   if(childnode.getAttributes() != null){
-				                   Node attribute = childnode.getAttributes().getNamedItem(attributeName);
-				                   if (attribute!=null && attributeValue.equals(attribute.getTextContent())){
-				                	   
-				                	   defValue = XMLHandler.getNodeValue(childnode);
-				                	  
-				                	   if(defValue != null && !defValue.equalsIgnoreCase("null")){
-				                		   //System.out.println("NODE_VALUE: " + defValue);
-				                		   ds.put(defValue, fieldsByDataset(defValue, jobs));
-				                		   k++;
-				                	   }else{
-				                		   //System.out.println("NODE_VALUE: IS NULL");
-				                	   }
-				                   }
-	                		   }
+            	
+            	
+	               System.out.println("----Loading Dataset: " + ((JobEntryCopy)jec[j]).getName());
+            	   String xml = ((JobEntryCopy)jec[j]).getXML();
+	               NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
+	               for (int temp = 0; temp < nl.getLength(); temp++){
+	                   Node nNode = nl.item(temp);
+	                   
+	                   
+	                   NodeList children;
+	                   Node childnode;
+	                   String defValue = null;
+	                   String type = null;
+	                  
+	                   children=nNode.getChildNodes();
+	                   
+	                   for (int i=0;i<children.getLength();i++)
+	                   {
+	                	   try{
+		                	  
+		                	   childnode=children.item(i);
+		                	   if(childnode != null){
+		                		   if(childnode.getAttributes() != null){
+					                   Node attribute = childnode.getAttributes().getNamedItem(attributeName);
+					                   if (attribute!=null && attributeValue.equals(attribute.getTextContent())){
+					                	   
+					                	   defValue = XMLHandler.getNodeValue(childnode);
+					                	  
+					                	   if(defValue != null && !defValue.equalsIgnoreCase("null")){
+					                		  
+					                		   if(datasetName.equals("") || defValue.equalsIgnoreCase(datasetName)){
+					                			   //System.out.println("NODE_VALUE: " + defValue);
+					                			   ds.put(defValue, fieldsByDataset(defValue, jobs));
+					                		   }
+					                		   k++;
+					                	   }else{
+					                		   //System.out.println("NODE_VALUE: IS NULL");
+					                	   }
+					                   }
+		                		   }
+		                	   }
+	                	   }catch (Exception exc){
+	                		   System.out.println("Failed to Read XML");
+	                		   //System.out.println(exc);
+	                		   //exc.printStackTrace();
 	                	   }
-                	   }catch (Exception exc){
-                		   System.out.println("Failed to Read XML");
-                		   //System.out.println(exc);
-                		   //exc.printStackTrace();
-                	   }
-
-                   }
-               }
+	
+	                   }
+	               }
+            	
             }
         }
         return ds;
@@ -234,7 +243,7 @@ public class AutoPopulate {
      * 
      */
     public String[] fieldsByDataset(String datasetName,List<JobEntryCopy> jobs)throws Exception{
-        System.out.println("***fieldsByDataset***");
+        //System.out.println("***fieldsByDataset***");
         String datasets[] = new String[1];
         ArrayList<String> adDS = new ArrayList<String>();
         this.fieldsByDatasetList(adDS, datasetName,jobs);
