@@ -38,11 +38,11 @@ public class AutoPopulate {
     		Iterator it = ds.entrySet().iterator();
     		while(it.hasNext()){
     			Map.Entry m = (Map.Entry)it.next();
-    			System.out.println("DataSet: " + m.getKey());
+    			//System.out.println("DataSet: " + m.getKey());
     			String[] fields = (String[])m.getValue();
     			
     			for(int i=0; i<fields.length; i++ ){
-    				System.out.println("---- " + fields[i]);
+    				//System.out.println("---- " + fields[i]);
     			}
     		}
     		
@@ -68,7 +68,7 @@ public class AutoPopulate {
             if(!((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("START") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("OUTPUT") && !((JobEntryCopy)jec[j]).getName().equalsIgnoreCase("SUCCESS")){
             	
             	
-	               System.out.println("----Loading Dataset: " + ((JobEntryCopy)jec[j]).getName());
+	               //System.out.println("----Loading Dataset: " + ((JobEntryCopy)jec[j]).getName());
             	   String xml = ((JobEntryCopy)jec[j]).getXML();
 	               NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
 	               for (int temp = 0; temp < nl.getLength(); temp++){
@@ -356,7 +356,7 @@ public class AutoPopulate {
         int len = strLine.length;
         if(len>0){
             datasetFields = new RecordList();
-            System.out.println("Open Record List");
+            //System.out.println("Open Record List");
             for(int i =0; i<len; i++){
                 RecordBO rb = new RecordBO(strLine[i]);
                 datasetFields.addRecordBO(rb);
@@ -372,12 +372,12 @@ public class AutoPopulate {
     	 int len = colArr.length;
     	 if(len>0){
     		 buildRecordList(columns);
-    		 System.out.println("Len: " + len);
+    		 //System.out.println("Len: " + len);
              for(int i =0; i<len; i++){
             	 //get just the name
             	 String[] fieldArr = colArr[i].split("[,]");
             	 if(fieldArr.length>1){
-            		 System.out.println(fieldArr[0]);
+            		 //System.out.println(fieldArr[0]);
             		 adDS.add(fieldArr[0]);
             	 }
             	 
@@ -410,7 +410,7 @@ public class AutoPopulate {
         String type = getType(jobs, datasetName);
         //datasetNode is set in getType
         node = datasetNode;
-        System.out.println("Type for "+ datasetName +": " + type);
+        //System.out.println("Type for "+ datasetName +": " + type);
         //place any outliers above the else will catch all that has a single parent with filed name recordset
         if(type != null && type.equalsIgnoreCase("ECLCount")){ 
         	fieldsByParent("ECLCount","recordset", adDS,datasetName,jobs);
@@ -439,7 +439,7 @@ public class AutoPopulate {
         }else if(type != null && type.equalsIgnoreCase("ECLML_FromField")){
         	
         	if(node != null){
-        		System.out.println("We have fromField");
+        		//System.out.println("We have fromField");
         		String parentNodeName = getRecordListFromField(node, adDS, datasetName,jobs);
         		fieldsByDatasetList(adDS,parentNodeName,jobs);
         	}
@@ -449,7 +449,7 @@ public class AutoPopulate {
         	//System.out.println("-------------GETTING RECORD LIST---------------");
         	//System.out.println("Type: " + type);
         	if(node != null){
-        		System.out.println("We have Node");
+        		//System.out.println("We have Node");
         		getRecordListFromECLDataset(node, adDS, datasetName,jobs);
         	}
         }else if(type != null && !type.equals("")){
@@ -591,7 +591,7 @@ public class AutoPopulate {
      * def of the datasets
      */
     public void fieldsByDatasetList2(ArrayList<String> adDS, String datasetName,List<JobEntryCopy> jobs)throws Exception{
-        System.out.println(" ------------ fieldsByDatasetList ------------ ");
+       // System.out.println(" ------------ fieldsByDatasetList ------------ ");
         Object[] jec = jobs.toArray();
 
         int k = 0;
@@ -730,7 +730,7 @@ public class AutoPopulate {
     }
     
     private String[] mergeArray(String[] a1, String[] a2){
-        System.out.println(" ------------ mergeArray ------------- ");
+        //System.out.println(" ------------ mergeArray ------------- ");
         
         String[] out = new String[a1.length+a2.length];
       
@@ -742,7 +742,7 @@ public class AutoPopulate {
 
     
     public String getGlobalVariable(List<JobEntryCopy> jobs, String ofType) throws Exception{
-        System.out.println(" ------------ getGlobalVariable ------------- ");
+       // System.out.println(" ------------ getGlobalVariable ------------- ");
         String datasets[] = null;
         ArrayList<String> adDS = new ArrayList<String>();
         String out = "";

@@ -17,18 +17,54 @@ public class Utils {
 		
 		Map<String, List<String>> mapFunctions = new TreeMap<String, List<String>>();
 	
-		/*TODO:  populate proper math functions
-List<String> arlListMath = new ArrayList<String>();
-		arlListMath.add("ABS");
-		arlListMath.add("ACOS");
-		arlListMath.add("ASIN");
-		arlListMath.add("ATAN");
-		arlListMath.add("ATAN2");
-		arlListMath.add("COS");
-		
-		mapFunctions.put("Math", arlListMath);
-		*/
 
+		
+		
+		
+		
+		//UNCatergorized basic ECL constructs
+		List<String> arlListLogical = new ArrayList<String>();
+		arlListLogical.add("AGGREGATE");
+		arlListLogical.add("ALLNODES");
+		arlListLogical.add("APPLY");
+		arlListLogical.add("ASSERT");
+		arlListLogical.add("BUILD");
+		arlListLogical.add("BETWEEN");
+		arlListLogical.add("CASE");
+		arlListLogical.add("CHOOSE");
+		arlListLogical.add("CHOOSEN");
+		arlListLogical.add("CHOOSESETS");
+		arlListLogical.add("COUNT");
+		arlListLogical.add("COVARIANCE");
+		arlListLogical.add("CRON");
+		arlListLogical.add("DEFINE");
+		arlListLogical.add("ERROR");
+		arlListLogical.add("EVALUATE");
+		arlListLogical.add("EXISTS");
+		arlListLogical.add("EXP");
+		arlListLogical.add("GETENV");
+		arlListLogical.add("GROUP");
+		arlListLogical.add("IF");
+		arlListLogical.add("ISVALID");
+		arlListLogical.add("LENGTH");
+		arlListLogical.add("LIMIT");
+		arlListLogical.add("LN");
+		arlListLogical.add("NONEMPTY");
+		arlListLogical.add("NORMALIZE");
+		arlListLogical.add("MAP");
+		arlListLogical.add("RANDMOM");
+		arlListLogical.add("RANGE");
+		arlListLogical.add("RANK");
+		arlListLogical.add("REGEXFIND");
+		arlListLogical.add("REGEXREPLACE");
+		arlListLogical.add("SEQUENTIAL");
+		arlListLogical.add("TRUNCATE");
+		//arlListLogical.add("WHEN");
+		arlListLogical.add("WHICH");
+		mapFunctions.put("ECL Language", arlListLogical);
+		
+		
+		//STD.Date functions
 		List<String> arlListDate = new ArrayList<String>();
 		arlListDate.add("STD.Date.Date_rec");
 		arlListDate.add("STD.Date.Date_t");
@@ -41,18 +77,61 @@ List<String> arlListMath = new ArrayList<String>();
 		arlListDate.add("STD.Date.FromGregorianYMD");
 		arlListDate.add("STD.Date.ToGregorianYMD");
 		mapFunctions.put("Date", arlListDate);
+				
+		// HASH Operations
+		List<String> arlListHash = new ArrayList<String>();
+		arlListHash.add("HASH");
+		arlListHash.add("HASH32");
+		arlListHash.add("HASH64");
+		arlListHash.add("HASHMD5");
 		
-		/* TODO: populate logical functions
-		List<String> arlListLogical = new ArrayList<String>();
-		arlListLogical.add("IF");
-		arlListLogical.add("MAP");
+		mapFunctions.put("HASH", arlListHash);
 		
-		mapFunctions.put("Logical", arlListLogical);
-		*/
+		//math functions
+		List<String> arlListMath = new ArrayList<String>();
+		arlListMath.add("ABS");
+		arlListMath.add("ACOS");
+		arlListMath.add("ASIN");
+		arlListMath.add("ATAN");
+		arlListMath.add("ATAN2");
+		arlListMath.add("AVE");
+		arlListMath.add("COS");
+		arlListMath.add("COSH");
+		arlListMath.add("LOG");
+		arlListMath.add("MAX");
+		arlListMath.add("MIN");
+		arlListMath.add("POWER");
+		arlListMath.add("RANDOM");
+		arlListMath.add("ROUND");
+		arlListMath.add("ROUNDUP");
+		arlListMath.add("SIN");
+		arlListMath.add("SINH");
+		arlListMath.add("SQRT");
+		arlListMath.add("SUM");
+		arlListMath.add("TAN");
+		arlListMath.add("TANH");
+		arlListMath.add("VARIANCE");
+		mapFunctions.put("Math", arlListMath);
 		
+		//Numerical operations
+		List<String> arlListNumber = new ArrayList<String>();
+		arlListNumber.add("INTFORMAT");
+		arlListNumber.add("REALFORMAT");
+		arlListNumber.add("ROUND");
+		arlListNumber.add("ROUNDUP");
+		mapFunctions.put("Numerical", arlListNumber);
+		
+		//basic string functions
+		List<String> arlListStringDefault = new ArrayList<String>();
+		arlListStringDefault.add("TRIM");
+		arlListStringDefault.add("ASCII");
+		arlListStringDefault.add("EBCDIC");
+		arlListStringDefault.add("FROMUNICODE");
+		
+		mapFunctions.put("String", arlListStringDefault);
+		
+		//STD.STR functiosn
 		List<String> arlListString = new ArrayList<String>();
-		
-
 		arlListString.add("STD.Str.CleanSpaces");
 		arlListString.add("STD.Str.CompareIgnoreCase");
 		arlListString.add("STD.Str.Contains");
@@ -81,10 +160,10 @@ List<String> arlListMath = new ArrayList<String>();
 		arlListString.add("STD.Str.WordCount");
 		
 		
-		mapFunctions.put("String", arlListString);
+		mapFunctions.put("String (STD)", arlListString);
 		
+		//STD.Uni functions
 		List<String> arlListStringUni = new ArrayList<String>();
-		
 		arlListStringUni.add("STD.Uni.CleanAccents");
 		arlListStringUni.add("STD.Uni.CleanSpaces");
 		arlListStringUni.add("STD.Uni.CompareAtStrength");
@@ -115,10 +194,8 @@ List<String> arlListMath = new ArrayList<String>();
 		arlListStringUni.add("STD.Uni.LocaleToUpperCase");
 		arlListStringUni.add("STD.Uni.WildMatch");
 		arlListStringUni.add("STD.Uni.WordCount");
-		
-		
-		
-		mapFunctions.put("String Unicode", arlListStringUni);
+
+		mapFunctions.put("String Unicode (STD)", arlListStringUni);
 		
 		
 		
@@ -153,7 +230,6 @@ List<String> arlListMath = new ArrayList<String>();
 		    String key = entry.getKey();
 		    TreeItem item = new TreeItem(tree, SWT.NONE);
 			item.setText(key);
-			//System.out.println("--------- " + key);
 			String[] value = entry.getValue();
 			for (int i = 0; i < value.length; i++) {
 				TreeItem child = new TreeItem(item, SWT.NONE);
@@ -168,7 +244,7 @@ List<String> arlListMath = new ArrayList<String>();
 		// Turn off drawing to avoid flicker
 		tree.setRedraw(false);
 		
-		String operatorList[] = {"+", "-", "*", "/", "%", "||", "(", ")", "=", "<>", ">", "<", "<=", ">="};
+		String operatorList[] = {":=","+", "-", "*", "/", "%", "||", "(", ")", "=", "<>", ">", "<", "<=", ">=","~","AND","IN","NOT","OR","XOR"};
 		// Create five root items
 		for (int i = 0; i < operatorList.length; i++) {
 			TreeItem item = new TreeItem(tree, SWT.NONE);
