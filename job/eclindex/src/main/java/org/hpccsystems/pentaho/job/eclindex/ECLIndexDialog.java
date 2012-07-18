@@ -180,8 +180,8 @@ public class ECLIndexDialog extends JobEntryDialog implements JobEntryDialogInte
         tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
         FormData data = new FormData();
         
-        data.height = 400;
-        data.width = 640;
+        data.height = 500;
+        data.width = 690;
         tabFolder.setLayoutData(data);
         
         Composite compForGrp = new Composite(tabFolder, SWT.NONE);
@@ -232,7 +232,7 @@ public class ECLIndexDialog extends JobEntryDialog implements JobEntryDialogInte
         FormData generalGroupFormat = new FormData();
         generalGroupFormat.top = new FormAttachment(0, margin);
         generalGroupFormat.width = 400;
-        generalGroupFormat.height = 85;
+        generalGroupFormat.height = 95;
         generalGroupFormat.left = new FormAttachment(middle, 0);
         generalGroup.setLayoutData(generalGroupFormat);
         
