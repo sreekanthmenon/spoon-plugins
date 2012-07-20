@@ -60,6 +60,8 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
     private Text eclccInstallDir;
     private Text mlPath;
     private Combo includeML;
+    private Text SALTPath;
+    private Combo includeSALT;
  /*
              *  private String mlPath = "ecl-ml";
     private String eclccInstallDir = "C:\\Program Files\\HPCC Systems\\HPCC\\bin\\ver_3_0\\";
@@ -154,7 +156,7 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 220;
+        datasetGroupFormat.height = 250;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         varGroup.setLayoutData(datasetGroupFormat);
 
@@ -174,6 +176,9 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         eclccInstallDir = buildText("eclcc Install Dir", jobName, lsMod, middle, margin, varGroup);
         mlPath = buildText("Path to ML Library", eclccInstallDir, lsMod, middle, margin, varGroup);
         includeML = buildCombo("Include ML Library?", mlPath, lsMod, middle, margin, varGroup, new String[]{"true", "false"});
+        
+        SALTPath = buildText("Path to SALT Library", includeML, lsMod, middle, margin, varGroup);
+        includeSALT = buildCombo("Include SALT Library?", SALTPath, lsMod, middle, margin, varGroup, new String[]{"true", "false"});
         
         
 
@@ -267,6 +272,13 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         }
         if (jobEntry.getIncludeML() != null) {
             includeML.setText(jobEntry.getIncludeML());
+        }
+        
+        if (jobEntry.getSALTPath() != null) {
+            SALTPath.setText(jobEntry.getSALTPath());
+        }
+        if (jobEntry.getIncludeSALT() != null) {
+            includeSALT.setText(jobEntry.getIncludeSALT());
         }
 
       
@@ -535,6 +547,9 @@ public class ECLGlobalVariablesDialog extends JobEntryDialog implements JobEntry
         jobEntry.setEclccInstallDir(eclccInstallDir.getText());
         jobEntry.setMlPath(mlPath.getText());
         jobEntry.setIncludeML(includeML.getText());
+        
+        jobEntry.setSALTPath(SALTPath.getText());
+        jobEntry.setIncludeSALT(includeSALT.getText());
 
 
 

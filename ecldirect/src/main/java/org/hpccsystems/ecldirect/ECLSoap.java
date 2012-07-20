@@ -50,6 +50,9 @@ public class ECLSoap {
     private int warningCount = 0;
     
     
+    private String SALTPath = "";
+    private boolean includeSALT = false;
+    
 
     public int getErrorCount() {
 		return errorCount;
@@ -146,9 +149,29 @@ public class ECLSoap {
     public void setMlPath(String mlPath) {
         this.mlPath = mlPath;
     }
-    //end getters and setters
     
-    public ECLSoap() {
+    
+   
+    
+    public String getSALTPath() {
+		return SALTPath;
+	}
+
+	public void setSALTPath(String sALTPath) {
+		SALTPath = sALTPath;
+	}
+
+	public boolean isIncludeSALT() {
+		return includeSALT;
+	}
+
+	public void setIncludeSALT(boolean includeSALT) {
+		this.includeSALT = includeSALT;
+	}
+	 //end getters and setters
+	
+	
+	public ECLSoap() {
         this.tempDir = System.getProperty("java.io.tmpdir");
         //System.out.println("OS Temp Dir is: " + tempDir);
     }

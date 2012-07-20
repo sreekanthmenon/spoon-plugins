@@ -40,8 +40,12 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
     private String jobName = "Spoon-job";
     private String cluster = "hthor";
     private boolean includeML = false;
+    
+    private String SALTPath = "";
+    private boolean includeSALT = false;
 
-    public String getServerIP() {
+   
+	public String getServerIP() {
         return serverIP;
     }
 
@@ -103,6 +107,38 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
         }
     }
 
+    
+    public String getSALTPath() {
+		return SALTPath;
+	}
+
+	public void setSALTPath(String sALTPath) {
+		SALTPath = sALTPath;
+	}
+
+	public boolean isIncludeSALT() {
+		return includeSALT;
+	}
+
+	public void setIncludeSALT(boolean includeSALT) {
+		this.includeSALT = includeSALT;
+	}
+	public void setIncludeSALT(String includeSALT) {
+        if(includeSALT.equals("true")){
+            this.includeSALT = true;
+        }else{
+            this.includeSALT = false;
+        }
+    }
+	
+	 public String getIncludeSALT() {
+	        if(includeSALT){
+	            return "true";
+	        }else{
+	            return "false";
+	        }
+	    }
+
 
     public String getJobName() {
         return jobName;
@@ -158,6 +194,12 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
             
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"includeML")) != null)
                 this.setIncludeML(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"includeML")));
+            
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"includeSALT")) != null)
+                this.setIncludeSALT(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"includeSALT")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"SALTPath")) != null)
+                this.setSALTPath(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"SALTPath")));
            
             
         } catch (Exception e) {
@@ -188,6 +230,9 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
         retval += "             <cluster><![CDATA["+this.getCluster()+"]]></cluster>"+Const.CR;
         
         retval += "             <includeML><![CDATA["+this.getIncludeML() + "]]></includeML>"+Const.CR;
+        
+        retval += "             <includeSALT><![CDATA["+this.getIncludeSALT() + "]]></includeSALT>"+Const.CR;
+        retval += "             <SALTPath><![CDATA["+this.getSALTPath()+"]]></SALTPath>"+Const.CR;
       
        
         return retval;
@@ -211,6 +256,9 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
             this.setCluster( rep.getStepAttributeString(id_jobentry, "cluster"));
             this.setIncludeML( rep.getStepAttributeString(id_jobentry, "includeML"));
             
+            this.setIncludeSALT( rep.getStepAttributeString(id_jobentry, "includeSALT"));
+            this.setSALTPath( rep.getStepAttributeString(id_jobentry, "SALTPath"));
+            
                     
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -230,6 +278,9 @@ public class ECLGlobalVariables extends JobEntryBase implements Cloneable, JobEn
             rep.saveStepAttribute(id_job, getObjectId(), "jobName", this.getJobName());
             rep.saveStepAttribute(id_job, getObjectId(), "cluster", this.getCluster());
             rep.saveStepAttribute(id_job, getObjectId(), "includeML", this.getIncludeML());
+            
+            rep.saveStepAttribute(id_job, getObjectId(), "includeSALT", this.getIncludeSALT());
+            rep.saveStepAttribute(id_job, getObjectId(), "SALTPath", this.getSALTPath());
             
             
         
