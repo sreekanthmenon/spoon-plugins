@@ -204,11 +204,24 @@ public class ECLSoap {
             if(this.includeML){
                 include = " -I \"" + this.mlPath +"\"";
             }
+            
+            if(this.includeSALT){
+                include = " -I \"" + this.SALTPath +"\"";
+            }
+            
             String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";
            // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
-            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-c -syntax" + include + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc\" -legacy " + logFile + "-c -syntax" + include + " " + inFilePath;
 
+            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------");
+            System.out.println(c);
+            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------");
 
+            
             ProcessBuilder pb = new ProcessBuilder(c);
             pb.redirectErrorStream(true); // merge stdout, stderr of process
             //System.out.println("Start Process Builder");
@@ -1094,8 +1107,21 @@ public class ECLSoap {
             }else{
             	//System.out.println("NO ML LIBRARY INCLUDED!");
             }
+            
+            if(this.includeSALT){
+                include = " -I \"" + this.SALTPath +"\"";
+            }
+            
             String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
-            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc\" -legacy " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
+            
+            System.out.println("!----------------------------------------------");
+            System.out.println("!----------------------------------------------");
+            System.out.println("!----------------------------------------------");
+            System.out.println(c);
+            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------");
+            System.out.println("-----------------------------------------------");
             
            // System.out.println("_________________________ECLCC_______________________________");
            // System.out.println(c);

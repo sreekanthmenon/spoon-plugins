@@ -135,6 +135,9 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
 	        String mlPath = "";
 	        String includeML = "";
 	        
+	        String SALTPath = "";
+	        String includeSALT = "";
+	        
 	        AutoPopulate ap = new AutoPopulate();
 	        try{
 	        //Object[] jec = this.jobMeta.getJobCopies().toArray();
@@ -148,6 +151,9 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
 	            eclccInstallDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"eclccInstallDir");
 	            mlPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"mlPath");
 	            includeML = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeML");
+	            
+	            SALTPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"SALTPath");
+	            includeSALT = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeSALT");
 	            
 	            //System.out.println("@@@@@@@@@@@@@@@@@@@" + includeML + "@@@@@@");
 	
@@ -193,17 +199,36 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
             eclDirect.setJobName(jobName);
             eclDirect.setMlPath(mlPath);
             eclDirect.setOutputName(this.getName());
+            
+            eclDirect.setIncludeSALT(includeSALT);
+            eclDirect.setSALTPath(SALTPath);
+            /*
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+            System.out.println("includeSALT: " + includeSALT);
+            System.out.println("SALTPath: " + SALTPath);
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+            */
             ArrayList dsList = null;
             String outStr = "";
             //System.out.println("Output -- Finished setting up ECLDirect");
             try{
                 String includes = "";
                 includes += "IMPORT Std;\n";
-                if(includeML.equals("true")){
+                if(includeML.equalsIgnoreCase("true")){
                     includes += "IMPORT * FROM ML;\r\n\r\n";
                     includes += "IMPORT * FROM ML.Cluster;\r\n\r\n";
                     includes += "IMPORT * FROM ML.Types;\r\n\r\n";
                 }
+                
+                if(includeSALT.equalsIgnoreCase("true")){
+                    includes += "IMPORT SALT23;\r\n\r\n";
+                    includes += "IMPORT ut;\r\n\r\n";
+                }
+                
                 System.out.println("Execute -- Finished Imports");
                 eclCode = includes + eclCode;
                 
@@ -230,6 +255,17 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                         //System.out.println("Dont includML");
                     }
                     es.setMlPath(mlPath);
+
+                     if(includeSALT.equals("true")){
+                         es.setIncludeSALT(true);
+                        // System.out.println("includML");
+                     }else{
+                         es.setIncludeSALT(false);
+                         //System.out.println("Dont includML");
+                     }
+                     es.setSALTPath(SALTPath);
+                     
+                     
                     es.setPort(Integer.parseInt(serverPort));
                     //System.out.println("Execute -- Validate 30");
                     error = (es.syntaxCheck(eclCode)).trim();
@@ -306,6 +342,16 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                         System.out.println("Dont includML");
                     }
                     es.setMlPath(mlPath);
+                    
+                    if(includeSALT.equals("true")){
+                        es.setIncludeSALT(true);
+                       // System.out.println("includML");
+                    }else{
+                        es.setIncludeSALT(false);
+                        //System.out.println("Dont includML");
+                    }
+                    es.setSALTPath(SALTPath);
+                    
                     es.setPort(Integer.parseInt(serverPort));
                     isValid = es.executeECL(eclCode);
                     eclDirect.setWuid(es.getWuid());
@@ -355,7 +401,15 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                                             es.setIncludeML(false);
                                             //System.out.println("Dont includML");
                                         }
-                                        
+                                        es.setMlPath(mlPath);
+                                        if(includeSALT.equals("true")){
+                                            es.setIncludeSALT(true);
+                                           // System.out.println("includML");
+                                        }else{
+                                            es.setIncludeSALT(false);
+                                            //System.out.println("Dont includML");
+                                        }
+                                        es.setSALTPath(SALTPath);
                                         InputStream is = es.ResultsSoapCall(eclDirect.getWuid(), resName);
                                         ArrayList results = es.parseResults(is);
                                         //System.out.println(this.fileName + "\\" + resName + ".csv");

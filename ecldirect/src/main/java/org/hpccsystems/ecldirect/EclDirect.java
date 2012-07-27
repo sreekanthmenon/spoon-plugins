@@ -40,6 +40,10 @@ public class EclDirect {
     
     private String mlPath;
     
+    private String includeSALT;
+    
+    private String SALTPath;
+    
     private String wuid;
     
      private String outputName = "";
@@ -48,7 +52,31 @@ public class EclDirect {
 
     
     
-    public boolean isValid() {
+    public String getIncludeSALT() {
+		return includeSALT;
+	}
+
+	public void setIncludeSALT(String includeSALT) {
+		this.includeSALT = includeSALT;
+	}
+	
+	public boolean isIncludeSALT() {
+		if(includeSALT != null && includeSALT.equalsIgnoreCase("true")){
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public String getSALTPath() {
+		return SALTPath;
+	}
+
+	public void setSALTPath(String sALTPath) {
+		SALTPath = sALTPath;
+	}
+
+	public boolean isValid() {
 		return isValid;
 	}
 
@@ -321,6 +349,20 @@ public class EclDirect {
         es.setMlPath(mlPath); 
         es.setOutputName(outputName);
         es.setPort(Integer.parseInt(this.serverPort));
+        
+        es.setSALTPath(SALTPath); 
+        es.setIncludeSALT(isIncludeSALT());
+        /*
+        System.out.println("@@~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("@@~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("@@~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("includeSALT: " + includeSALT);
+        System.out.println("SALTPath: " + SALTPath);
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        */
+        
         return es;
     }
      public String convertInputStreamToString(InputStream ists) throws IOException {

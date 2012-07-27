@@ -819,6 +819,18 @@ public class AutoPopulate {
                                 );
                           }
                           
+                          if(ofType.equalsIgnoreCase("SALTPath")){
+                              out = XMLHandler.getNodeValue(
+                                  XMLHandler.getSubNode(nNode, "SALTPath")
+                              );
+                        }
+                        
+                        if(ofType.equalsIgnoreCase("includeSALT")){
+                              out = XMLHandler.getNodeValue(
+                                  XMLHandler.getSubNode(nNode, "includeSALT")
+                              );
+                        }
+                          
                           
                                   
 
