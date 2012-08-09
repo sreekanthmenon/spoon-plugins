@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<plugin id="ECLGeneric"
-	iconfile="eclgeneric.png"
-	description="Generic Code"
-	tooltip="Generic code input" 
+<plugin id="ECLDataProfiling"
+	iconfile="icon.png"
+	description="Data Profiling (SALT)"
+	tooltip="Data Profiling" 
 	category="HPCC Systems"
-	classname="org.hpccsystems.pentaho.job.eclgeneric.ECLGeneric">
+	classname="org.hpccsystems.pentaho.job.eclsaltdataprofiling.ECLSaltDataProfiling">
             
     <libraries>
 	  <library name="../../hpcc-common/ecldirect.jar"/>
-        <library name="../../hpcc-common/eclgui.jar"/>
-        <library name="eclgeneric.jar"/>
+      <library name="../../hpcc-common/eclgui.jar"/>
+      <library name="eclsaltdataprofiling.jar"/>
     </libraries>            
 </plugin>

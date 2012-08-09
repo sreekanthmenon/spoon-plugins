@@ -6,6 +6,8 @@ package org.hpccsystems.pentaho.job.eclsaltdataprofiling;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import org.eclipse.swt.widgets.Combo;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -27,35 +29,28 @@ import org.w3c.dom.Node;
  */
 public class ECLSaltDataProfiling extends JobEntryBase implements Cloneable, JobEntryInterface {
     
-    //private String jobName;
-    private String name = "";
     
-    private String recordsetName = "";
+    private String fileName = "";
     
-    private String ECLCode = "";
+    private String fileType;
 
-    public String getECLCode() {
-        return ECLCode;
-    }
+    public String getFileName() {
+		return fileName;
+	}
 
-    public void setECLCode(String ECLCode) {
-        this.ECLCode = ECLCode;
-    }
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 
-    public String getRecordsetName() {
-        return recordsetName;
-    }
+	public String getFileType() {
+		return fileType;
+	}
 
-    public void setRecordsetName(String recordsetName) {
-        this.recordsetName = recordsetName;
-    }
-    
-    
-    
-    
-    
+	public void setFileType(String fileType) {
+		this.fileType = fileType;
+	}
 
-    @Override
+	@Override
     public Result execute(Result prevResult, int k) throws KettleException {
         
         Result result = prevResult;
@@ -64,13 +59,48 @@ public class ECLSaltDataProfiling extends JobEntryBase implements Cloneable, Job
 
         
         RowMetaAndData data = new RowMetaAndData();
-        data.addValue("ecl", Value.VALUE_TYPE_STRING, this.ECLCode + "\r\n");
         
         
         List list = result.getRows();
         list.add(data);
         String eclCode = "";
+        //indata:= dataset('~in::testing',R,CSV(SEPARATOR('')));
         
+        String ft = "";
+        if(this.fileType.equalsIgnoreCase("csv")){
+        	ft = "CSV(SEPARATOR(''))";
+        }else{
+        	ft = this.fileType;
+        }
+        String ecl = "R:= record " + "\r\n" +
+        		"String Txt;" + "\r\n" +
+        		"end; " + "\r\n\r\n" +
+        		"indata:= dataset('" + this.fileName + "',R," + ft + "); " + "\r\n" +
+        		"indata_filtered := PROJECT(indata, TRANSFORM(R, SELF.TXT := STD.Str.FilterOut(LEFT.txt, '\"')));" + "\r\n" +
+        		"T := indata_filtered[1..1];" + "\r\n" +
+        		"D := indata_filtered[2..];" + "\r\n" +
+        		"SALT23.MAC_Character_Counts.Data_Layout Take(R le,UNSIGNED c) := TRANSFORM" + "\r\n" +
+        		"SELF.Fld := ut.Word(le.Txt,c,',');" + "\r\n" +
+        		"SELF.FldNo := c;" + "\r\n" +
+        		"END;" + "\r\n" +
+        		"Flds := NORMALIZE(D,ut.NoWords(LEFT.Txt,',')+1,Take(LEFT,COUNTER));" + "\r\n" +
+        		"SALT23.MAC_Character_Counts.Field_Identification TakeName(R le,UNSIGNED c) := TRANSFORM" + "\r\n" +
+        		"SELF.FieldName := ut.Word(le.Txt,c,',');" + "\r\n" +
+        		"SELF.FldNo := c;" + "\r\n" +
+        		"END;" + "\r\n" +
+        		"Titles := NORMALIZE(T,ut.NoWords(LEFT.Txt,',')+1,TakeName(LEFT,COUNTER));" + "\r\n" +
+        		"p := SALT23.MAC_Character_Counts.FN_Profile(Flds,Titles);" + "\r\n" +
+        		"output(SALT23.MAC_Character_Counts.EclRecord(p),NAMED('dataProfilingStructure'));" + "\r\n" +
+        		"output(p,NAMED('dataProfilingResults'),all);" + "\r\n" +
+        		"\r\n\r\n";
+        
+        logBasic("{Dataset Job} Execute = " + ecl);
+        
+        logBasic("{Dataset Job} Previous =" + ecl);
+        
+        result.setResult(true);
+
+        data.addValue("ecl", Value.VALUE_TYPE_STRING, ecl);
           
         if (list == null) {
             list = new ArrayList();
@@ -99,10 +129,12 @@ public class ECLSaltDataProfiling extends JobEntryBase implements Cloneable, Job
             //this.setName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "name")));
           
            
-            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")) != null)
-                this.setRecordsetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"recordset_name")));
-        if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"ECLCode")) != null)
-                this.setECLCode(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"ECLCode")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"file_name")) != null)
+                this.setFileName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"file_name")));
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"file_type")) != null)
+                this.setFileType(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"file_type")));
+
         
         } catch (Exception e) {
             throw new KettleXMLException("ECL Distribute Job Plugin Unable to read step info from XML node", e);
@@ -112,33 +144,21 @@ public class ECLSaltDataProfiling extends JobEntryBase implements Cloneable, Job
 
     public String getXML() {
         String retval = "";
-        
         retval += super.getXML();
-
-      
-        retval += "             <recordset_name><![CDATA["+this.recordsetName+"]]></recordset_name>"+Const.CR;
-        retval += "             <ECLCode><![CDATA["+this.ECLCode+"]]></ECLCode>"+Const.CR;
-
-       
-       
+        retval += "             <file_name><![CDATA["+this.fileName+"]]></file_name>"+Const.CR;
+        retval += "             <file_type><![CDATA["+this.fileType+"]]></file_type>"+Const.CR;
         return retval;
-
     }
 
     public void loadRep(Repository rep, ObjectId id_jobentry, List<DatabaseMeta> databases, List<SlaveServer> slaveServers)
             throws KettleException {
-        try {
-            //jobName = rep.getStepAttributeString(id_jobentry, "jobName"); //$NON-NLS-1$
-
-            //name = rep.getStepAttributeString(id_jobentry, "name"); //$NON-NLS-1$
+        try {    
             
-                  
+            if(rep.getStepAttributeString(id_jobentry, "file_name") != null)
+                fileName = rep.getStepAttributeString(id_jobentry, "file_name");
             
-            if(rep.getStepAttributeString(id_jobentry, "recordset_name") != null)
-                recordsetName = rep.getStepAttributeString(id_jobentry, "recordset_name");
-            
-            if(rep.getStepAttributeString(id_jobentry, "ECLCode") != null)
-                ECLCode = rep.getStepAttributeString(id_jobentry, "ECLCode");
+            if(rep.getStepAttributeString(id_jobentry, "file_type") != null)
+                fileType = rep.getStepAttributeString(id_jobentry, "file_type");
             
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -149,8 +169,8 @@ public class ECLSaltDataProfiling extends JobEntryBase implements Cloneable, Job
         try {
             //rep.saveStepAttribute(id_job, getObjectId(), "jobName", jobName); //$NON-NLS-1$
             
-            rep.saveStepAttribute(id_job, getObjectId(), "recordset_name", recordsetName);
-            rep.saveStepAttribute(id_job, getObjectId(), "ECLCode", ECLCode);
+            rep.saveStepAttribute(id_job, getObjectId(), "file_name", fileName);
+            rep.saveStepAttribute(id_job, getObjectId(), "file_type", fileType);
            
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);

@@ -210,10 +210,10 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
             //int len = folder.getChildren().length;
             int len = folder.getItemCount();
             //System.out.println("Number of items: " + folder.getItemCount());
-            System.out.println("Number of tabs: " + len);
+           // System.out.println("Number of tabs: " + len);
             folder.setSelection(len-1);
-            System.out.println("fileName" + fileName);
-            System.out.println("setActive -- isactive = true");
+            //System.out.println("fileName" + fileName);
+            //System.out.println("setActive -- isactive = true");
             this.isActive = true;
          }else{
              this.isActive = false;
@@ -239,19 +239,19 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
   }
 
   public String getId() {
-    System.out.println("getId");
+    //System.out.println("getId");
     return "eclresults";
   }
 
   
   // Whatever you pass out will be reparented. Don't construct the UI in this method as it may be called more than once.
   public Composite getUI() {
-       System.out.println("getUI");
+       //System.out.println("getUI");
     return comp;
   }
 
   public String getDisplayName(Locale locale) {
-       System.out.println("getDisplayName");
+       //System.out.println("getDisplayName");
     return "ECL Results";
   }
 
@@ -331,7 +331,7 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
                                    // System.out.println(strLineArr[i]);
                       }else{
                          
-                          System.out.println("-- "+i+" -- " + strLineArr[i]);
+                          //System.out.println("-- "+i+" -- " + strLineArr[i]);
                           item.setText(i,strLineArr[i]);
                       }
                   }
@@ -340,12 +340,12 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
               
           }
           
-          System.out.println("Finisehd file");
+          //System.out.println("Finisehd file");
          
           for (int i=0; i<length; i++) {
 		table.getColumn (i).pack ();
 	  }
-          System.out.println("finished packing");
+          //System.out.println("finished packing");
           //Close the input stream
           in.close();
     }catch (Exception e){//Catch exception if any

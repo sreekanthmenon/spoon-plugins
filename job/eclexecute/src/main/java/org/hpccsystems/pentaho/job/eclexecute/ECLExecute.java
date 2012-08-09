@@ -34,6 +34,8 @@ import org.pentaho.di.plugins.perspectives.eclresults.*;
 import org.hpccsystems.eclguifeatures.*;
 import org.pentaho.di.job.JobMeta;
 
+import org.hpccsystems.pentaho.job.eclexecute.RenderWebDisplay;
+
 /**
  *
  * @author ChalaAX
@@ -171,7 +173,7 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
         
         
             ECLExecute.isReady=true;
-            logBasic("not waiting: " + ECLExecute.isReady);
+           // logBasic("not waiting: " + ECLExecute.isReady);
             result.setResult(true);
 
 
@@ -415,6 +417,13 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                                         //System.out.println(this.fileName + "\\" + resName + ".csv");
                                         resName = resName.replace(" ", "_");
                                         createOutputFile(results,this.fileName + "\\" + resName + ".csv",counter);
+                                        
+                                        //special code to catch and output the dataProfiling Results
+                                        if(resName.equalsIgnoreCase("dataProfilingResults")){ 
+	                                        RenderWebDisplay rwd = new RenderWebDisplay();
+	                                 		rwd.processFile(this.fileName + "\\" + resName + ".csv", this.fileName);
+                                        }
+                                 		
                                         counter++;
                                     }
                                 }
@@ -498,7 +507,7 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                                 for (int lCol = 0; lCol < columnList.size(); lCol++) {
                                  //   logBasic("----------Column-------------");
                                     Column column = (Column) columnList.get(lCol);
-                                    logBasic(column.getName() + "=" + column.getValue() + "|");
+                                 //   logBasic(column.getName() + "=" + column.getValue() + "|");
                                     outStr += column.getValue();
                                     if(lCol< (columnList.size()-1)){
                                         outStr += ",";
@@ -512,7 +521,7 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                                         }
                                     }
                                 }
-                                logBasic("newline");
+                               // logBasic("newline");
                                 outStr += newline;
                             }
                         }
@@ -531,6 +540,9 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                //result.setResult(false);
                 e.printStackTrace();
             }  
+             
+            
+     		
          }
     }
 

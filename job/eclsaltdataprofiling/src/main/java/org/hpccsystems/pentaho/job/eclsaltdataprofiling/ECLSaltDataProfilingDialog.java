@@ -45,9 +45,8 @@ public class ECLSaltDataProfilingDialog extends JobEntryDialog implements JobEnt
     
     private Text jobEntryName;
 
-    private Text recordsetName;
-    
-    private Text ECLCode;
+    private Text fileName;
+    private Combo fileType;
     
     private Button wOK, wCancel;
     private boolean backupChanged;
@@ -91,7 +90,7 @@ public class ECLSaltDataProfilingDialog extends JobEntryDialog implements JobEnt
         int margin = Const.MARGIN;
 
         shell.setLayout(formLayout);
-        shell.setText("Define an ECL Iterate");
+        shell.setText("Define Data Profiling Details");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -120,14 +119,15 @@ public class ECLSaltDataProfilingDialog extends JobEntryDialog implements JobEnt
         FormData recordGroupFormat = new FormData();
         recordGroupFormat.top = new FormAttachment(generalGroup, margin);
         recordGroupFormat.width = 600;
-        recordGroupFormat.height = 375;
+        recordGroupFormat.height = 100;
         recordGroupFormat.left = new FormAttachment(0, 0);
         recordGroup.setLayoutData(recordGroupFormat);
         
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
 
         //recordsetName = buildText("Output Recordset", null, lsMod, middle, margin, recordGroup);
-        ECLCode = this.buildMultiText("ECL Code", null, lsMod, middle, margin, recordGroup);
+        fileName = buildText("Logical File Name", null, lsMod, middle, margin, recordGroup);
+        fileType = buildCombo("File Type", fileName, lsMod, middle, margin, recordGroup,new String[]{"", "CSV"});
         
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
@@ -170,30 +170,17 @@ public class ECLSaltDataProfilingDialog extends JobEntryDialog implements JobEnt
             }
         });
         
-
-
-        //if (jobEntry.getJobName() != null) {
-        //    jobEntryName.setText(jobEntry.getJobName());
-        //}
         if (jobEntry.getName() != null) {
             jobEntryName.setText(jobEntry.getName());
         }
         
-
-        
-
-        //if (jobEntry.getRecordsetName() != null) {
-        //    recordsetName.setText(jobEntry.getRecordsetName());
-       // }
-        
-        if (jobEntry.getECLCode() != null) {
-            ECLCode.setText(jobEntry.getECLCode());
+        if (jobEntry.getFileName() != null) {
+            fileName.setText(jobEntry.getFileName());
         }
         
-        
-
-
-
+        if (jobEntry.getFileType() != null) {
+            fileType.setText(jobEntry.getFileType());
+        }
         shell.pack();
         shell.open();
         while (!shell.isDisposed()) {
@@ -309,25 +296,11 @@ public class ECLSaltDataProfilingDialog extends JobEntryDialog implements JobEnt
     	if(!validate()){
     		return;
     	}
-                    /*
-     * private Text name;
-    private Text datasetName;
-    private Text expression;
-    private Text index;
-    private Text joinCondition;
-    private Text skew;
-    */
-        //jobEntry.setJobName(jobEntryName.getText());
-        jobEntry.setName(jobEntryName.getText());
-        /*
-    private Text record;
-    private Text recordName;
-    private Text recordsetName;
-    */
 
-        //jobEntry.setRecordsetName(recordsetName.getText());
-        jobEntry.setECLCode(ECLCode.getText());
-        
+        jobEntry.setName(jobEntryName.getText());
+
+        jobEntry.setFileName(fileName.getText());
+        jobEntry.setFileType(fileType.getText());
         
 
         dispose();

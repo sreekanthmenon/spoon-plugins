@@ -73,6 +73,11 @@
 			<zipfileset dir="./job/eclproject/target" includes="eclproject.jar" prefix="jobentries/eclproject" />
 			<zipfileset dir="./job/eclrollup/src/main/resources/plugin" includes="plugin.xml,*.png" prefix="jobentries/eclrollup" />
 			<zipfileset dir="./job/eclrollup/target" includes="eclrollup.jar" prefix="jobentries/eclrollup" />
+			
+			<zipfileset dir="./job/eclsaltdataprofiling/src/main/resources/plugin" includes="plugin.xml,*.png" prefix="jobentries/eclsaltdataprofiling" />
+			<zipfileset dir="./job/eclsaltdataprofiling/target" includes="eclsaltdataprofiling.jar" prefix="jobentries/eclsaltdataprofiling" />
+			
+			
 			<zipfileset dir="./job/eclsort/src/main/resources/plugin" includes="plugin.xml,*.png" prefix="jobentries/eclsort" />
 			<zipfileset dir="./job/eclsort/target" includes="eclsort.jar" prefix="jobentries/eclsort" />
 			<zipfileset dir="./job/eclsprayfile/src/main/resources/plugin" includes="plugin.xml,*.png" prefix="jobentries/eclsprayfile" />

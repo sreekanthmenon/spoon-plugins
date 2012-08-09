@@ -202,11 +202,11 @@ public class ECLSoap {
             //need to modify -I to include path...
             String include = "";
             if(this.includeML){
-                include = " -I \"" + this.mlPath +"\"";
+                include += " -I \"" + this.mlPath +"\"";
             }
             
             if(this.includeSALT){
-                include = " -I \"" + this.SALTPath +"\"";
+                include += " -I \"" + this.SALTPath +"\"";
             }
             
             String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";

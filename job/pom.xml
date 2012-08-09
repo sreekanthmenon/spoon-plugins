@@ -34,6 +34,7 @@
 		<module>ecloutput</module>
 		<module>eclproject</module>
 		<module>eclrollup</module>
+		<module>eclsaltdataprofiling</module>
 		<module>eclsort</module>
 		<module>eclsprayfile</module>
 		<module>ecltable</module>

@@ -123,7 +123,7 @@ public class Spray implements EclCommand {
                 outputField.append("std.file.sprayVariable('");
                 outputField.append(ipAddress).append("',");
                 outputField.append("'").append(filePath).append("',");
-                outputField.append("8192").append(",,,,'").append(clusterName).append("',");
+                outputField.append("8192").append(",'" + this.csvSeparator +"',,,'").append(clusterName).append("',");
                 outputField.append("'").append(logicalFileName).append("',-1,");
                 outputField.append("'http://").append(ipAddress).append(":").append(serverPort).append("/FileSpray'").append(",,").append(allowOverWrite).append(");");
             } else {
@@ -142,6 +142,7 @@ public class Spray implements EclCommand {
         } else {
             throw new RuntimeException("Uninitialized File Type");
         }
+        System.out.println(outputField.toString());
         return outputField.toString();
 
     }
