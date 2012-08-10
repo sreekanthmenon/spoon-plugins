@@ -46,12 +46,21 @@ public class EclDirect {
     private String outputName = "";
     private boolean isValid = true;
     private String error = "";
+    private ArrayList<String[]> files = new ArrayList();
     
 
     
     
 
-    public String getError() {
+    public ArrayList getFiles() {
+		return files;
+	}
+
+	public void setFiles(ArrayList files) {
+		this.files = files;
+	}
+
+	public String getError() {
 		return error;
 	}
 
@@ -432,6 +441,9 @@ public class EclDirect {
                              ArrayList results = es.parseResults(is);
                              resName = resName.replace(" ", "_");
                              createOutputFile(results,outputDir + "\\" + resName + ".csv",counter);
+                             
+                             String[] fileInfo = {resName, outputDir, outputDir + "\\" + resName + ".csv"};
+                             files.add(fileInfo);
                              counter++;
                          }
                      }

@@ -542,6 +542,20 @@ public class ECLExecute extends JobEntryBase implements Cloneable, JobEntryInter
                     result.setLogText(error);
                 	logError(eclDirect.getError());
                 	System.out.println(eclDirect.getError());
+                }else{
+                	ArrayList<String[]> files = eclDirect.getFiles();
+                	for(int i=0; i<files.size();i++){
+                		String[] fileDetail = files.get(i);
+                		
+                		if(fileDetail[0].equalsIgnoreCase("dataProfilingResults")){
+                			RenderWebDisplay rwd = new RenderWebDisplay();
+                			//rwd.processFile(file, outFolder);
+                			//{resName, outputDir, outputDir + "\\" + resName + ".csv"}
+                			//name = 0, dir = 1, file =2 
+                			rwd.processFile(fileDetail[2],fileDetail[1]);
+                		}
+                	}
+                	
                 }
                     
              }catch (Exception e){
