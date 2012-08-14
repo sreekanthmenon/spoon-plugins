@@ -534,6 +534,7 @@ public class MainMapper {
 						txtExpression.setText("");
 						uncheckAll();
 						tableViewer.refresh();
+						tableViewer.getTable().redraw();
 					}
 				}
 			}
