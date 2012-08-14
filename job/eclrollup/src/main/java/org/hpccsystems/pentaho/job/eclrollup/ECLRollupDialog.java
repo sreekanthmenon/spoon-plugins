@@ -4,6 +4,8 @@
  */
 package org.hpccsystems.pentaho.job.eclrollup;
 
+
+
 import java.util.Iterator;
 import java.util.Map;
 
@@ -264,47 +266,6 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         //transformFormat = buildMultiText("Transform Format", parameterName, lsMod, middle, margin, distributeGroup);
         
 
-        if (jobEntry.getRecordset() != null) {
-        	dataset.setText(jobEntry.getRecordset());
-            try{
-            	populateDatasets();
-            }catch (Exception e){
-            	System.out.println("Failed to load datasets");
-            }
-        }
-        if (jobEntry.getRecordsetName() != null) {
-            recordsetName.setText(jobEntry.getRecordsetName());
-        }
-        
-        if (jobEntry.getCondition() != null) {
-            condition.setText(jobEntry.getCondition());
-        }
-        
-        
-        //if (jobEntry.getTransform() != null) {
-        //    transform.setText(jobEntry.getTransform());
-        //}
-        //if (jobEntry.getTransformCall() != null) {
-        //    transformCall.setText(jobEntry.getTransformCall());
-        //}
-        if (jobEntry.getTransformName() != null) {
-            transformName.setText(jobEntry.getTransformName());
-        }
-        
-        if (jobEntry.getFieldlist() != null) {
-            fieldlist.setText(jobEntry.getFieldlist());
-        }
-       
-        if (jobEntry.getGroup() != null) {
-            group.setText(jobEntry.getGroup());
-        }
-        if (jobEntry.getRunLocalString() != null) {
-            runLocal.setText(jobEntry.getRunLocalString());
-        }
-        
-        //if (jobEntry.getRecordFormat() != null) {
-         //   recordFormat.setText(jobEntry.getRecordFormat());
-        //}
         
     }
     
@@ -341,7 +302,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         int margin = Const.MARGIN; //4. This value is defined in org.pentaho.di.core.Const.
 
         shell.setLayout(formLayout);
-        shell.setText("Define an ECL Project");
+        shell.setText("Define an ECL Rollup");
         
         //Create a Tab folder and add an event which gets the updated recordlist and populates the Variable Name drop down. 
         final TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
@@ -350,7 +311,8 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
         		if(tabFolder.getSelectionIndex() == 2){
         			if(tblOutput.getRecordList() != null && tblOutput.getRecordList().getRecords().size() > 0) {
         				String[] cmbValues = new String[tblOutput.getRecordList().getRecords().size()];
-        				int count = 0;
+        				int count = 1;
+        				cmbValues[0] = "SELF";
         				for (Iterator<RecordBO> iterator = tblOutput.getRecordList().getRecords().iterator(); iterator.hasNext();) {
         					RecordBO obj = (RecordBO) iterator.next();
         					cmbValues[count] = "self." + obj.getColumnName();
@@ -455,7 +417,7 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
 		}
 		 
 		//Create a Mapper
-		String[] cmbValues = {"FirstName", "LastName", "Zip", "City"};
+		String[] cmbValues = {"SELF"};
 		tblMapper = new MainMapper(compForGrp3, mapDataSets, cmbValues);
 		
 		//Add the existing Mapper RecordList
@@ -517,6 +479,53 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
             jobEntryName.setText(jobEntry.getName());
         }
 
+        
+        //load fields 
+        
+
+        this.dataset.addSelectionListener(new SelectionAdapter() {
+            public void widgetSelected(SelectionEvent e) {
+                   System.out.print("inRecordName Listner");
+		        try{
+		        	populateDatasets();
+		        }catch (Exception excep){
+		        	System.out.println("Failed to load datasets");
+		        }
+            };
+        });
+        
+        if (jobEntry.getRecordset() != null) {
+        	dataset.setText(jobEntry.getRecordset());
+            try{
+            	populateDatasets();
+            }catch (Exception e){
+            	System.out.println("Failed to load datasets");
+            }
+        }
+        if (jobEntry.getRecordsetName() != null) {
+            recordsetName.setText(jobEntry.getRecordsetName());
+        }
+        
+        if (jobEntry.getCondition() != null) {
+            condition.setText(jobEntry.getCondition());
+        }
+        
+        if (jobEntry.getTransformName() != null) {
+            transformName.setText(jobEntry.getTransformName());
+        }
+        
+        if (jobEntry.getFieldlist() != null) {
+            fieldlist.setText(jobEntry.getFieldlist());
+        }
+       
+        if (jobEntry.getGroup() != null) {
+            group.setText(jobEntry.getGroup());
+        }
+        if (jobEntry.getRunLocalString() != null) {
+            runLocal.setText(jobEntry.getRunLocalString());
+        }
+        
+
 
         //shell.pack();
         shell.open();
@@ -531,6 +540,9 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     }
     
     private void populateDatasets() throws Exception{
+    	if(dataset.getText().equals("")){
+    		return;
+    	}
     	AutoPopulate ap = new AutoPopulate();
     	Map<String, String[]> mapDataSets = null;
 		try {
@@ -540,7 +552,14 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
 		}
 		//(tblMapper.getTreeInputDataSet()).clearAll(false);
 		(tblMapper.getTreeInputDataSet()).removeAll();
-		Utils.fillTree(tblMapper.getTreeInputDataSet(), mapDataSets);
+		Utils.fillTree("LEFT", "L",tblMapper.getTreeInputDataSet(), mapDataSets);
+		Utils.fillTree("RIGHT", "R",tblMapper.getTreeInputDataSet(), mapDataSets);
+		
+		
+		Utils.fillTreeVariableName(tblMapper, tblMapper.getTreeInputDataSet(), mapDataSets);		
+		
+		
+		
 		//System.out.println("Updated Input Recordsets");
         tblMapper.reDrawTable();
     }
@@ -666,6 +685,11 @@ public class ECLRollupDialog extends JobEntryDialog implements JobEntryDialogInt
     			isValid = false;
     			errors += "You must provide only one of the following: \"Condition\", \"Fieldlist\", \"Group\"!\r\n";
     		}
+    	}
+    	//TODO: update this doesn't seem to work.
+    	if(tblMapper.getMapperRecList().equals("")){
+    		isValid = false;
+    		errors += "You must provide a \"Transform Format\"!\r\n";
     	}
 
 		if(!isValid){
