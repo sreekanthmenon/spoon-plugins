@@ -42,10 +42,10 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
-import org.hpccsystems.eclguifeatures.CreateTable;
 import org.hpccsystems.eclguifeatures.ErrorNotices;
-import org.hpccsystems.eclguifeatures.RecordBO;
-import org.hpccsystems.eclguifeatures.RecordList;
+import org.hpccsystems.recordlayout.CreateTable;
+import org.hpccsystems.recordlayout.RecordBO;
+import org.hpccsystems.recordlayout.RecordList;
 
 /**
  *

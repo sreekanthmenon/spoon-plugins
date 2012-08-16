@@ -41,7 +41,7 @@ import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.Text;
-import org.hpccsystems.eclguifeatures.RecordList;
+import org.hpccsystems.recordlayout.RecordList;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.job.JobMeta;
 import org.pentaho.di.job.entry.JobEntryDialogInterface;
@@ -53,9 +53,9 @@ import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
 
-import org.hpccsystems.eclguifeatures.CreateTable;
+import org.hpccsystems.recordlayout.CreateTable;
 import org.hpccsystems.eclguifeatures.ErrorNotices;
-import org.hpccsystems.eclguifeatures.RecordBO;
+import org.hpccsystems.recordlayout.RecordBO;
 
 
 /**

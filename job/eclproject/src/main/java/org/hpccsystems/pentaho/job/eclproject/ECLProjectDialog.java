@@ -50,10 +50,10 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 
-import org.hpccsystems.eclguifeatures.CreateTable;
+import org.hpccsystems.recordlayout.CreateTable;
 import org.hpccsystems.eclguifeatures.ErrorNotices;
-import org.hpccsystems.eclguifeatures.RecordBO;
-import org.hpccsystems.eclguifeatures.RecordList;
+import org.hpccsystems.recordlayout.RecordBO;
+import org.hpccsystems.recordlayout.RecordList;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.mapper.*;
 /**

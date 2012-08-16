@@ -34,7 +34,7 @@ import org.pentaho.di.plugins.perspectives.eclresults.*;
 
 import org.hpccsystems.eclguifeatures.*;
 import org.pentaho.di.job.JobMeta;
-import org.hpccsystems.pentaho.job.ecljobentry.*;
+import org.hpccsystems.ecljobentrybase.*;
 
 /**
  *

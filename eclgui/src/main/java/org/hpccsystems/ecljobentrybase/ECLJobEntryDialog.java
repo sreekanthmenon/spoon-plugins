@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.ecljobentry;
+package org.hpccsystems.ecljobentrybase;
 
 import java.util.ArrayList;
 import org.eclipse.swt.SWT;
@@ -54,13 +54,16 @@ import org.eclipse.swt.widgets.DirectoryDialog;
 
 /**
  *
- * @author ChalaAX
+ * @author Chambers,Joseph
  */
-public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogInterface {
+public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogInterface{
 
    
+	
+    protected HashMap controls = new HashMap();
+    protected boolean backupChanged;
     
-    private HashMap controls = new HashMap();
+
 
     public ECLJobEntryDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
@@ -68,14 +71,15 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
         
         
     }
-
+    
+    
     public JobEntryInterface open() {
-    	return null;
-    }
+        return null;
+       }
+
 
     
-    
-    protected Button buildButton(String strLabel, Control prevControl, 
+    public Button buildButton(String strLabel, Control prevControl, 
              ModifyListener isMod, int middle, int margin, Composite groupBox){
         
             Button nButton = new Button(groupBox, SWT.PUSH | SWT.SINGLE | SWT.CENTER);
@@ -95,7 +99,7 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
             
            
     }
-    protected String buildFileDialog() {
+    public String buildFileDialog() {
         
             //file field
             FileDialog fd = new FileDialog(shell, SWT.SAVE);
@@ -113,7 +117,7 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
             
         }
 
-    protected Text buildText(String strLabel, Control prevControl,
+    public Text buildText(String strLabel, Control prevControl,
                 ModifyListener lsMod, int middle, int margin, Composite groupBox) {
             // label
             Label fmt = new Label(groupBox, SWT.RIGHT);
@@ -138,7 +142,7 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
             return text;
         }
 
-    protected Text buildMultiText(String strLabel, Control prevControl,
+    public Text buildMultiText(String strLabel, Control prevControl,
                 ModifyListener lsMod, int middle, int margin, Composite groupBox) {
             // label
             Label fmt = new Label(groupBox, SWT.RIGHT);
@@ -164,7 +168,7 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
             return text;
         }
 
-    protected Combo buildCombo(String strLabel, Control prevControl,
+    public Combo buildCombo(String strLabel, Control prevControl,
                 ModifyListener lsMod, int middle, int margin, Composite groupBox, String[] items) {
             // label
             Label fmt = new Label(groupBox, SWT.RIGHT);
@@ -190,6 +194,12 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
 
             return combo;
         }
+
+    public void dispose() {
+        WindowProperty winprop = new WindowProperty(shell);
+        props.setScreen(winprop);
+        shell.dispose();
+    }
 
     
 }
