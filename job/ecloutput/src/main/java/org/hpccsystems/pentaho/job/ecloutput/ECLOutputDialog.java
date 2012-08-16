@@ -64,11 +64,12 @@ import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
-//import org.eclipse.swt.layout.FillLayout;
+import org.hpccsystems.ecljobentrybase.*;
+
 
 /**
  *
- * @author ChalaAX
+ * @author ChambersJ
  */
 public class ECLOutputDialog extends ECLJobEntryDialog implements JobEntryDialogInterface {
 	

@@ -116,7 +116,18 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
             }
             
         }
-
+    public String buildDirectoryDialog() {
+        
+        DirectoryDialog dialog = new DirectoryDialog(shell);
+        dialog.setFilterPath("c:\\"); // Windows specific
+        //System.out.println("RESULT=" + dialog.open());
+        String selected = dialog.open();
+        if(selected == null){
+            selected = "";
+        }
+        return selected;
+  
+   }
     public Text buildText(String strLabel, Control prevControl,
                 ModifyListener lsMod, int middle, int margin, Composite groupBox) {
             // label
@@ -194,7 +205,22 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
 
             return combo;
         }
-
+    public Label buildLabel(String strLabel, Control prevControl,
+            ModifyListener lsMod, int middle, int margin, Composite groupBox){
+            Label fmt = new Label(groupBox, SWT.RIGHT);
+            fmt.setText(strLabel);
+            props.setLook(fmt);
+            FormData labelFormat = new FormData();
+            //labelFormat.left = new FormAttachment(0, 0);
+            //labelFormat.top = new FormAttachment(prevControl, margin);
+           // labelFormat.right = new FormAttachment(middle, -margin);
+            
+            labelFormat.left = new FormAttachment(middle, 0);
+            labelFormat.top = new FormAttachment(prevControl, margin);
+            labelFormat.right = new FormAttachment(100, 0);
+            fmt.setLayoutData(labelFormat);
+            return fmt;
+        }
     public void dispose() {
         WindowProperty winprop = new WindowProperty(shell);
         props.setScreen(winprop);

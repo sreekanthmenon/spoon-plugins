@@ -31,7 +31,7 @@ import org.hpccsystems.ecljobentrybase.*;
 
 /**
  *
- * @author ChalaAX
+ * @author ChambersJ
  */
 //public class ECLRollup extends ECLJobEntry implements Cloneable, JobEntryInterface  {
 public class ECLRollup extends ECLJobEntry{

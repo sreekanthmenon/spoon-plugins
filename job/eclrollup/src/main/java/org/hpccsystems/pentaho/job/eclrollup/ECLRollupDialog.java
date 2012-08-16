@@ -58,7 +58,7 @@ import org.hpccsystems.ecljobentrybase.*;
 
 /**
  *
- * @author ChalaAX
+ * @author ChambersJ
  */
 public class ECLRollupDialog extends ECLJobEntryDialog{
 //public class ECLRollupDialog extends ECLJobEntryDialog {
