@@ -74,7 +74,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     
     
     
-    private Button wOK, wCancel, mlFileOpenButton, eclFileOpenButton;
+    private Button wOK, wCancel, mlFileOpenButton, eclFileOpenButton,saltFileOpenButton;
     private boolean backupChanged;
     private SelectionAdapter lsDef;
 
@@ -157,7 +157,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 320;
+        datasetGroupFormat.height = 360;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         varGroup.setLayoutData(datasetGroupFormat);
 
@@ -177,9 +177,6 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         eclccInstallDir = buildText("eclcc Install Dir", jobName, lsMod, middle, margin, varGroup);
         this.eclFileOpenButton = buildButton("Choose Location", eclccInstallDir, lsMod, middle, margin, varGroup);
         controls.put("fOpen", eclccInstallDir);
-        
-        SALTPath = buildText("Path to SALT Library", includeML, lsMod, middle, margin, varGroup);
-        includeSALT = buildCombo("Include SALT Library?", SALTPath, lsMod, middle, margin, varGroup, new String[]{"true", "false"});
         Listener eclFileOpenListener = new Listener() {
 
             public void handleEvent(Event e) {
@@ -207,7 +204,22 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         };
         this.mlFileOpenButton.addListener(SWT.Selection, mlFileOpenListener);
         
+        includeSALT = buildCombo("Include SALT Library?", mlFileOpenButton, lsMod, middle, margin, varGroup, new String[]{"true", "false"});
+        SALTPath = buildText("Path to SALT Library", includeSALT, lsMod, middle, margin, varGroup);
         
+        this.saltFileOpenButton = buildButton("Choose Location", SALTPath, lsMod, middle, margin, varGroup);
+        controls.put("fOpen", saltFileOpenButton);
+        
+        Listener saltFileOpenListener = new Listener() {
+
+            public void handleEvent(Event e) {
+                String newFile = buildDirectoryDialog();
+                if(newFile != ""){
+                	SALTPath.setText(newFile);
+                }
+            }
+        };
+        this.saltFileOpenButton.addListener(SWT.Selection, saltFileOpenListener);
 
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
