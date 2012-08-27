@@ -1,4 +1,4 @@
-package org.hpccsystems.eclguifeatures;
+package org.hpccsystems.recordlayout;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -11,7 +11,7 @@ public class RecordList {
 	private Set<IRecordListViewer> changeListeners = new HashSet<IRecordListViewer>();
 	
 	// Combo box choices
-	static final String[] COLUMN_TYPE_ARRAY = {"Select", "Integer", "Real", "Decimel", "String", "QString", "Unicode", "Data", "VarString", "VarUnicode", "Set Of", "TypeOf", "RecordOf", "Enum"};
+	static final String[] COLUMN_TYPE_ARRAY = {"Select", "Integer", "Real", "Decimal", "String", "QString", "Unicode", "Data", "VarString", "VarUnicode", "Set Of", "TypeOf", "RecordOf", "Enum"};
 		
 	
 	public RecordList(){
@@ -62,13 +62,6 @@ public class RecordList {
 	public void addChangeListener(IRecordListViewer viewer) {
 		changeListeners.add(viewer);
 	}
-        
-        
-        
-        
-        
-        
-        
         
      public void addRecordBO(RecordBO r){
         arlRecords.add(arlRecords.size(), r);

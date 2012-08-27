@@ -33,12 +33,13 @@ import org.pentaho.di.plugins.perspectives.eclresults.*;
 
 import org.hpccsystems.eclguifeatures.*;
 import org.pentaho.di.job.JobMeta;
+import org.hpccsystems.ecljobentrybase.*;
 
 /**
  *
- * @author ChalaAX
+ * @author ChambersJ
  */
-public class ECLError extends JobEntryBase implements Cloneable, JobEntryInterface {
+public class ECLError extends ECLJobEntry{//extends JobEntryBase implements Cloneable, JobEntryInterface {
     
 
 
@@ -106,6 +107,7 @@ public class ECLError extends JobEntryBase implements Cloneable, JobEntryInterfa
 			if (isGuiMode()) {
 			    ErrorNotices en = new ErrorNotices();
 			    //String error = result.getLogText();
+			    error = "Please see eclwatch for more detailed information!\n\n\n" + error;
 			    en.openDialog("Syntax Check Failed:", error,eclCode);
 			}
 		    
