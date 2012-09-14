@@ -119,11 +119,11 @@ public class Spray implements EclCommand {
         StringBuilder outputField = new StringBuilder();
         outputField.append("import std;").append("\r\n");
         if (fileType != null) {
-            if (fileType.equalsIgnoreCase("variable")) {
+        	if (fileType.equalsIgnoreCase("variable")) {
                 outputField.append("std.file.sprayVariable('");
                 outputField.append(ipAddress).append("',");
                 outputField.append("'").append(filePath).append("',");
-                outputField.append("8192").append(",,,,'").append(clusterName).append("',");
+                outputField.append("8192").append(",'" + this.csvSeparator +"',,,'").append(clusterName).append("',");
                 outputField.append("'").append(logicalFileName).append("',-1,");
                 outputField.append("'http://").append(ipAddress).append(":").append(serverPort).append("/FileSpray'").append(",,").append(allowOverWrite).append(");");
             } else {
@@ -139,6 +139,7 @@ public class Spray implements EclCommand {
                 outputField.append("'http://").append(ipAddress).append(":").append(serverPort).append("/FileSpray'").append(",,").append(allowOverWrite).append(");");
                 
             }
+        	
         } else {
             throw new RuntimeException("Uninitialized File Type");
         }
