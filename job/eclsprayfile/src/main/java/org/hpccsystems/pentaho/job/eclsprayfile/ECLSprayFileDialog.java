@@ -191,7 +191,7 @@ public class ECLSprayFileDialog extends ECLJobEntryDialog{//extends JobEntryDial
         FormData sourceGroupFormat = new FormData();
         sourceGroupFormat.top = new FormAttachment(generalGroup, margin);
         sourceGroupFormat.width = 400;
-        sourceGroupFormat.height = 120;
+        sourceGroupFormat.height = 140;
         sourceGroupFormat.left = new FormAttachment(middle, 0);
         sourceGroup.setLayoutData(sourceGroupFormat);
        
