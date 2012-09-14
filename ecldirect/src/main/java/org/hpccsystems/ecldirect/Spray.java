@@ -130,14 +130,18 @@ public class Spray implements EclCommand {
         if (fileType != null) {
         	if (fileType.equalsIgnoreCase("variable")) {
                 outputField.append("std.file.sprayVariable('");
-                outputField.append(this.ipAddress).append("',");
-                outputField.append("'").append(this.filePath).append("',");
-                outputField.append(",").append(",'").append(this.csvSeparator).append("','");
-                outputField.append(this.csvTerminator).append("','").append(this.csvQuote);
-                outputField.append("','").append(this.groupName).append("',");
-                outputField.append("'").append(this.logicalFileName).append("',-1,");
-                outputField.append("'http://").append(this.ipAddress).append(":").append(this.serverPort);
-                outputField.append("/FileSpray'").append(",,").append(this.allowOverWrite).append(");");
+                outputField.append(this.ipAddress).append("',");//sourceIP
+                outputField.append("'").append(this.filePath).append("',");//sourcepath
+                outputField.append(",");//maxrecordsize
+                outputField.append("'").append(this.csvSeparator).append("',");//srcCSVseparator
+                outputField.append("'").append(this.csvTerminator).append("',");//srcCSVterminator
+                outputField.append("'").append(this.csvQuote).append("',");//srcCSVquote
+                outputField.append("'").append(this.groupName).append("',");//destinationgroup
+                outputField.append("'").append(this.logicalFileName).append("',");//destinationlogicalname
+                outputField.append("-1,");//[timeout]
+                outputField.append("'http://").append(this.ipAddress).append(":").append(this.serverPort).append("/FileSpray'").append(",");//espserverIPport
+                outputField.append(",");//maxConnections
+                outputField.append(this.allowOverWrite).append(");");//allowoverwrite
                 
         	}else if (fileType.equalsIgnoreCase("xml")) {
         		//todo: need to be developed
@@ -145,14 +149,16 @@ public class Spray implements EclCommand {
                 //todo: Need to be fully tested
                 
                 outputField.append("STD.File.SprayFixed('");
-                outputField.append(this.ipAddress).append("',");
-                outputField.append("'").append(this.filePath).append("',");
-                outputField.append(this.recordSize).append(",");
-                outputField.append("'").append(this.groupName).append("'").append(",");
-                
-                outputField.append("'").append(this.logicalFileName).append("',-1,");
-                outputField.append("'http://").append(this.ipAddress).append(":").append(this.serverPort);
-                outputField.append("/FileSpray'").append(",,").append(this.allowOverWrite).append(");");
+                outputField.append(this.ipAddress).append("',");//sourceIP
+                outputField.append("'").append(this.filePath).append("',");//sourcepath
+                outputField.append(this.recordSize).append(",");//recordsize
+                outputField.append("'").append(this.groupName).append("'").append(",");//destinationgroup
+                outputField.append("'").append(this.logicalFileName).append("',");//destinationlogicalname
+                outputField.append("-1,");//timeout
+                outputField.append("'http://").append(this.ipAddress).append(":").append(this.serverPort).append("/FileSpray'").append(",");//espserverIPport
+                outputField.append(",");//maxConnections
+                outputField.append(this.allowOverWrite);//allowoverwrite
+                outputField.append(");");
                 
             }
         	
