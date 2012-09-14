@@ -133,7 +133,7 @@ public class Spray implements EclCommand {
                 outputField.append(ipAddress).append("',");
                 outputField.append("'").append(filePath).append("',");
                 outputField.append(this.recordSize).append(",");
-                outputField.append("group").append(",");
+                outputField.append("'" + this.clusterName + "'").append(",");
                 
                 outputField.append("'").append(logicalFileName).append("',-1,");
                 outputField.append("'http://").append(ipAddress).append(":").append(serverPort).append("/FileSpray'").append(",,").append(allowOverWrite).append(");");
