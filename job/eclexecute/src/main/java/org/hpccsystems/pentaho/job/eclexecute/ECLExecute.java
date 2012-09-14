@@ -104,7 +104,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	@Override
     public Result execute(Result prevResult, int k) throws KettleException {
 		String error = "";
-        
+		String resName = "";
       //Result result = null;
         
         Result result = prevResult;
@@ -227,6 +227,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 	logError(eclDirect.getError());
                 	System.out.println(eclDirect.getError());
                 	error += eclDirect.getError();
+                	
                 }
                     
              }catch (Exception e){
@@ -255,7 +256,12 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
             } catch (IOException e) {
                  e.printStackTrace();
             }   
-             
+            resName = eclDirect.getResName();
+            System.out.println("-------------------------" + resName);
+            if(resName.equalsIgnoreCase("dataProfilingResults")){ 
+                RenderWebDisplay rwd = new RenderWebDisplay();
+         		rwd.processFile(this.fileName + "\\" + resName + ".csv", this.fileName);
+            }
         
        }
         

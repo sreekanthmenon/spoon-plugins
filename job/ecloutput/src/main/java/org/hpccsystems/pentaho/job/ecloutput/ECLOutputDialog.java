@@ -151,7 +151,7 @@ public class ECLOutputDialog extends ECLJobEntryDialog implements JobEntryDialog
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
 
         shell.setLayout(new FillLayout(SWT.VERTICAL));
-    
+        shell.setText("Define an ECL Output");
         props.setLook(shell);
         JobDialog.setShellImage(shell, jobEntry);
 

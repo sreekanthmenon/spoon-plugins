@@ -47,12 +47,20 @@ public class EclDirect {
     private boolean isValid = true;
     private String error = "";
     private ArrayList<String[]> files = new ArrayList();
-    
+    private String resName = "";
 
     
     
 
-    public ArrayList getFiles() {
+    public String getResName() {
+		return resName;
+	}
+
+	public void setResName(String resName) {
+		this.resName = resName;
+	}
+
+	public ArrayList getFiles() {
 		return files;
 	}
 
@@ -436,7 +444,7 @@ public class EclDirect {
                      for(int r = 0; r < al3Size ; r++){
 
                          if(((Column)al3.get(r)).getName().equals("Name")){
-                             String resName = ((Column)al3.get(r)).getValue();
+                             resName = ((Column)al3.get(r)).getValue();
                              InputStream is = es.ResultsSoapCall(this.getWuid(), resName);
                              ArrayList results = es.parseResults(is);
                              resName = resName.replace(" ", "_");

@@ -209,11 +209,11 @@ public class ECLSoap {
                 include += " -I \"" + this.SALTPath +"\"";
             }
             
-            String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";
+            String logFile = "--logfile \"" + this.tempDir + this.outputName.replace(' ', '_') + "_syntax_log.log\" ";
            // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
-            String c = "\"" + eclccInstallDir + "eclcc\" -legacy " + logFile + "-c -syntax" + include + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" -legacy " + logFile + "-c -syntax" + include + " " + inFilePath;
 
-            System.out.println("-----------------------------------------------");
+            System.out.println("----------------syntaxCheck-------------------------------");
             System.out.println("-----------------------------------------------");
             System.out.println("-----------------------------------------------");
             System.out.println(c);
@@ -1112,10 +1112,10 @@ public class ECLSoap {
                 include = " -I \"" + this.SALTPath +"\"";
             }
             
-            String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
-            String c = "\"" + eclccInstallDir + "eclcc\" -legacy " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
+            String logFile = "--logfile " + this.tempDir + this.outputName.replace(' ', '_') + "_log.log ";
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" -legacy " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
             
-            System.out.println("!----------------------------------------------");
+            System.out.println("!----------------------compile ecl------------------------");
             System.out.println("!----------------------------------------------");
             System.out.println("!----------------------------------------------");
             System.out.println(c);
@@ -1162,7 +1162,7 @@ public class ECLSoap {
             deleteFile(this.tempDir+outFile);
             deleteFile(this.tempDir+inFile);
             
-            //System.out.println("finished compileECL");
+            System.out.println("finished compileECL");
             //load file as string
             return compiled_ecl;
             
