@@ -15,13 +15,13 @@ public class RenderWebDisplay {
 
 	public static void main(String[] args){
 		RenderWebDisplay rwd = new RenderWebDisplay();
-		String file = "C:\\Spoon Demos 6-5\\dataprofiling\\output\\dataProfilingResults.csv";
-		String outFolder = "C:\\Spoon Demos 6-5\\dataprofiling\\output";
+		String file = "C:\\Spoon Demos 6-5\\salt_dataprofiling_quickstart\\out\\Dataprofiling_AllProfiles.csv";
+		String outFolder = "C:\\Spoon Demos 6-5\\salt_dataprofiling_quickstart\\out";
 		rwd.processFile(file, outFolder);
 		}
 	
 	public void processFile(String fileName, String outFolder){
-		String fileStruct = outFolder + "\\dataProfilingStructure.csv";
+		String fileStruct = outFolder + "\\Dataprofiling_OptimizedLayout.csv";
 		
 		String html = "";
 		html += makeHTMLHeader();
@@ -98,142 +98,156 @@ public class RenderWebDisplay {
 	            	  second = true;
 	              }else{
 		           //  html += renderRows(strLineArr,length);
-		              if(lineArr.length == firstRowLen){
-		      			
-		            	html += "\n\r<tr>" +
-		                      "<td>" + lineArr[0] + "</td>" + //fldno
-		                      "<td>" + lineArr[1] + "</td>" + //fieldname
-		                      "<td>" + lineArr[2] + "</td>"; //cardinality
-		                      ;
-		                newTable = true;
-		                fldno = lineArr[0];
-		      			len = lineArr[3];
-		      			words = lineArr[4];
-		      			characters = lineArr[5];
-		      			patterns = lineArr[6];
-		      			freqTerms = lineArr[7];
-		      			/*
-		                      "<td>" + lineArr[3] + "</td>" + //len
-		                      "<td>" + lineArr[4] + "</td>" + //words
-		                      "<td>" + lineArr[5] + "</td>" + //characters
-		                      "<td>" + lineArr[6] + "</td>" + //patterns
-		                      "<td>" + lineArr[7] + "</td>" + //frequent terms
-		                      "</tr>";*/
+		              	if(lineArr.length >= firstRowLen){
+		              	//if(lineArr[2] != ""){
+			      			//System.out.println("NAME: " + lineArr[1]);
+			            	html += "\n\r<tr>" +
+			                      "<td>" + lineArr[0] + "</td>" + //fldno
+			                      "<td>" + lineArr[1] + "</td>" + //fieldname
+			                      "<td>" + lineArr[2] + "</td>"; //cardinality
+			                      ;
+			                newTable = true;
+			                fldno = lineArr[0];
+			      			len = lineArr[3];
+			      			//System.out.println("DEFINE LEN: |" + len + "|");
+			      			words = lineArr[4];
+			      			characters = lineArr[5];
+			      			patterns = lineArr[6];
+			      			freqTerms = lineArr[7];
+			      			/*
+			                      "<td>" + lineArr[3] + "</td>" + //len
+			                      "<td>" + lineArr[4] + "</td>" + //words
+			                      "<td>" + lineArr[5] + "</td>" + //characters
+			                      "<td>" + lineArr[6] + "</td>" + //patterns
+			                      "<td>" + lineArr[7] + "</td>" + //frequent terms
+			                      "</tr>";*/
 
-		      		}else{
-		      			//its an odd length so thus a sub row
-		      			
-		      			if(!len.equals("")){
-		      				if(newTable){
-		      					html += "<td colspan='2'>";
-		      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblLen-" + fldno + "');\">[+] Show</a>";
-		      					html += "<table id='tblLen-" + fldno + "' class='inner' style='display:none;'><tbody>";
-		      					newTable = false;
-		      				}
-		      				//System.out.println("len------");
-			      			int thisLen = lineArr.length;
-			      			String subStr = "";
-			      			html += "<tr>";
-			      			 for(int i =0; i<thisLen; i++){
-			      				 subStr += lineArr[i];
+		      			}else{
+			      				//its an odd length so thus a sub row
+			      			
+			      			if(!len.equals("")){
 			      				
-			      				html += "<td>" + lineArr[i] + "</td>";
-			      			 }
-			      			 html += "</tr>";
-			      			 len = len.substring(subStr.length(),len.length());
-			      			
-			      			 if(len.equals("")){
-			      				 html += "</tbody></table></td>";
-			      				 newTable = true;
-			      			 }
-		      			}else if(!words.equals("")){
-		      				if(newTable){
-		      					html += "<td colspan='2'>";
-		      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblWords-" + fldno + "');\">[+] Show</a>";
-		      					html += "<table id='tblWords-" + fldno + "' class='inner' style='display:none;'><tbody>";
-		      					newTable = false;
-		      				}
-			      			int thisLen = lineArr.length;
-			      			String subStr = "";
-			      			html += "<tr>";
-			      			for(int i =0; i<thisLen; i++){
-			      				 subStr += lineArr[i];
-			      				
-			      				html += "<td>" + lineArr[i] + "</td>";
-			      			 }
-			      			html += "</tr>";
-			      			words = words.substring(subStr.length(),words.length());
-			      			
-			      			if(words.equals("")){
-			      				 html += "</table></td>";
-			      				 newTable = true;
-			      			 }
-		      			}else if(!characters.equals("")){
-		      				if(newTable){
-		      					html += "<td colspan='2'>";
-		      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblChars-" + fldno + "');\">[+] Show</a>";
-		      					html += "<table id='tblChars-" + fldno + "' class='inner' style='display:none;'><tbody>";
-		      					newTable = false;
-		      				}
-			      			int thisLen = lineArr.length;
-			      			String subStr = "";
-			      			html += "<tr>";
-			      			for(int i =0; i<thisLen; i++){
-			      				 subStr += lineArr[i];
-			      				 
-			      				html += "<td>" + lineArr[i] + "</td>";
-			      			 }
-			      			html += "</tr>";
-			      			characters = characters.substring(subStr.length(),characters.length());
-			      			
-			      			if(characters.equals("")){
-			      				 html += "</table></td>";
-			      				 newTable = true;
-			      			 }
-		      			}else if(!patterns.equals("")){
-		      				if(newTable){
-		      					html += "<td colspan='2'>";
-		      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblPatterns-" + fldno + "');\">[+] Show</a>";
-		      					html += "<table id='tblPatterns-" + fldno + "' class='inner' style='display:none;'><tbody>";
-		      					newTable = false;
-		      				}
-			      			int thisLen = lineArr.length;
-			      			String subStr = "";
-			      			html += "<tr>";
-			      			for(int i =0; i<thisLen; i++){
-			      				 subStr += lineArr[i];
-			      				
-			      				html += "<td>" + lineArr[i] + "</td>";
-			      			 }
-			      			html += "</tr>";
-			      			patterns = patterns.substring(subStr.length(),patterns.length());
-			      			
-			      			if(patterns.equals("")){
-			      				 html += "</table></td>";
-			      				 newTable = true;
-			      			 }
-		      			}else if(!freqTerms.equals("")){
-		      				if(newTable){
-		      					html += "<td colspan='2'>";
-		      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblFrequent-" + fldno + "');\">[+] Show</a>";
-		      					html += "<table id='tblFrequent-" + fldno + "' class='inner' style='display:none;'><tbody>";
-		      					newTable = false;
-		      				}
-			      			int thisLen = lineArr.length;
-			      			String subStr = "";
-			      			html += "<tr>";
-			      			for(int i =0; i<thisLen; i++){
-			      				 subStr += lineArr[i];
-			      				 
-			      				html += "<td>" + lineArr[i] + "</td>";
-			      			 }
-			      			html += "</tr>";
-			      			freqTerms = freqTerms.substring(subStr.length(),freqTerms.length());
-			      			if(freqTerms.equals("")){
-			      				 html += "</table></td>";
-			      				 newTable = true;
-			      			 }
-		      			}
+			      				 //System.out.println("|"+len+"|");
+			      				if(newTable){
+			      					html += "<td colspan='2'>";
+			      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblLen-" + fldno + "');\">[+] Show</a>";
+			      					html += "<table id='tblLen-" + fldno + "' class='inner' style='display:none;'><tbody>";
+			      					newTable = false;
+			      				}
+			      				//System.out.println("len------");
+				      			int thisLen = lineArr.length;
+				      			String subStr = "";
+				      			html += "<tr>";
+				      			 for(int i =0; i<thisLen; i++){
+				      				 subStr += lineArr[i];
+				      				
+				      				html += "<td>" + lineArr[i] + "</td>";
+				      			 }
+				      			 html += "</tr>";
+				      			 //System.out.println(subStr.length());
+				      			 //System.out.println(len.length());
+				      			 //if(subStr.length()<=len.length()){
+				      			
+				      			   len = len.substring(subStr.length(),len.length());
+				      			   //System.out.println("|"+len+"|");
+			      				 //}else{
+			      				//	html += "</tbody></table></td>";
+				      			//	 newTable = true;
+			      				// }
+				      			
+				      			 if(len.equals("")){
+				      				// System.out.println("new table");
+				      				 html += "</tbody></table></td>";
+				      				 newTable = true;
+				      			 }
+			      			}else if(!words.equals("")){
+			      				if(newTable){
+			      					html += "<td colspan='2'>";
+			      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblWords-" + fldno + "');\">[+] Show</a>";
+			      					html += "<table id='tblWords-" + fldno + "' class='inner' style='display:none;'><tbody>";
+			      					newTable = false;
+			      				}
+				      			int thisLen = lineArr.length;
+				      			String subStr = "";
+				      			html += "<tr>";
+				      			for(int i =0; i<thisLen; i++){
+				      				 subStr += lineArr[i];
+				      				
+				      				html += "<td>" + lineArr[i] + "</td>";
+				      			 }
+				      			html += "</tr>";
+				      			words = words.substring(subStr.length(),words.length());
+				      			
+				      			if(words.equals("")){
+				      				 html += "</table></td>";
+				      				 newTable = true;
+				      			 }
+			      			}else if(!characters.equals("")){
+			      				if(newTable){
+			      					html += "<td colspan='2'>";
+			      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblChars-" + fldno + "');\">[+] Show</a>";
+			      					html += "<table id='tblChars-" + fldno + "' class='inner' style='display:none;'><tbody>";
+			      					newTable = false;
+			      				}
+				      			int thisLen = lineArr.length;
+				      			String subStr = "";
+				      			html += "<tr>";
+				      			for(int i =0; i<thisLen; i++){
+				      				 subStr += lineArr[i];
+				      				 
+				      				html += "<td>" + lineArr[i] + "</td>";
+				      			 }
+				      			html += "</tr>";
+				      			characters = characters.substring(subStr.length(),characters.length());
+				      			
+				      			if(characters.equals("")){
+				      				 html += "</table></td>";
+				      				 newTable = true;
+				      			 }
+			      			}else if(!patterns.equals("")){
+			      				if(newTable){
+			      					html += "<td colspan='2'>";
+			      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblPatterns-" + fldno + "');\">[+] Show</a>";
+			      					html += "<table id='tblPatterns-" + fldno + "' class='inner' style='display:none;'><tbody>";
+			      					newTable = false;
+			      				}
+				      			int thisLen = lineArr.length;
+				      			String subStr = "";
+				      			html += "<tr>";
+				      			for(int i =0; i<thisLen; i++){
+				      				 subStr += lineArr[i];
+				      				
+				      				html += "<td>" + lineArr[i] + "</td>";
+				      			 }
+				      			html += "</tr>";
+				      			patterns = patterns.substring(subStr.length(),patterns.length());
+				      			
+				      			if(patterns.equals("")){
+				      				 html += "</table></td>";
+				      				 newTable = true;
+				      			 }
+			      			}else if(!freqTerms.equals("")){
+			      				if(newTable){
+			      					html += "<td colspan='2'>";
+			      					html += "<a href=\"javascript:void(0)\" onclick=\"showAndHide(this, 'tblFrequent-" + fldno + "');\">[+] Show</a>";
+			      					html += "<table id='tblFrequent-" + fldno + "' class='inner' style='display:none;'><tbody>";
+			      					newTable = false;
+			      				}
+				      			int thisLen = lineArr.length;
+				      			String subStr = "";
+				      			html += "<tr>";
+				      			for(int i =0; i<thisLen; i++){
+				      				 subStr += lineArr[i];
+				      				 
+				      				html += "<td>" + lineArr[i] + "</td>";
+				      			 }
+				      			html += "</tr>";
+				      			freqTerms = freqTerms.substring(subStr.length(),freqTerms.length());
+				      			if(freqTerms.equals("")){
+				      				 html += "</table></td>";
+				      				 newTable = true;
+				      			 }
+			      			}
 		      		}
 		              second = false;
 		              

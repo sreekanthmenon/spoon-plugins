@@ -3,21 +3,34 @@
  * and open the template in the editor.
  */
 package org.hpccsystems.ecldirect;
-import java.net.*;
-import java.io.*;
-import java.util.*;
-
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.net.Authenticator;
+import java.net.PasswordAuthentication;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
-
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-//import org.xml.sax.InputSource;
+import org.w3c.dom.NodeList;
 
 
 
@@ -52,9 +65,19 @@ public class ECLSoap {
     
     private String SALTPath = "";
     private boolean includeSALT = false;
+    private String saltLib = "";
     
 
-    public int getErrorCount() {
+    
+    public String getSaltLib() {
+		return saltLib;
+	}
+
+	public void setSaltLib(String saltLib) {
+		this.saltLib = saltLib;
+	}
+
+	public int getErrorCount() {
 		return errorCount;
 	}
 
@@ -207,6 +230,10 @@ public class ECLSoap {
             
             if(this.includeSALT){
                 include += " -I \"" + this.SALTPath +"\"";
+            }
+            
+            if(this.saltLib != null && !this.saltLib.equals("")){
+                include += " -I \"" + this.saltLib +"\"";
             }
             
             String logFile = "--logfile \"" + this.tempDir + this.outputName.replace(' ', '_') + "_syntax_log.log\" ";
@@ -1110,6 +1137,10 @@ public class ECLSoap {
             
             if(this.includeSALT){
                 include = " -I \"" + this.SALTPath +"\"";
+            }
+            
+            if(this.saltLib != null && !this.saltLib.equals("")){
+                include += " -I \"" + this.saltLib +"\"";
             }
             
             String logFile = "--logfile " + this.tempDir + this.outputName.replace(' ', '_') + "_log.log ";

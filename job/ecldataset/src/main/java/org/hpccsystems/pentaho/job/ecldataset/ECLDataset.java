@@ -124,40 +124,7 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
         
         return errors;
     }
-    public String resultListToString(RecordList recordList){
-        String out = "";
-        
-        if(recordList != null){
-            if(recordList.getRecords() != null && recordList.getRecords().size() > 0) {
-                    System.out.println("Size: "+recordList.getRecords().size());
-                    for (Iterator<RecordBO> iterator = recordList.getRecords().iterator(); iterator.hasNext();) {
-                            RecordBO record = (RecordBO) iterator.next();
-                        	String rLen = record.getColumnWidth();
-        					if (rLen != null && rLen.trim().length() >0) {
-                                if(record.getColumnName() != null && !record.getColumnName().equals("")){
-                                    out += record.getColumnType()+rLen + " " + record.getColumnName();
-                                    if(record.getDefaultValue() != ""){
-                                        out += " := " + record.getDefaultValue();
-                                    }
-                                    out += ";\r\n";
-                                 }
-                            }else{
-                                if(record.getColumnName() != null && !record.getColumnName().equals("")){
-                                    out += record.getColumnType() + " " + record.getColumnName();
-                                    if(record.getDefaultValue() != ""){
-                                        out += " := " + record.getDefaultValue();
-                                    }
-                                    out += ";\r\n";
-                                }
-                            }
-                            
-                            
-                    }
-            }
-        }
-        
-        return out;
-    }
+    
 
     @Override
     public Result execute(Result prevResult, int k) throws KettleException {

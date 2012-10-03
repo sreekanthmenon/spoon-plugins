@@ -5,6 +5,7 @@
 package org.hpccsystems.ecljobentrybase;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 //import org.hpccsystems.ecldirect.Output;
 import org.hpccsystems.ecldirect.EclDirect;
@@ -31,6 +32,8 @@ import org.pentaho.di.core.gui.SpoonFactory;
 
 
 import org.hpccsystems.eclguifeatures.*;
+import org.hpccsystems.recordlayout.RecordBO;
+import org.hpccsystems.recordlayout.RecordList;
 import org.pentaho.di.job.JobMeta;
 
 /**
@@ -70,6 +73,41 @@ return null;
 
     public void saveRep(Repository rep, ObjectId id_job) throws KettleException {
 
+    }
+    
+    public String resultListToString(RecordList recordList){
+        String out = "";
+        
+        if(recordList != null){
+            if(recordList.getRecords() != null && recordList.getRecords().size() > 0) {
+                    System.out.println("Size: "+recordList.getRecords().size());
+                    for (Iterator<RecordBO> iterator = recordList.getRecords().iterator(); iterator.hasNext();) {
+                            RecordBO record = (RecordBO) iterator.next();
+                        	String rLen = record.getColumnWidth();
+        					if (rLen != null && rLen.trim().length() >0) {
+                                if(record.getColumnName() != null && !record.getColumnName().equals("")){
+                                    out += record.getColumnType()+rLen + " " + record.getColumnName();
+                                    if(record.getDefaultValue() != ""){
+                                        out += " := " + record.getDefaultValue();
+                                    }
+                                    out += ";\r\n";
+                                 }
+                            }else{
+                                if(record.getColumnName() != null && !record.getColumnName().equals("")){
+                                    out += record.getColumnType() + " " + record.getColumnName();
+                                    if(record.getDefaultValue() != ""){
+                                        out += " := " + record.getDefaultValue();
+                                    }
+                                    out += ";\r\n";
+                                }
+                            }
+                            
+                            
+                    }
+            }
+        }
+        
+        return out;
     }
     
     

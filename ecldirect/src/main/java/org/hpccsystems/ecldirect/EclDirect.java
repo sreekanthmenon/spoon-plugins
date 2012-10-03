@@ -11,20 +11,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-//import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.List;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-//import org.apache.commons.io.IOUtils;
+
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import org.hpccsystems.ecldirect.ECLSoap;
 
 /**
  *
@@ -42,6 +39,7 @@ public class EclDirect {
     private String mlPath;
     private String includeSALT;
     private String SALTPath;
+    private String saltLib;
     private String wuid;
     private String outputName = "";
     private boolean isValid = true;
@@ -52,7 +50,15 @@ public class EclDirect {
     
     
 
-    public String getResName() {
+    public String getSaltLib() {
+		return saltLib;
+	}
+
+	public void setSaltLib(String saltLib) {
+		this.saltLib = saltLib;
+	}
+
+	public String getResName() {
 		return resName;
 	}
 
@@ -331,6 +337,7 @@ public class EclDirect {
         }
 
         es.setSALTPath(SALTPath); 
+        es.setSaltLib(saltLib);
         es.setIncludeSALT(isIncludeSALT());
   
            

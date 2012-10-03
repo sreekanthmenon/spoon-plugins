@@ -4,7 +4,6 @@
  */
 package org.hpccsystems.ecldirect;
 
-import java.io.*;
 
 
 /**

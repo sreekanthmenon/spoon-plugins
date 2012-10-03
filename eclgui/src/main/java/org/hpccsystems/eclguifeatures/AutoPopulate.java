@@ -26,6 +26,7 @@ import org.hpccsystems.recordlayout.*;
 public class AutoPopulate {
     
     private String[] dataSets;
+    private int nodeIndex;
     private String[] recordSets;
     private Node datasetNode = null;//used internally to store the node in the load record list functions
     
@@ -313,15 +314,16 @@ public class AutoPopulate {
 				                	   defValue = XMLHandler.getNodeValue(childnode);
 				                	  
 				                	   if(defValue != null){
-				                		   //System.out.println("---------------NODE_VALUE: " + defValue);
+				                		   System.out.println("---------------NODE_VALUE: " + defValue);
 
 				                		   
 				                		   
 				                		   if(defValue.equals(datasetValue)){
-				                			   //System.out.println("Verify that " + defValue + " = " + datasetValue);
-				                			  // System.out.println("-------------Yes----------" + tType);
+				                			   System.out.println("Verify that " + defValue + " = " + datasetValue);
+				                			   System.out.println("-------------Yes----------" + tType);
 				                    		   type = tType;
 				                    		   datasetNode = nNode;
+				                    		   nodeIndex = i;
 				                    		   k++;
 				                    		   //to save execution time lets exit on the first find as it is most likely to be the one we want
 				                    		   
@@ -330,7 +332,7 @@ public class AutoPopulate {
 				                    	   }
 				                		   
 				                	   }else{
-				                		   //System.out.println("NODE_VALUE: IS NULL");
+				                		   System.out.println("NODE_VALUE: IS NULL");
 				                	   }
 				                   }
 	                		   }
@@ -852,4 +854,73 @@ public class AutoPopulate {
         return out;
 
     }
+    
+    
+    /*
+     * Gets the Dataset fields from all existing nodes
+     * This uses recursion to travel up from joins etc to the 
+     * def of the datasets
+     */
+    public String getDatasetsField(String fieldName, String datasetName,List<JobEntryCopy> jobs)throws Exception{
+        //System.out.println(" ------------ fieldsByDatasetList ------------ ");
+        Object[] jec = jobs.toArray();
+        Node node = null;
+        RecordList recordList = null;
+        String type = getType(jobs, datasetName);
+        //datasetNode is set in getType
+        //return datasetNode;
+        
+        String recordName = XMLHandler.getNodeValue(
+                XMLHandler.getSubNode(datasetNode, fieldName));
+       
+        return recordName;
+    }
+    
+    /*
+     * Gets the Dataset fields from all existing nodes
+     * This uses recursion to travel up from joins etc to the 
+     * def of the datasets
+     */
+    public RecordList rawFieldsByDataset(String datasetName,List<JobEntryCopy> jobs)throws Exception{
+        //System.out.println(" ------------ fieldsByDatasetList ------------ ");
+        Object[] jec = jobs.toArray();
+        Node node = null;
+        RecordList recordList = null;
+        String type = getType(jobs, datasetName);
+        //datasetNode is set in getType
+        node = datasetNode;
+        if(type != null && type.equalsIgnoreCase("ECLDataset")){
+        	System.out.println("-------------GETTING RECORD LIST---------------");
+        	System.out.println("Type: " + type);
+        	if(node != null){
+        		
+        		recordList = fetchFieldsRecordListByDataset(node);
+        	}
+        }
+        return recordList;
+       
+    }
+    
+    public RecordList fetchFieldsRecordListByDataset(Node node){
+    	String columns = XMLHandler.getNodeValue(
+                XMLHandler.getSubNode(node, "recordList"));
+    	String[] strLine = columns.split("[|]");
+    	RecordList recordList = null;
+        int len = strLine.length;
+        if(len>0){
+        	recordList = new RecordList();
+            //System.out.println("Open Record List");
+            for(int i =0; i<len; i++){
+                //System.out.println("++++++++++++" + strLine[i]);
+                //this.recordDef.addRecord(new RecordBO(strLine[i]));
+                RecordBO rb = new RecordBO(strLine[i]);
+                //System.out.println(rb.getColumnName());
+                recordList.addRecordBO(rb);
+            }
+        }
+        
+        return recordList;
+    }
+    
+    
 }
