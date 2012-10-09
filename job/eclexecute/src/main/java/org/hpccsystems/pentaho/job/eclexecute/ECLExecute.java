@@ -438,9 +438,9 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
        return result;
     }
 	
-    
+     /*
     public void createOutputFile_old(ArrayList dsList,String fileName, int count){
-         String outStr = "";
+        String outStr = "";
          String header = "";
          if(dsList != null){
          String newline = System.getProperty("line.separator");
@@ -456,12 +456,21 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                                  //   logBasic("----------Column-------------");
                                     Column column = (Column) columnList.get(lCol);
                                  //   logBasic(column.getName() + "=" + column.getValue() + "|");
-                                    outStr += column.getValue();
+                                    //if column has , then wrap in "
+                                    if(column.getValue().contains(",")){
+                                    	outStr += "\"" + column.getValue() + "\"";
+                                    }else{
+                                    	outStr += column.getValue();
+                                    }
                                     if(lCol< (columnList.size()-1)){
                                         outStr += ",";
                                     }
                                     if(jRow == 0){
-                                        header += column.getName();
+                                    	if(column.getName().contains(",")){
+                                    		header += "\"" + column.getName() + "\"";
+                                    	}else{
+                                    		header += column.getName();
+                                    	}
                                         if(lCol< (columnList.size()-1)){
                                             header += ",";
                                         }else{
@@ -489,7 +498,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 e.printStackTrace();
             }  
          }
-    }
+    }*/
 
     @Override
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {

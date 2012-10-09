@@ -5,18 +5,23 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.lang.reflect.Method;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import au.com.bytecode.opencsv.CSVReader;
 
 
 public class RenderWebDisplay {
 
 	public static void main(String[] args){
 		RenderWebDisplay rwd = new RenderWebDisplay();
-		String file = "C:\\Spoon Demos 6-5\\salt_dataprofiling_quickstart\\out\\Dataprofiling_AllProfiles.csv";
-		String outFolder = "C:\\Spoon Demos 6-5\\salt_dataprofiling_quickstart\\out";
+		String file = "C:\\Spoon Demos\\new\\salt_dataprofiling_quickstart\\out\\Dataprofiling_AllProfiles.csv";
+		String outFolder = "C:\\Spoon Demos\\new\\salt_dataprofiling_quickstart\\out";
 		rwd.processFile(file, outFolder);
 		}
 	
@@ -70,13 +75,18 @@ public class RenderWebDisplay {
 	}
 	private String fileDataToTableRows(String fileName){
 	      String html = "\n\r";
+	      
+	      
+	      int line = 1;
 	      try{
+	    	  CSVReader reader = new CSVReader(new FileReader(fileName),',','"');
 	          // Open the file that is the first 
 	          // command line parameter
-	          FileInputStream fstream = new FileInputStream(fileName);
+	          //FileInputStream fstream = new FileInputStream(fileName);
+	          String [] nextLine;
 	          // Get the object of DataInputStream
-	          DataInputStream in = new DataInputStream(fstream);
-	          BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	          //DataInputStream in = new DataInputStream(fstream);
+	          //BufferedReader br = new BufferedReader(new InputStreamReader(in));
 	          String strLine;	          
 	          int firstRowLen = 0;
 	          boolean first = true;
@@ -89,9 +99,30 @@ public class RenderWebDisplay {
 	          String freqTerms = "";
 	          String fldno = "";
 	          boolean newTable = false;
-	          while ((strLine = br.readLine()) != null)   {
+	          
+	          while ((nextLine = reader.readNext()) != null) {
+	        	  //System.out.println("LINE: " + line++ + " LEN: " + nextLine.length);
+	        	  String[] lineArr = nextLine;
+	          //while ((strLine = br.readLine()) != null)   {
 	          // Print the content on the console
+	        	  //String regex = "\"(\\([^)]*\\)|[^\"])*\"";
+
+	        	 // String[] lineArr = strLine.split(regex);
+	        	  //String[] lineArr = strLine.split(",(?![^()]*+\\))");
+/*
 	              String[] lineArr = strLine.split("\\,");
+	        	  String[] lineArr2 = new String[6];
+	        	  String regex = "\"(\\([^)]*\\)|[^\"])*\"";
+	        	  Pattern p = Pattern.compile(regex);
+	        	  Matcher m = p.matcher(strLine);
+	        	  int cnt = 0;
+	        	  while(m.find()) {
+	        		  System.out.println(strLine.substring(m.start(),m.end()));
+	        		  lineArr2[cnt++] = strLine.substring(m.start(),m.end());
+	        	  }
+
+	*/        	  
+	        	  
 	              if(first){
 	            	  firstRowLen = lineArr.length;
 	            	  first = false;
@@ -255,10 +286,11 @@ public class RenderWebDisplay {
 	          }
 	         
 	          //Close the input stream
-	          in.close();
+	          //in.close();
 	    }catch (Exception e){//Catch exception if any
 	        System.err.println("Error: " + e.getMessage());
 	        e.printStackTrace();
+	        System.out.println("LINE: " + line++ + " ");
 	     }
 	      return html;
 
