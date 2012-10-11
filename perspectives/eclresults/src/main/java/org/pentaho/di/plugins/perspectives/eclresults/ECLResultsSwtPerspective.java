@@ -35,6 +35,10 @@ import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 
 
+import au.com.bytecode.opencsv.CSVReader;
+
+
+
 public class ECLResultsSwtPerspective implements SpoonPerspective {
   private Composite comp;
   private static ECLResultsSwtPerspective instance = new ECLResultsSwtPerspective();
@@ -272,6 +276,10 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
   private void openFile(String fileName, Table table){
       String outStr;
       try{
+    	  
+    	  CSVReader reader = new CSVReader(new FileReader(fileName),',','"');
+          String [] strLineArr;
+          
           // Open the file that is the first 
           // command line parameter
           FileInputStream fstream = new FileInputStream(fileName);
@@ -288,9 +296,10 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
           int length = 0;
           boolean first = true;
           //Read File Line By Line
-          while ((strLine = br.readLine()) != null)   {
+          while ((strLineArr = reader.readNext()) != null) {
+          //while ((strLine = br.readLine()) != null)   {
           // Print the content on the console
-              outStr = strLine;
+              //outStr = strLine;
               TableItem item = null;
               
               
@@ -298,7 +307,7 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
               
               //StringTokenizer st = new StringTokenizer(strLine,",");
               //length = st.countTokens();
-              String[] strLineArr = strLine.split("\\,");
+              //String[] strLineArr = strLine.split("\\,");
               if(first){
                   length = strLineArr.length;
               }else{
