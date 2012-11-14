@@ -2,11 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.salthygien;
+package org.hpccsystems.pentaho.job.salthygiene;
 
 import java.util.Iterator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.ScrolledComposite;
 import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
@@ -18,6 +19,8 @@ import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -31,6 +34,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.TabFolder;
 import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
 import org.pentaho.di.core.Const;
 import org.pentaho.di.job.JobMeta;
@@ -44,17 +48,16 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.eclguifeatures.ErrorNotices;
-import org.hpccsystems.recordlayout.CreateTable;
 import org.hpccsystems.recordlayout.RecordBO;
-import org.hpccsystems.recordlayout.RecordList;
+import org.hpccsystems.saltui.*;
 import org.hpccsystems.ecljobentrybase.*;
 /**
  *
  * @author ChambersJ
  */
-public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
+public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
 
-    private SALTDataProfiling jobEntry;
+    private SALTHygiene jobEntry;
     private Text jobEntryName;
     private Combo datasetName;
     private Combo layout;
@@ -63,12 +66,16 @@ public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog
     private boolean backupChanged;
     private SelectionAdapter lsDef;
     
+    CreateTable createTable = null;
+    private EntryList entryList;
+    private FieldTypeList fieldTypeList;
+    
 
 
 
-    public SALTHygienDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+    public SALTHygieneDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (SALTDataProfiling) jobEntryInt;
+        jobEntry = (SALTHygiene) jobEntryInt;
         if (this.jobEntry.getName() == null) {
             this.jobEntry.setName("Dataset");
         }
@@ -90,7 +97,21 @@ public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         }
         
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
-
+        createTable = new CreateTable(shell);
+        TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
+        FormData data = new FormData();
+        
+        data.height = 500;
+        data.width = 650;
+        tabFolder.setLayoutData(data);
+        
+        Composite compForGrp = new Composite(tabFolder, SWT.NONE);
+        //compForGrp.setLayout(new FillLayout(SWT.VERTICAL));
+        compForGrp.setBackground(new Color(tabFolder.getDisplay(),255,255,255));
+        compForGrp.setLayout(new FormLayout());
+        
+        TabItem item1 = new TabItem(tabFolder, SWT.NULL);
+        item1.setText ("General");
         props.setLook(shell);
         JobDialog.setShellImage(shell, jobEntry);
 
@@ -122,7 +143,7 @@ public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         groupLayout.marginHeight = 10;
 
         // Stepname line
-        Group generalGroup = new Group(shell, SWT.SHADOW_NONE);
+        Group generalGroup = new Group(compForGrp, SWT.SHADOW_NONE);
         props.setLook(generalGroup);
         generalGroup.setText("General Details");
         generalGroup.setLayout(groupLayout);
@@ -137,7 +158,7 @@ public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog
 
         //All other contols
         //Join Declaration
-        Group joinGroup = new Group(shell, SWT.SHADOW_NONE);
+        Group joinGroup = new Group(compForGrp, SWT.SHADOW_NONE);
         props.setLook(joinGroup);
         joinGroup.setText("Data Profiling Details");
         joinGroup.setLayout(groupLayout);
@@ -148,62 +169,39 @@ public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         joinGroupFormat.left = new FormAttachment(middle, 0);
         joinGroup.setLayoutData(joinGroupFormat);
 
-        
+        item1.setControl(compForGrp);
         this.datasetName = buildCombo("Dataset Name", null, lsMod, middle, margin, joinGroup,datasets);
         //this.layout = buildCombo("Layout", this.datasetName, lsMod, middle, margin, joinGroup,datasets);
+        
+        createTable = new CreateTable(shell);
+        
+        
+        if(jobEntry.getEntryList() != null){
+            entryList = jobEntry.getEntryList();
+            createTable.setEntryList(jobEntry.getEntryList());
+            /*
+            if(entryList.getEntries() != null && entryList.getEntries().size() > 0) {
+                    System.out.println("Size: "+entryList.getEntries().size());
+                    for (Iterator<EntryBO> iterator = entryList.getEntries().iterator(); iterator.hasNext();) {
+                            EntryBO obj = (EntryBO) iterator.next();
+                    }
+            }*/
+        }
+        if(jobEntry.getFieldTypeList() != null){
+        	fieldTypeList = jobEntry.getFieldTypeList();
+        	createTable.setFieldTypes(jobEntry.getFieldTypeList());
+        }
+        TabItem item2 = createTable.buildDetailsTab("Rules", tabFolder);
        
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
         wCancel = new Button(shell, SWT.PUSH);
         wCancel.setText("Cancel");
 
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, joinGroup);
+        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, tabFolder);
 
         
-        /*leftRecordSet.addModifyListener(new ModifyListener(){
-            public void modifyText(ModifyEvent e){
-                System.out.println("left RS changed");
-                AutoPopulate ap = new AutoPopulate();
-                try{
-                    System.out.println("Load items for select");
-                    String[] items = ap.fieldsByDataset( leftRecordSet.getText(),jobMeta.getJobCopies());
-                    System.out.println("++++++"+items.length+"+++++");
-                    leftJoinCondition.setItems(items);
-                    System.out.println("itemsSet");
-                    leftJoinCondition.redraw();
-                    System.out.println("new Join condition vals loaded");
-                }catch (Exception ex){
-                    System.out.println("failed to load record definitions");
-                    System.out.println(ex.toString());
-                    ex.printStackTrace();
-                }
-               // leftJoinCondition.setItems(items);
-            }
-        });
-      
-        rightRecordSet.addModifyListener(new ModifyListener(){
-            public void modifyText(ModifyEvent e){
-                System.out.println("left RS changed");
-                AutoPopulate ap = new AutoPopulate();
-                try{
-                    System.out.println("Load items for select");
-                    String[] items = ap.fieldsByDataset( rightRecordSet.getText(),jobMeta.getJobCopies());
-                    System.out.println("++++++"+items.length+"+++++");
-                    rightJoinCondition.setItems(items);
-                    System.out.println("itemsSet");
-                    rightJoinCondition.redraw();
-                    System.out.println("new Join condition vals loaded");
-                }catch (Exception ex){
-                    System.out.println("failed to load record definitions");
-                    System.out.println(ex.toString());
-                    ex.printStackTrace();
-                }
-               // leftJoinCondition.setItems(items);
-            }
-        });
-          */
-        //this.leftRecordSet.addListener(SWT.Selection, leftRecordSetListener);
-        //this.leftRecordSet.addModifyListener(leftRecordSetListener);
+       
       
         // Add listeners
         Listener cancelListener = new Listener() {
@@ -265,6 +263,109 @@ public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         return jobEntry;
 
     }
+    
+    private TabItem buildDetailsTab2(String tabName, TabFolder tabFolder){
+    	
+    	TabItem tabItem = new TabItem(tabFolder, SWT.NULL);
+		tabItem.setText(tabName);
+		
+		/*Composite composite = new Composite(tabFolder, SWT.NONE);
+		tabItem.setControl(composite);*/
+
+		ScrolledComposite sc2 = new ScrolledComposite(tabFolder, SWT.H_SCROLL | SWT.V_SCROLL);
+		Composite compForGrp2 = new Composite(sc2, SWT.NONE);
+		sc2.setContent(compForGrp2);
+
+		// Set the minimum size
+		sc2.setMinSize(650, 450);
+
+		// Expand both horizontally and vertically
+		sc2.setExpandHorizontal(true);
+		sc2.setExpandVertical(true);
+        
+		
+	
+		/*
+		Composite compForGrp2 = new Composite(tabFolder, SWT.NONE);
+        //compForGrp.setLayout(new FillLayout(SWT.VERTICAL));
+        compForGrp2.setBackground(new Color(tabFolder.getDisplay(),255,255,255));
+        compForGrp2.setLayout(new FormLayout());
+        */
+        
+		//this.addChildControls(compForGrp2);
+        FormLayout groupLayout = new FormLayout();
+        groupLayout.marginWidth = 10;
+        groupLayout.marginHeight = 10;
+        ModifyListener lsMod = new ModifyListener() {
+
+            public void modifyText(ModifyEvent e) {
+                jobEntry.setChanged();
+            }
+        };
+        
+		/*Group generalGroup2 = new Group(compForGrp2, SWT.SHADOW_NONE);
+        props.setLook(generalGroup2);
+        generalGroup2.setText("General Details");
+        generalGroup2.setLayout(groupLayout);
+        FormData generalGroupFormat2 = new FormData();
+        generalGroupFormat2.top = new FormAttachment(0, 0);
+        generalGroupFormat2.width = 400;
+        generalGroupFormat2.height = 65;
+        generalGroupFormat2.left = new FormAttachment(0, 0);
+        generalGroup2.setLayoutData(generalGroupFormat2);
+        
+        Text jobEntryName2 = buildText("Job Entry Name", null, lsMod, 0, 0, generalGroup2);
+        */
+        GridData gridData = new GridData (GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH);
+        compForGrp2.setLayoutData (gridData);
+
+		// Set numColumns to 6 for the buttons 
+		GridLayout layout = new GridLayout(6, false);
+		compForGrp2.setLayout (layout);
+		
+		
+		int style = SWT.CHECK | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION;
+
+		final Table table = new Table(compForGrp2, style);
+		
+		final TableViewer tableViewer = new TableViewer(table);
+                
+                table.addListener (SWT.Selection, new Listener () {
+                    public void handleEvent (Event event) {
+                            tableViewer.refresh();
+                            table.redraw();
+                    }
+                });      
+		GridData tableGridData = new GridData(GridData.FILL_BOTH);
+		tableGridData.grabExcessVerticalSpace = true;
+		tableGridData.horizontalSpan = 4;
+		tableGridData.grabExcessHorizontalSpace = false;
+		tableGridData.widthHint = 600;
+		table.setLayoutData(tableGridData);		
+					
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
+		
+		TableColumn column = new TableColumn(table, SWT.LEFT, 0);
+        column.setText("Fields");
+        column.setWidth(250);
+        
+        TableColumn column2 = new TableColumn(table, SWT.LEFT, 1);
+        column2.setText("Rules");
+        column2.setWidth(250);
+        
+        TableColumn column3 = new TableColumn(table, SWT.CENTER, 2);
+        column3.setText("");
+        column3.setWidth(50);
+        
+        TableColumn column4 = new TableColumn(table, SWT.CENTER, 3);
+        column4.setText("");
+        column4.setWidth(50);
+
+        //tabItem.setControl(compForGrp2);
+        tabItem.setControl(sc2);
+		return tabItem;
+    }
 
     private boolean validate(){
     	boolean isValid = true;
@@ -305,7 +406,8 @@ public class SALTHygienDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         jobEntry.setName(jobEntryName.getText());
         jobEntry.setDatasetName(datasetName.getText());
         //jobEntry.setLayout(layout.getText());
-       
+        jobEntry.setEntryList(createTable.getEntryList());
+        jobEntry.setFieldTypeList(createTable.getFieldTypes());
         dispose();
     }
 

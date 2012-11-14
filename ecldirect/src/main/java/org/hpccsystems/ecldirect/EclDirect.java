@@ -492,10 +492,12 @@ public class EclDirect {
                                 for (int lCol = 0; lCol < columnList.size(); lCol++) {
                                  //"----------Column-------------"
                                     Column column = (Column) columnList.get(lCol);
-                                    if(column.getValue().contains(",")){
-                                    	outStr += "\"" + column.getValue() + "\"";
+                                    String val = column.getValue().replace("\\", "\\\\");
+                                    val = val.replace("\"", "\\\"");
+                                    if(val.contains(",")){
+                                    	outStr += "\"" + val + "\"";
                                     }else{
-                                    	outStr += column.getValue();
+                                    	outStr += val;
                                     }
                                     //outStr += column.getValue();
                                     if(lCol< (columnList.size()-1)){

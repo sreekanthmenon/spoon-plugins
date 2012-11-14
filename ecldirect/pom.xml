@@ -10,4 +10,68 @@
 		<artifactId>spoon-plugins</artifactId>
 		<version>0.1-SNAPSHOT</version>
 	</parent>
+	<build>
+	<plugins>
+	<plugin>
+		<groupId>org.codehaus.mojo</groupId>
+		<artifactId>xmlbeans-maven-plugin</artifactId>
+		<version>2.3.3</version>
+		<executions>
+		  <execution>
+			
+			<goals>
+			  <goal>xmlbeans</goal>
+			</goals>
+			<configuration>
+			<inherited>true</inherited>
+			 <schemaDirectory>src/main/xsd</schemaDirectory>
+			</configuration>
+		  </execution>
+		</executions>
+	  </plugin>
+	  
+	  <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>1.7</version>
+        <executions>
+          <execution>
+            <id>add-source</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>target/generated-classes/xmlbeans</source>
+          
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+	  
+	  
+	  </plugins>
+			</build>
+			
+	  <dependencyManagement>
+			<dependencies>
+				<dependency>
+					<groupId>org.apache.xmlbeans</groupId>
+					<artifactId>xmlbeans</artifactId>
+					<version>2.4.0</version>
+				</dependency>
+		
+			</dependencies>
+		</dependencyManagement>
+
+		<dependencies>
+			<dependency>
+				<groupId>org.apache.xmlbeans</groupId>
+				<artifactId>xmlbeans</artifactId>
+				<version>2.4.0</version>
+			</dependency>
+		
+		</dependencies>
 </project>

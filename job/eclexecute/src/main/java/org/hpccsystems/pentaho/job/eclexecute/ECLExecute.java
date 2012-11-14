@@ -40,8 +40,8 @@ import org.hpccsystems.ecljobentrybase.*;
 import org.hpccsystems.pentaho.job.eclexecute.RenderWebDisplay;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
+import org.hpccsystems.salt.dataprofiling.Generator;
 
-import com.hpccsystems.salt.Generator;
 
 /**
  *
@@ -161,6 +161,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		String resName = "";
       //Result result = null;
 		String xmlBuilder = "";
+		String xmlHygieneBuilder = "";
 		String layoutECL = "";
         
         Result result = prevResult;
@@ -233,20 +234,22 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	String file_name = "";
 		        	for(int i = 0; i < datasets.length; i++){
 		        		 //iterate through all the xml files and build a specification file.
-		        		System.out.println("dataset: " + datasets[i]);
+		        		//System.out.println("dataset: " + datasets[i]);
 		        		RecordList fields = ap.rawFieldsByDataset(datasets[i],jobMeta.getJobCopies());
 		        		//have field declaration now we need to build the xml
 		        		for (Iterator<RecordBO> iterator = fields.getRecords().iterator(); iterator.hasNext();) {
 		        			RecordBO obj = (RecordBO) iterator.next();
-		        			System.out.println("----------------" + obj.getColumnName());
-		        			System.out.println("----------------" + obj.getColumnType());
-		        			System.out.println("----------------" + obj.getColumnWidth());
+		        			//System.out.println("----------------" + obj.getColumnName());
+		        			//System.out.println("----------------" + obj.getColumnType());
+		        			//System.out.println("----------------" + obj.getColumnWidth());
 		        			//TODO: build xml from above data
 		        			
 		        			xmlBuilder += "<fielddef>\r\n" +
 		        								"<name>" + obj.getColumnName() + "</name>\r\n" +
 		                    					"<datatype>" + obj.getColumnType() + "</datatype>\r\n" +
 		                    				"</fielddef>\r\n";
+		        			
+		        			xmlHygieneBuilder += buildHygieneRule(obj.getColumnName(),obj.getColumnType());
 		        		}
 		        		//jobMeta.getJob
 		        		file_name = ap.getDatasetsField("record_name", datasets[i],jobMeta.getJobCopies());
@@ -259,6 +262,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	
 		        	
 		        	
+		        	//need to load the hygine data if it exists
 		        	
 		        	
 		        	xmlBuilder = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" +
@@ -438,6 +442,22 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
        return result;
     }
 	
+	public String buildHygieneRule(String columnName,String columnType){
+		String xml = "";
+		
+		xml += "<hyg:field-rule>";
+		xml += "    <hyg:field-name>" + columnName + "</hyg:field-name>";
+		xml += "    <hyg:field-type>" + columnType + "</hyg:field-type>";
+		
+		//see if hygine rule exists for field
+		//if rule exists build it
+		
+		
+		//Close off the XML Tag
+		xml += "</hyg:field-rule>";
+		
+		return xml;
+	}
      /*
     public void createOutputFile_old(ArrayList dsList,String fileName, int count){
         String outStr = "";

@@ -1,4 +1,4 @@
-package com.hpccsystems.salt;
+package org.hpccsystems.salt.dataprofiling;
 
 public class StringBuilderEx {
 

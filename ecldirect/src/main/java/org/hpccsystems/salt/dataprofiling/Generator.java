@@ -1,4 +1,4 @@
-package com.hpccsystems.salt;
+package org.hpccsystems.salt.dataprofiling;
 
 import java.io.FileInputStream;
 import java.io.InputStream;

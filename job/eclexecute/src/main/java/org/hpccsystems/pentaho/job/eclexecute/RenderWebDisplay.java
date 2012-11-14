@@ -9,6 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,7 +22,8 @@ public class RenderWebDisplay {
 	public static void main(String[] args){
 		RenderWebDisplay rwd = new RenderWebDisplay();
 		String file = "C:\\Spoon Demos\\new\\salt_dataprofiling_quickstart\\out\\Dataprofiling_AllProfiles.csv";
-		String outFolder = "C:\\Spoon Demos\\new\\salt_dataprofiling_quickstart\\out";
+		file = "C:\\Documents and Settings\\ChambeJX.RISK\\Desktop\\toyota\\out_clean2\\NEW\\Dataprofiling_AllProfiles.csv";
+		String outFolder = "C:\\Documents and Settings\\ChambeJX.RISK\\Desktop\\toyota\\out_clean\\NEW";
 		rwd.processFile(file, outFolder);
 		}
 	
@@ -79,7 +81,15 @@ public class RenderWebDisplay {
 	      
 	      int line = 1;
 	      try{
-	    	  CSVReader reader = new CSVReader(new FileReader(fileName),',','"');
+	    	// Open the file that is the first 
+	          FileInputStream fstream = new FileInputStream(fileName);
+	          DataInputStream in = new DataInputStream(fstream);
+	          BufferedReader br = new BufferedReader(new InputStreamReader(in));
+	          
+	    	  CSVReader reader = new CSVReader(br,',','"','\\');
+	    	  // CSVReader reader = new CSVReader(new FileReader(fileName),',','"');
+	    	  
+	    	  
 	          // Open the file that is the first 
 	          // command line parameter
 	          //FileInputStream fstream = new FileInputStream(fileName);
@@ -102,6 +112,9 @@ public class RenderWebDisplay {
 	          
 	          while ((nextLine = reader.readNext()) != null) {
 	        	  //System.out.println("LINE: " + line++ + " LEN: " + nextLine.length);
+	        	  //if(nextLine[1].equals("customer_key_1") || nextLine[1].equals("name")){
+	        		//  System.out.println(nextLine[1] + " " + nextLine.length);
+	        	  //}
 	        	  String[] lineArr = nextLine;
 	          //while ((strLine = br.readLine()) != null)   {
 	          // Print the content on the console
@@ -131,7 +144,7 @@ public class RenderWebDisplay {
 		           //  html += renderRows(strLineArr,length);
 		              	if(lineArr.length >= firstRowLen){
 		              	//if(lineArr[2] != ""){
-			      			//System.out.println("NAME: " + lineArr[1]);
+			      			System.out.println("NAME: " + lineArr[1]);
 			            	html += "\n\r<tr>" +
 			                      "<td>" + lineArr[0] + "</td>" + //fldno
 			                      "<td>" + lineArr[1] + "</td>" + //fieldname
@@ -229,8 +242,14 @@ public class RenderWebDisplay {
 				      				html += "<td>" + lineArr[i] + "</td>";
 				      			 }
 				      			html += "</tr>";
-				      			characters = characters.substring(subStr.length(),characters.length());
+				      			//if(characters.length()>=subStr.length()){
+				      				
 				      			
+				      			characters = characters.substring(subStr.length(),characters.length());
+				      			//}else{
+				      			//	System.out.println("subStr: " + subStr);
+				      			//	characters = characters.substring(subStr.length(),characters.length());
+				      			//}
 				      			if(characters.equals("")){
 				      				 html += "</table></td>";
 				      				 newTable = true;

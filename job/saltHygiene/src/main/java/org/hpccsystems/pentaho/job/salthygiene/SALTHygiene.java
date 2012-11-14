@@ -2,15 +2,18 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.salthygien;
+package org.hpccsystems.pentaho.job.salthygiene;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.hpccsystems.ecldirect.SaltDataProfiling;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
+import org.hpccsystems.saltui.EntryBO;
+import org.hpccsystems.saltui.EntryList;
+import org.hpccsystems.saltui.FieldTypeBO;
+import org.hpccsystems.saltui.FieldTypeList;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -32,12 +35,14 @@ import org.hpccsystems.ecljobentrybase.*;
  *
  * @author ChambersJ
  */
-public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cloneable, JobEntryInterface {
+public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements Cloneable, JobEntryInterface {
     
 	
     private String datasetName;
     private String layout;
-	
+	//private String rules;
+	private EntryList entryList = new EntryList();
+	private FieldTypeList fieldTypeList = new FieldTypeList();
    
 	public String getDatasetName() {
 		return datasetName;
@@ -51,17 +56,89 @@ public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cl
 	public void setLayout(String layout) {
 		this.layout = layout;
 	}
-
-
+    public FieldTypeList getFieldTypeList() {
+		return fieldTypeList;
+	}
+	public void setFieldTypeList(FieldTypeList fieldTypeList) {
+		this.fieldTypeList = fieldTypeList;
+	}
+	public EntryList getEntryList() {
+		return entryList;
+	}
+	public void setEntryList(EntryList entryList) {
+		this.entryList = entryList;
+	}
+	
+	
+	
+	public String saveEntryList(){
+        String out = "";
+        ArrayList<EntryBO> list = entryList.getEntries();
+        Iterator<EntryBO> itr = list.iterator();
+        boolean isFirst = true;
+        while(itr.hasNext()){
+            if(!isFirst){out+="|";}
+            
+            out += itr.next().toCSV();
+            isFirst = false;
+        }
+        
+        //fieldTypes
+        return out;
+    }
+    
+    public void openEntryList(String in){
+        String[] strLine = in.split("[|]");
+        int len = strLine.length;
+        if(len>0){
+            entryList = new EntryList();
+            for(int i =0; i<len; i++){
+                EntryBO eb = new EntryBO(strLine[i]);
+                entryList.addEntryBO(eb);
+            }
+        }
+        
+        //fieldTypes
+    }
+    
+    public String saveFieldTypeList(){
+        String out = "";
+        ArrayList<FieldTypeBO> list = fieldTypeList.getFields();
+        Iterator<FieldTypeBO> itr = list.iterator();
+        boolean isFirst = true;
+        while(itr.hasNext()){
+            if(!isFirst){out+="|";}
+            
+            out += itr.next().toCSV();
+            isFirst = false;
+        }
+        
+        //fieldTypes
+        return out;
+    }
+    
+    public void openFieldTypeList(String in){
+        String[] strLine = in.split("[|]");
+        int len = strLine.length;
+        
+        if(len>0){
+            fieldTypeList = new FieldTypeList();
+            for(int i =0; i<len; i++){
+                FieldTypeBO ft = new FieldTypeBO(strLine[i]);
+                ft.fromCSV(strLine[i]);
+                fieldTypeList.add(ft);
+            }
+        }
+        
+        //fieldTypes
+    }
     
     
-    
-
-    @Override
+	@Override
     public Result execute(Result prevResult, int k) throws KettleException {
         
         Result result = prevResult;
-        
+        /*
         AutoPopulate ap = new AutoPopulate();
         String jobNameNoSpace = "";
         JobMeta jobMeta = super.parentJob.getJobMeta();
@@ -82,21 +159,15 @@ public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cl
 
         }
         
-        SaltDataProfiling sdp = new SaltDataProfiling();
-        
-        sdp.setDatasetName(this.getDatasetName());
-        sdp.setLayout(this.getLayout());
-        sdp.setName(this.getName());
-        sdp.setSaltLib(jobNameNoSpace + "_module");
 
-        logBasic("{Dataset Job} Execute = " + sdp.ecl());
+
+       
         
         logBasic("{Dataset Job} Previous =" + result.getLogText());
         
         result.setResult(true);
         
         RowMetaAndData data = new RowMetaAndData();
-        data.addValue("ecl", Value.VALUE_TYPE_STRING, sdp.ecl());
         
         
         List list = result.getRows();
@@ -118,7 +189,7 @@ public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cl
         
         result.setRows(list);
         result.setLogText("ECLDataset executed, ECL code added");
-        
+        */
         return result;
     }
  
@@ -131,7 +202,11 @@ public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cl
             	setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "datasetName")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "layout")) != null)
             	setLayout(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "layout")));
-
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "entryList")) != null)
+                openEntryList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "entryList")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fieldTypeList")) != null)
+                openFieldTypeList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fieldTypeList")));
+            
         } catch (Exception e) {
             throw new KettleXMLException("ECL Dataset Job Plugin Unable to read step info from XML node", e);
         }
@@ -145,7 +220,8 @@ public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cl
       
         retval += "		<datasetName><![CDATA[" + datasetName + "]]></datasetName>" + Const.CR;
         retval += "		<layout><![CDATA[" + layout + "]]></layout>" + Const.CR;
-        
+        retval += "		<entryList><![CDATA[" + this.saveEntryList() + "]]></entryList>" + Const.CR;
+        retval += "		<fieldTypeList><![CDATA[" + this.saveFieldTypeList() + "]]></fieldTypeList>" + Const.CR;
         return retval;
 
     }
@@ -157,6 +233,12 @@ public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cl
                 datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_jobentry, "layout") != null)
                 layout = rep.getStepAttributeString(id_jobentry, "layout"); //$NON-NLS-1$
+            
+            if(rep.getStepAttributeString(id_jobentry, "entryList") != null)
+                this.openEntryList(rep.getStepAttributeString(id_jobentry, "entryList")); //$NON-NLS-1$
+            
+            if(rep.getStepAttributeString(id_jobentry, "fieldTypeList") != null)
+                this.openFieldTypeList(rep.getStepAttributeString(id_jobentry, "fieldTypeList")); //$NON-NLS-1$
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -168,7 +250,8 @@ public class SALTHygien extends ECLJobEntry{//extends JobEntryBase implements Cl
             
             rep.saveStepAttribute(id_job, getObjectId(), "datasetName", datasetName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "layout", layout); //$NON-NLS-1$
-            
+            rep.saveStepAttribute(id_job, getObjectId(), "entryList", this.saveEntryList()); //$NON-NLS-1$.
+            rep.saveStepAttribute(id_job, getObjectId(), "fieldTypeList", this.saveFieldTypeList()); //$NON-NLS-1$
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

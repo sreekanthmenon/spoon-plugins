@@ -43,6 +43,7 @@
 		<module>eclmerge</module>
 		
 		<module>saltdataprofiling</module>
+		<module>saltHygiene</module>
 	</modules>
 
 	<properties>

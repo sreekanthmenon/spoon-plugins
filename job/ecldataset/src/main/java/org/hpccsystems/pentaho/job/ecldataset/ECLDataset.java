@@ -222,7 +222,7 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")) != null)
                 openRecordList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "recordList")));
             
-            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fileTYpe")) != null)
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fileType")) != null)
                 setFileType(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fileType")));
 
         } catch (Exception e) {

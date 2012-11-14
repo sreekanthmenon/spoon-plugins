@@ -96,6 +96,8 @@
 			<zipfileset dir="./job/eclmerge/target" includes="eclmerge.jar" prefix="jobentries/eclmerge" />
 			<zipfileset dir="./job/saltdataprofiling/src/main/resources/plugin" includes="plugin.xml,*.png" prefix="jobentries/saltdataprofiling" />
 			<zipfileset dir="./job/saltdataprofiling/target" includes="saltdataprofiling.jar" prefix="jobentries/saltdataprofiling" />
+			<zipfileset dir="./job/salthygiene/src/main/resources/plugin" includes="plugin.xml,*.png" prefix="jobentries/salthygiene" />
+			<zipfileset dir="./job/salthygiene/target" includes="salthygiene.jar" prefix="jobentries/salthygiene" />
 			
 		</zip>
 	</target>
