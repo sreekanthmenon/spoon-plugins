@@ -7,6 +7,7 @@ package org.hpccsystems.ecljobentrybase;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Pattern;
 //import org.hpccsystems.ecldirect.Output;
 import org.hpccsystems.ecldirect.EclDirect;
 import org.pentaho.di.cluster.SlaveServer;
@@ -87,17 +88,40 @@ return null;
         					if (rLen != null && rLen.trim().length() >0) {
                                 if(record.getColumnName() != null && !record.getColumnName().equals("")){
                                     out += record.getColumnType()+rLen + " " + record.getColumnName();
-                                    if(record.getDefaultValue() != ""){
-                                        out += " := " + record.getDefaultValue();
+                                    if(record.getDefaultValue().equalsIgnoreCase("null")){
+                                    	//added so we can set null values
+                                        out += ":= ''";
+                                    }else if(record.getDefaultValue() != ""){
+                                    	//added check to make non numeric be quoted ''
+                                    	String regex = "((-|\\+)?[0-9]+(\\.[0-9]+)?)+";
+                                    	if(record.getDefaultValue().matches(regex)){
+                                    		out += ":= " + record.getDefaultValue();
+                                    	}else{
+                                    		out += ":= '" + record.getDefaultValue() + "'";
+                                        }
                                     }
                                     out += ";\r\n";
                                  }
                             }else{
                                 if(record.getColumnName() != null && !record.getColumnName().equals("")){
                                     out += record.getColumnType() + " " + record.getColumnName();
-                                    if(record.getDefaultValue() != ""){
-                                        out += " := " + record.getDefaultValue();
+                                    //if(record.getDefaultValue() != ""){
+                                    //    out += ":= " + record.getDefaultValue();
+                                    //}
+                                    
+                                    if(record.getDefaultValue().equalsIgnoreCase("null")){
+                                    	//added so we can set null values
+                                        out += ":= ''";
+                                    }else if(record.getDefaultValue() != ""){
+                                    	//added check to make non numeric be quoted ''
+                                    	String regex = "((-|\\+)?[0-9]+(\\.[0-9]+)?)+";
+                                    	if(record.getDefaultValue().matches(regex)){
+                                    		out += ":= " + record.getDefaultValue();
+                                    	}else{
+                                    		out += ":= '" + record.getDefaultValue() + "'";
+                                        }
                                     }
+                                    
                                     out += ";\r\n";
                                 }
                             }

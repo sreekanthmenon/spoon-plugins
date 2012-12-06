@@ -1,5 +1,6 @@
 package org.hpccsystems.recordlayout;
 
+import java.awt.Robot;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -29,6 +30,10 @@ import org.eclipse.jface.window.Window;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.DisposeEvent;
 import org.eclipse.swt.events.DisposeListener;
+import org.eclipse.swt.events.FocusEvent;
+import org.eclipse.swt.events.FocusListener;
+import org.eclipse.swt.events.KeyEvent;
+import org.eclipse.swt.events.KeyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.TraverseEvent;
@@ -54,7 +59,9 @@ import org.eclipse.swt.widgets.TabItem;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.Text;
+import org.eclipse.swt.custom.CCombo;
 import org.eclipse.swt.custom.ScrolledComposite;
+import org.eclipse.swt.events.KeyListener;
 
 public class CreateTable {
     private Shell shell;
@@ -384,6 +391,7 @@ public class CreateTable {
 		
 	}// End of createTable method
 	
+	int currIndex = 0;
 	/**
 	 * Create a TableViewer
 	 */
@@ -413,7 +421,78 @@ public class CreateTable {
                 
                 if(columnNames.length >= 3){
                     // Column 3 : Column Type (Combo Box) 
-                    editors[2] = new ComboBoxCellEditor(table, recordList.getColTypes(), SWT.DROP_DOWN|SWT.READ_ONLY);
+                    final ComboBoxCellEditor c = new ComboBoxCellEditor(table, recordList.getColTypes(), SWT.DROP_DOWN|SWT.READ_ONLY);
+                    
+                    
+                    currIndex = ((CCombo)c.getControl()).getSelectionIndex();
+                    c.getControl().addKeyListener(new KeyListener() {
+              	      String selectedItem = "";
+
+            	      public void keyPressed(KeyEvent e) {
+            	    	 // System.out.println("test: " + ((CCombo)c.getControl()).getText());
+            	        if (((CCombo)c.getControl()).getText().length() > 0) {
+            	        	System.out.println("cant getText");
+            	          //return;
+            	        }
+            	        int currentSel = ((CCombo)c.getControl()).getSelectionIndex();
+            	        //System.out.println("CurrentIndex: " + currIndex);
+            	        //System.out.println("CurrentSel: " + currentSel);
+            	        
+            	        String key = Character.toString(e.character);
+            	        //System.out.println("Key Pressed: " + key);
+            	        String[] items = ((CCombo)c.getControl()).getItems();
+            	      
+            	        /*try{
+            	        Robot robot = new Robot();
+            	        robot.keyPress(java.awt.event.KeyEvent.VK_DOWN);
+            	       }catch(Exception eRobot){
+            	    	   
+            	       }*/
+            	        
+            	       
+            	        for (int i = currentSel; i < items.length; i++) {
+            	          if (items[i].toLowerCase().startsWith(key.toLowerCase())) {
+            	        	  if(i != currentSel){
+            	        		  //((CCombo)c.getControl()).select(i);
+            	        		  currIndex = i;
+            	        		 // selectedItem = items[i];
+            	        		//  System.out.println("found item: " + selectedItem);
+            	        		  return;
+            	        	  }
+            	          }
+            	        }
+            	        
+            	        for (int i = 1; i < items.length; i++) {
+              	          if (items[i].toLowerCase().startsWith(key.toLowerCase())) {
+              	        	  	  currIndex = i;
+              	        		  //((CCombo)c.getControl()).select(i);
+              	        		 // selectedItem = items[i];
+              	        		 // System.out.println("found item: " + selectedItem);
+              	        		  return;
+              	        	  
+              	          }
+              	        }
+              	        
+            	      }
+
+					@Override
+					public void keyReleased(KeyEvent arg0) {
+						// TODO Auto-generated method stub
+						 
+						 int oldIndex = currIndex;
+						 System.out.println("CurrentIndex 1: " + currIndex);
+						 currIndex = ((CCombo)c.getControl()).getSelectionIndex();
+						 System.out.println("CurrentIndex 2: " + currIndex);
+						 
+						 if(Math.abs(currIndex-oldIndex) == 2){
+							 oldIndex--;
+						 }
+						 System.out.println("Set Index:" + oldIndex);
+						 ((CCombo)c.getControl()).select(oldIndex);
+					}
+
+            	    });
+                    editors[2] = c;
                 }
                 if(columnNames.length >= 4){
                     // Column 4 : Column Width (Text with digits only)

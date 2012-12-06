@@ -52,7 +52,7 @@ public class SaltDataProfiling implements EclCommand {
 
 	@Override
     public String ecl() {
-		String regex = "[ ]";
+		//String regex = "[ ]";
     	String unique = this.name.replace(" ", "_");
         String ecl = "h_" + unique + " := " + saltLib + ".Hygiene(" + this.datasetName + ");\r\n";
         ecl += "p_" + unique + " := h_" + unique + ".AllProfiles;\r\n";

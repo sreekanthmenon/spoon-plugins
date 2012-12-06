@@ -68,7 +68,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
     
     CreateTable createTable = null;
     private EntryList entryList;
-    private FieldTypeList fieldTypeList;
+    private HygieneRuleList fieldTypeList;
     
 
 
@@ -77,7 +77,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         super(parent, jobEntryInt, rep, jobMeta);
         jobEntry = (SALTHygiene) jobEntryInt;
         if (this.jobEntry.getName() == null) {
-            this.jobEntry.setName("Dataset");
+            this.jobEntry.setName("Salt Hygiene");
         }
     }
 
@@ -95,6 +95,8 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
             System.out.println(e.toString());
             datasets = new String[]{""};
         }
+        
+        //see need to get the dataset set on screen a pass its fields in
         
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
         createTable = new CreateTable(shell);
@@ -130,13 +132,13 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
 
 
         shell.setLayout(formLayout);
-        shell.setText("Join");
+        shell.setText("Salt Hygiene");
 
         int middle = props.getMiddlePct();
         int margin = Const.MARGIN;
 
         shell.setLayout(formLayout);
-        shell.setText("Define an ECL Join");
+        shell.setText("Define Salt Hygiene Rules");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -174,7 +176,29 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         //this.layout = buildCombo("Layout", this.datasetName, lsMod, middle, margin, joinGroup,datasets);
         
         createTable = new CreateTable(shell);
+        try{
+	        String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
+	        createTable.loadFields(items);
+	        
+        }catch (Exception exc){
+        	System.out.println("error loading dataset fields");
+        }
+        datasetName.addModifyListener(new ModifyListener(){
+            public void modifyText(ModifyEvent e){
+                System.out.println("left RS changed");
+                AutoPopulate ap = new AutoPopulate();
+                try{
+                	String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
+                	createTable.loadFields(items);
+                }catch (Exception exc){
+                	System.out.println("error loading dataset fields");
+                }
+            }
+        });
         
+        createTable = new CreateTable(shell);
+        
+        //String[] items = ap.fieldsByDataset( leftRecordSet.getText(),jobMeta.getJobCopies());
         
         if(jobEntry.getEntryList() != null){
             entryList = jobEntry.getEntryList();
@@ -189,7 +213,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         }
         if(jobEntry.getFieldTypeList() != null){
         	fieldTypeList = jobEntry.getFieldTypeList();
-        	createTable.setFieldTypes(jobEntry.getFieldTypeList());
+        	createTable.setRuleList(jobEntry.getFieldTypeList());
         }
         TabItem item2 = createTable.buildDetailsTab("Rules", tabFolder);
        
@@ -227,7 +251,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
             }
         };
 
-
+        tabFolder.setRedraw(true);
         // Detect X or ALT-F4 or something that kills this window...
 
         shell.addShellListener(new ShellAdapter() {
@@ -407,7 +431,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         jobEntry.setDatasetName(datasetName.getText());
         //jobEntry.setLayout(layout.getText());
         jobEntry.setEntryList(createTable.getEntryList());
-        jobEntry.setFieldTypeList(createTable.getFieldTypes());
+        jobEntry.setFieldTypeList(createTable.getRuleList());
         dispose();
     }
 

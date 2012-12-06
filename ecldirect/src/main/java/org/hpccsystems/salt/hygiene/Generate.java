@@ -26,8 +26,8 @@ public class Generate {
             StringBuilderEx likes = new StringBuilderEx();
             StringBuilderEx fields = new StringBuilderEx();
 
-            //specStr.appendLine("MODULE:" + spec.getModuleName());
-            //specStr.appendLine("FILENAME:" + spec.getFileName());
+            specStr.appendLine("MODULE:" + spec.getModuleName());
+            specStr.appendLine("FILENAME:" + spec.getFileName());
 
             FieldHygieneRule rules[] = spec.getFieldRuleArray();
             for (int i = 0; i < rules.length; i++) {
@@ -73,6 +73,18 @@ public class Generate {
         } else {
             return null;
         }
+    }
+    
+    public String generateHygieneSpecFromXMLFile(String filename){
+    	String spec = "";
+    	try{
+    		String fileContent = readFileAsString(filename);
+    		spec = generateHygieneSpec(fileContent);
+    	}catch (Exception e){
+    		System.out.println("failed to open file");
+    	}
+    	return spec;
+        
     }
 
     public static void main(String[] args) throws Exception {

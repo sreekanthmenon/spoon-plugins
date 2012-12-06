@@ -27,6 +27,29 @@ public class EntryList {
 		return entries.get(index);
 	}
 	
+	public void updateEntry(int index, EntryBO r){
+		System.out.println("Update Entry: " + index + " - " + r.getField());
+		entries.set(index, r);
+	}
+	
+	//this just updates the name stored to the entry for quick reference
+	//this doesn't update indexes except if newName is "" then it assumes it was
+	//deleted
+	public void updateAll(String newName, String oldName){
+		for(int i = 0; i<entries.size();i++){
+			if(entries.get(i).getRuleName().equalsIgnoreCase(oldName)){
+				entries.get(i).setRuleName(newName);
+				if(newName.equals("")){
+					entries.get(i).setHygieneRuleListIndex(-1);
+				}
+				System.out.println("Updating NewName: " + newName + " OldName: " + oldName);
+			}//else{
+			//	System.out.println("No Update: " + oldName);
+			//}
+			
+		}
+	}
+	
 	//Add a new Record to the existing list
 	public void addEntry(int index) {
 		EntryBO entry = new EntryBO();
@@ -39,6 +62,22 @@ public class EntryList {
 		while (iterator.hasNext()){
 			iterator.next().addEntry(entry);
 		}
+	}
+	
+	public int containsEntry(String name){
+		int index = -1;
+		//System.out.println("Looking for: " + name);
+		for(int i = 0; i<entries.size();i++){
+			//System.out.println(entries.get(i).getRuleName() + " vs " + name);
+			if(entries.get(i).getRuleName().equalsIgnoreCase(name)){
+				index = i;
+			}//else{
+			//	System.out.println("No Update: " + oldName);
+			//}
+			
+		}
+		
+		return index;
 	}
 
 	public void removeEntry(int index) {
@@ -65,7 +104,7 @@ public class EntryList {
 	}
         
      public void addEntryBO(EntryBO r){
-    	 entries.add(entries.size(), r);
+    	entries.add(entries.size(), r);
         Iterator<IEntryListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext()){
                 iterator.next().addEntry(r);

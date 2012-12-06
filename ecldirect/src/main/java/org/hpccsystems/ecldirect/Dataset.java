@@ -112,9 +112,9 @@ public class Dataset implements EclCommand {
         if(logicalFileName != null && logicalFileName.length() > 0){
             System.out.println("regular dataset |" + logicalFileName +"|");
             if(recordFmt != null && recordFmt.length() > 0){
-                recordDef = recordName + ":= record \r\n" + recordFmt + "\r\nend; \r\n";
+                recordDef = recordName + " := record \r\n" + recordFmt + "\r\nend; \r\n";
             }
-            datasetDef = name + ":= dataset('" + logicalFileName + "'," + recordName + "," +  fileType + "); \r\n";
+            datasetDef = name + " := dataset('" + logicalFileName + "'," + recordName + "," +  fileType + "); \r\n";
         }else{
             System.out.println("ml dataset");
             //this is for recordset (in-line inputs

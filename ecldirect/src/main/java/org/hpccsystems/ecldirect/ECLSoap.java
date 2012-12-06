@@ -44,7 +44,7 @@ import org.w3c.dom.NodeList;
  */
 public class ECLSoap {
     
-    private String hostname = "192.168.80.130";
+    private String hostname = "192.168.80.132";
     private int port = 8010;
     
     private String mlPath = "";

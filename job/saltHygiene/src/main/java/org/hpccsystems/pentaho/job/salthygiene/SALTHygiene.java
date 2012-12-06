@@ -12,8 +12,8 @@ import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
 import org.hpccsystems.saltui.EntryBO;
 import org.hpccsystems.saltui.EntryList;
-import org.hpccsystems.saltui.FieldTypeBO;
-import org.hpccsystems.saltui.FieldTypeList;
+import org.hpccsystems.saltui.HygieneRuleBO;
+import org.hpccsystems.saltui.HygieneRuleList;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -30,7 +30,7 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 import org.hpccsystems.ecljobentrybase.*;
-
+import org.hpccsystems.ecldirect.SaltHygieneReport;
 /**
  *
  * @author ChambersJ
@@ -42,7 +42,7 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
     private String layout;
 	//private String rules;
 	private EntryList entryList = new EntryList();
-	private FieldTypeList fieldTypeList = new FieldTypeList();
+	private HygieneRuleList fieldTypeList = new HygieneRuleList();
    
 	public String getDatasetName() {
 		return datasetName;
@@ -56,10 +56,10 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
 	public void setLayout(String layout) {
 		this.layout = layout;
 	}
-    public FieldTypeList getFieldTypeList() {
+    public HygieneRuleList getFieldTypeList() {
 		return fieldTypeList;
 	}
-	public void setFieldTypeList(FieldTypeList fieldTypeList) {
+	public void setFieldTypeList(HygieneRuleList fieldTypeList) {
 		this.fieldTypeList = fieldTypeList;
 	}
 	public EntryList getEntryList() {
@@ -103,8 +103,8 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
     
     public String saveFieldTypeList(){
         String out = "";
-        ArrayList<FieldTypeBO> list = fieldTypeList.getFields();
-        Iterator<FieldTypeBO> itr = list.iterator();
+        ArrayList<HygieneRuleBO> list = fieldTypeList.getFields();
+        Iterator<HygieneRuleBO> itr = list.iterator();
         boolean isFirst = true;
         while(itr.hasNext()){
             if(!isFirst){out+="|";}
@@ -122,9 +122,9 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
         int len = strLine.length;
         
         if(len>0){
-            fieldTypeList = new FieldTypeList();
+            fieldTypeList = new HygieneRuleList();
             for(int i =0; i<len; i++){
-                FieldTypeBO ft = new FieldTypeBO(strLine[i]);
+                HygieneRuleBO ft = new HygieneRuleBO(strLine[i]);
                 ft.fromCSV(strLine[i]);
                 fieldTypeList.add(ft);
             }
@@ -138,6 +138,58 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
     public Result execute(Result prevResult, int k) throws KettleException {
         
         Result result = prevResult;
+        
+        AutoPopulate ap = new AutoPopulate();
+        String jobNameNoSpace = "";
+        JobMeta jobMeta = super.parentJob.getJobMeta();
+        try{
+                String jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
+                jobNameNoSpace = jobName.replace(" ", "_");  
+                this.setLayout(ap.getDatasetsField("record_name", this.getDatasetName(),jobMeta.getJobCopies()));
+                
+            }catch (Exception e){
+                System.out.println("Error Parsing existing Global Variables ");
+                System.out.println(e.toString());
+                e.printStackTrace();
+
+            }
+        
+        SaltHygieneReport shr = new SaltHygieneReport();
+        shr.setDatasetName(datasetName);
+        shr.setName(this.getName());
+        shr.setSaltLib(jobNameNoSpace + "_module");
+        shr.setLayout(this.getLayout());
+       
+        logBasic("{Dataset Job} Execute = " + shr.ecl());
+        logBasic("{Dataset Job} Previous =" + result.getLogText());
+        
+        result.setResult(true);
+        
+        RowMetaAndData data = new RowMetaAndData();
+        data.addValue("ecl", Value.VALUE_TYPE_STRING, shr.ecl());
+        
+        List list = result.getRows();
+        list.add(data);
+        String eclCode = "";
+        if (list == null) {
+            list = new ArrayList();
+        } else {
+            
+            for (int i = 0; i < list.size(); i++) {
+                RowMetaAndData rowData = (RowMetaAndData) list.get(i);
+                String code = rowData.getString("ecl", null);
+                if (code != null) {
+                    eclCode += code;
+                }
+            }
+            logBasic("{Dataset Job} ECL Code =" + eclCode);
+        }
+
+        result.setRows(list);
+        result.setLogText("ECLDataset executed, ECL code added");
+        
+        
+        
         /*
         AutoPopulate ap = new AutoPopulate();
         String jobNameNoSpace = "";

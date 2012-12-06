@@ -97,9 +97,9 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
         this.fileType = fileType;
     }
     
-    public String resultListToString(){
-    	return resultListToString(this.recordList);
-    }
+    //public String resultListToString(){
+    //	return resultListToString(this.recordList);
+    //}
     
     public String fieldsValid(RecordList recordList){
         String errors = "";
@@ -135,7 +135,7 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
         dataset.setLogicalFileName(getLogicalFileName());
         dataset.setName(getDatasetName());
        // dataset.setRecordFormatString(getRecordDef());
-        dataset.setRecordFormatString(resultListToString());
+        dataset.setRecordFormatString(resultListToString(this.recordList));
         dataset.setRecordName(getRecordName());
         dataset.setFileType(getFileType());
         dataset.setRecordSet(getRecordSet());

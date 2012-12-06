@@ -40,7 +40,8 @@ import org.hpccsystems.ecljobentrybase.*;
 import org.hpccsystems.pentaho.job.eclexecute.RenderWebDisplay;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
-import org.hpccsystems.salt.dataprofiling.Generator;
+import org.hpccsystems.salt.hygiene.Generate;
+import org.hpccsystems.saltui.*;
 
 
 /**
@@ -160,7 +161,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		String error = "";
 		String resName = "";
       //Result result = null;
-		String xmlBuilder = "";
+		//String xmlBuilder = "";
 		String xmlHygieneBuilder = "";
 		String layoutECL = "";
         
@@ -243,13 +244,13 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        			//System.out.println("----------------" + obj.getColumnType());
 		        			//System.out.println("----------------" + obj.getColumnWidth());
 		        			//TODO: build xml from above data
-		        			
+		        			/*
 		        			xmlBuilder += "<fielddef>\r\n" +
 		        								"<name>" + obj.getColumnName() + "</name>\r\n" +
 		                    					"<datatype>" + obj.getColumnType() + "</datatype>\r\n" +
 		                    				"</fielddef>\r\n";
-		        			
-		        			xmlHygieneBuilder += buildHygieneRule(obj.getColumnName(),obj.getColumnType());
+		        			*/
+		        			xmlHygieneBuilder += buildHygieneRule(datasets[i], obj.getColumnName(),obj.getColumnType());
 		        		}
 		        		//jobMeta.getJob
 		        		file_name = ap.getDatasetsField("record_name", datasets[i],jobMeta.getJobCopies());
@@ -264,7 +265,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	
 		        	//need to load the hygine data if it exists
 		        	
-		        	
+		        	/*
 		        	xmlBuilder = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" +
 		        				"<salt-specification xmlns=\"http://hpccsystems.com/SALT\">\r\n" +
 		        				"<module-name>" + jobNameNoSpace + "_module</module-name>\r\n" +
@@ -272,26 +273,29 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        				"<fields>\r\n" + xmlBuilder +
 		        				"</fields>\r\n" +
 		        				"</salt-specification>";
-		        	
+		        	*/
 		        	//write file to output directory
 		        	
-		        	
-		        	
+		        	xmlHygieneBuilder = "<hyg:hygiene-spec xmlns:hyg=\"http://hpccsystems.org/salt/hygiene/bean\">" +"\r\n"+
+										    "<hyg:module-name>" + jobNameNoSpace + "_module</hyg:module-name>" +"\r\n"+
+										    "<hyg:file-name>" + file_name + "</hyg:file-name>" +"\r\n"+
+										    xmlHygieneBuilder +
+										    "</hyg:hygiene-spec>";
 		        	
 		        	try {              
 		             
 		                
 		                BufferedWriter out = new BufferedWriter(new FileWriter(this.fileName + "\\salt.xml"));
-		                out.write(xmlBuilder);
+		                out.write(xmlHygieneBuilder);
 		                out.close();
 		                
-		                FileInputStream fis = new FileInputStream(
-		                		this.fileName + "\\salt.xml");
+		                //FileInputStream fis = new FileInputStream(
+		               // 		this.fileName + "\\salt.xml");
 		                //need to compare xml bevore writting it to see if need to re-compile salt
-		        		Generator gen = new Generator(fis);
-
+		        		Generate gen = new Generate();
+		        		String spec = gen.generateHygieneSpecFromXMLFile(this.fileName + "\\salt.xml");
 		        		BufferedWriter out2 = new BufferedWriter(new FileWriter(this.fileName + "\\salt.spc"));
-		                out2.write(gen.toSALT());
+		                out2.write(spec);
 		                out2.close();
 		                
 		                String modFile = "";
@@ -442,19 +446,74 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
        return result;
     }
 	
-	public String buildHygieneRule(String columnName,String columnType){
+	public String buildHygieneRule(String datasetName, String columnName, String columnType){
 		String xml = "";
-		
-		xml += "<hyg:field-rule>";
-		xml += "    <hyg:field-name>" + columnName + "</hyg:field-name>";
-		xml += "    <hyg:field-type>" + columnType + "</hyg:field-type>";
+        JobMeta jobMeta = super.parentJob.getJobMeta();
+        List<JobEntryCopy> jobs = jobMeta.getJobCopies();
+        
+		xml += "<hyg:field-rule>"+"\r\n";
+		xml += "    <hyg:field-name>" + columnName + "</hyg:field-name>"+"\r\n";
+		xml += "    <hyg:field-type>" + columnType + "</hyg:field-type>"+"\r\n";
 		
 		//see if hygine rule exists for field
 		//if rule exists build it
-		
+		try{
+	        SaltAutoPopulate sap = new SaltAutoPopulate();
+	        String[] rules = sap.getRule(jobs,datasetName, columnName);
+	        ArrayList<EntryBO> entries = sap.entryList.getEntries();
+	        
+	        for(int i =0; i<entries.size(); i++){
+	        	EntryBO entry = entries.get(i);
+	        	if(columnName.equalsIgnoreCase(entry.getField())){
+	        		System.out.println("Field with Rule: " + entry.getField());
+	        		//we have a column match and it has a rule 
+	        		//look up rule
+	        		HygieneRuleBO rule = sap.fieldTypeList.get(sap.fieldTypeList.getIndex(entry.getRuleName()));
+	        		//we have the rule time to build the xml
+	        		if(rule.isCaps()){
+	        			xml += "    <hyg:caps>true</hyg:caps>"+"\r\n";
+	        		}
+	        		if(rule.isLefttrim()){
+	        			xml += "    <hyg:left-trim>true</hyg:left-trim>"+"\r\n";
+	        		}
+	        		if(!rule.getAllow().equals("")){
+	        			xml += "    <hyg:allow>"+rule.getAllow()+"</hyg:allow>"+"\r\n";
+	        		}
+	        		if(!rule.getSpaces().equals("")){
+	        			xml += "    <hyg:spaces>"+rule.getSpaces()+"</hyg:spaces>"+"\r\n";
+	        		}
+	        		if(!rule.getOnfail().equals("")){
+	        			xml += "    <hyg:on-fail>"+rule.getOnfail()+"</hyg:on-fail>"+"\r\n";
+	        		}
+	        		if(!rule.getIgnore().equals("")){
+	        			//not implemented
+	        			xml += "    <hyg:ignore>"+rule.getIgnore()+"</hyg:ignore>"+"\r\n";
+	        		}
+	        		if(!rule.getLengths().equals("")){
+	        			//not implemented
+	        			xml += "    <hyg:lengths>"+rule.getLengths()+"</hyg:lengths>"+"\r\n";
+	        		}
+	        		if(!rule.getDisallowedQuotes().equals("")){
+	        			//not implemented
+	        			xml += "    <hyg:disallowed-quotes>"+rule.getDisallowedQuotes()+"</hyg:disallowed-quotes>"+"\r\n";
+	        		}
+	        		//if(!rule.getLike().equals("")){
+	        			//not implemented
+	        		//	xml += "    <hyg:like>"+rule.getLike()+"</hyg:like>"+"\r\n";
+	        		//}
+	        		if(!rule.getWords().equals("")){
+	        			//not implemented
+	        			xml += "    <hyg:words>"+rule.getWords()+"</hyg:words>"+"\r\n";
+	        		}
+	        		
+	        		
+	        	}
+	        }
+        
+        }catch (Exception e){}
 		
 		//Close off the XML Tag
-		xml += "</hyg:field-rule>";
+		xml += "</hyg:field-rule>"+"\r\n";
 		
 		return xml;
 	}

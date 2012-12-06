@@ -10,8 +10,8 @@ import org.eclipse.swt.widgets.Composite;
 public class EntryBO {
 	private String field = "";
 	private String ruleName = "";
-	private FieldTypeList fieldTypeList = new FieldTypeList();
-	private int	fieldTypeListIndex = -1;
+	private HygieneRuleList hygieneRuleList = new HygieneRuleList();
+	private int	hygieneRuleListIndex = -1;
 	
 	public EntryBO(){}
 	
@@ -23,12 +23,12 @@ public class EntryBO {
 	
 	
 
-	public int getFieldTypeListIndex() {
-		return fieldTypeListIndex;
+	public int getHygieneRuleListIndex() {
+		return hygieneRuleListIndex;
 	}
 
-	public void setFieldTypeListIndex(int fieldTypeListIndex) {
-		this.fieldTypeListIndex = fieldTypeListIndex;
+	public void setHygieneRuleListIndex(int hygieneRuleListIndex) {
+		this.hygieneRuleListIndex = hygieneRuleListIndex;
 	}
 
 	public String getField() {
@@ -43,12 +43,12 @@ public class EntryBO {
 	public void setRuleName(String ruleName) {
 		this.ruleName = ruleName;
 	}
-	public FieldTypeList getFieldTypeList() {
-		return fieldTypeList;
+	public HygieneRuleList getHygieneRuleList() {
+		return hygieneRuleList;
 	}
 
-	public void setFieldTypeList(FieldTypeList fieldTypeList) {
-		this.fieldTypeList = fieldTypeList;
+	public void setHygieneRuleList(HygieneRuleList hygieneRuleList) {
+		this.hygieneRuleList = hygieneRuleList;
 	}
 
 	
@@ -57,7 +57,7 @@ public class EntryBO {
 			
 			csv += field;
 			csv += ","+ruleName;
-			csv += ","+fieldTypeListIndex;
+			csv += ","+hygieneRuleListIndex;
 			//csv += ","+fieldTypeList.toPipeDelm();
 			
             return csv;
@@ -69,12 +69,12 @@ public class EntryBO {
             if(strArr.length == 3){
                 field = strArr[0];
                 ruleName = strArr[1];
-                fieldTypeListIndex = Integer.parseInt(strArr[2]);
+                hygieneRuleListIndex = Integer.parseInt(strArr[2]);
                 //fieldTypeList.fromPipeDelm(strArr[2]);
             } else{
             	field = "";
                 ruleName = "";
-                fieldTypeListIndex = -1;
+                hygieneRuleListIndex = -1;
                 //fieldTypeList.fromPipeDelm("");
             }
         }
