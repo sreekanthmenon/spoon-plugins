@@ -4,6 +4,7 @@
  */
 package org.hpccsystems.pentaho.job.ecldataset;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -11,6 +12,7 @@ import org.eclipse.swt.events.ModifyEvent;
 import org.eclipse.swt.events.ModifyListener;
 import org.eclipse.swt.events.SelectionAdapter;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.events.ShellAdapter;
 import org.eclipse.swt.events.ShellEvent;
 import org.eclipse.swt.graphics.Color;
@@ -174,7 +176,7 @@ public class ECLDatasetDialog extends ECLJobEntryDialog{//extends JobEntryDialog
                 System.out.println(e.toString());
                 
             }
-        HPCCServerInfo hsi = new HPCCServerInfo(serverHost,serverPort);
+        final HPCCServerInfo hsi = new HPCCServerInfo(serverHost,serverPort);
         fileList = hsi.fetchFileList();
         datasetName = buildText("Dataset Name", null, lsMod, middle, margin, datasetGroup);
         fileName = buildCombo("Logical File Name", datasetName, lsMod, middle, margin, datasetGroup, fileList);
@@ -198,7 +200,30 @@ public class ECLDatasetDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         
        // recordDef = buildMultiText("Record Definition", recordName, lsMod, middle, margin, recordGroup);
         
-        
+        fileName.addSelectionListener(new SelectionListener(){
+
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				String file = fileName.getText();
+				
+				ArrayList<String[]> details = hsi.fetchFileDetails(file);
+				
+				if(details.size()>0){
+					ErrorNotices en = new ErrorNotices();
+					if(en.openComfirmDialog(getParent(), "Do you want to eplace your current Record Structure on the\r\nFields tab with the one stored on the server?")){
+						ct.setRecordList(jobEntry.ArrayListToRecordList(details));
+						ct.redrawTable(true);
+					}
+				}
+				
+			}}); 
            item1.setControl(compForGrp);
         
         
