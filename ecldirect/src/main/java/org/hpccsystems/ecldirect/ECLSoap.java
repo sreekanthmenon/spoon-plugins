@@ -49,9 +49,28 @@ public class ECLSoap {
     private int errorCount = 0;
     private int warningCount = 0;
     
+    private String user = "";
+    private String pass = "";
+    
     
 
-    public int getErrorCount() {
+    public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+
+	public int getErrorCount() {
 		return errorCount;
 	}
 
@@ -183,7 +202,7 @@ public class ECLSoap {
             }
             String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";
            // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
-            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-c -syntax" + include + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-c -syntax" + include + " " + inFilePath;
 
 
             ProcessBuilder pb = new ProcessBuilder(c);
@@ -988,10 +1007,9 @@ public class ECLSoap {
        String xml = "";
        try {
 
-              String user = "hpccdemo";
-              String pass = "hpccdemo";
 
-              Authenticator.setDefault(new ECLAuthenticator(user,pass));
+
+            Authenticator.setDefault(new ECLAuthenticator(user,pass));
              
           
             String encoding = new sun.misc.BASE64Encoder().encode ((user+":"+pass).getBytes());
@@ -1072,9 +1090,9 @@ public class ECLSoap {
             	//System.out.println("NO ML LIBRARY INCLUDED!");
             }
             String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
-            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
             
-           // System.out.println("_________________________ECLCC_______________________________");
+            //System.out.println("_________________________ECLCC_______________________________");
            // System.out.println(c);
             ProcessBuilder pb = new ProcessBuilder(c);
             pb.redirectErrorStream(true); // merge stdout, stderr of process

@@ -5,6 +5,7 @@
 package org.hpccsystems.pentaho.job.ecldataset;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -178,6 +179,23 @@ public class ECLDatasetDialog extends ECLJobEntryDialog{//extends JobEntryDialog
             }
         final HPCCServerInfo hsi = new HPCCServerInfo(serverHost,serverPort);
         fileList = hsi.fetchFileList();
+        try{
+        	ArrayList<String> files = ap.getLogicalFileName(this.jobMeta.getJobCopies());
+        	if(files != null){
+        		fileList = ap.merge(fileList, files.toArray(new String[files.size()]));
+        	}
+        }catch(Exception ex){
+        	System.out.println("Unable to fetch file names from sprays: " + ex.toString());
+        }
+        ArrayList<String> tempFiles = new ArrayList<String>();
+        for (int i = 0; i<fileList.length; i++){
+        	if(!tempFiles.contains(fileList[i])){
+        		tempFiles.add(fileList[i]);
+        	}
+        }
+        Collections.sort(tempFiles);
+        fileList = tempFiles.toArray(new String[tempFiles.size()]);
+       
         datasetName = buildText("Dataset Name", null, lsMod, middle, margin, datasetGroup);
         fileName = buildCombo("Logical File Name", datasetName, lsMod, middle, margin, datasetGroup, fileList);
         fileType = buildCombo("File Type", fileName, lsMod, middle, margin, datasetGroup,new String[]{"", "CSV", "THOR"});

@@ -125,7 +125,7 @@ public class FileInfoSoap {
 			System.out.println("error");
 			System.out.println(e);
 		}
-		return null;
+		return new String[0];
 	}
 	
 	
