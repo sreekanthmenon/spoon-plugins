@@ -10,6 +10,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.pentaho.di.core.encryption.Encr;
 import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.xml.XMLHandler;
 import org.pentaho.di.job.entry.JobEntryCopy;
@@ -18,6 +19,7 @@ import org.w3c.dom.NodeList;
 import java.util.regex.*;
 
 import org.hpccsystems.recordlayout.*;
+
 
 /**
  *
@@ -314,13 +316,13 @@ public class AutoPopulate {
 				                	   defValue = XMLHandler.getNodeValue(childnode);
 				                	  
 				                	   if(defValue != null){
-				                		   System.out.println("---------------NODE_VALUE: " + defValue);
+				                		   //System.out.println("---------------NODE_VALUE: " + defValue);
 
 				                		   
 				                		   
 				                		   if(defValue.equals(datasetValue)){
-				                			   System.out.println("Verify that " + defValue + " = " + datasetValue);
-				                			   System.out.println("-------------Yes----------" + tType);
+				                			   //System.out.println("Verify that " + defValue + " = " + datasetValue);
+				                			  // System.out.println("-------------Yes----------" + tType);
 				                    		   type = tType;
 				                    		   datasetNode = nNode;
 				                    		   nodeIndex = i;
@@ -332,7 +334,7 @@ public class AutoPopulate {
 				                    	   }
 				                		   
 				                	   }else{
-				                		   System.out.println("NODE_VALUE: IS NULL");
+				                		   //System.out.println("NODE_VALUE: IS NULL");
 				                	   }
 				                   }
 	                		   }
@@ -744,7 +746,11 @@ public class AutoPopulate {
         return out;
     }
 
+
     
+    public String getGlobalVariableEncrypted(List<JobEntryCopy> jobs, String ofType) throws Exception{
+    	return Encr.decryptPassword(getGlobalVariable(jobs,ofType));
+    }
     public String getGlobalVariable(List<JobEntryCopy> jobs, String ofType) throws Exception{
        // System.out.println(" ------------ getGlobalVariable ------------- ");
         String datasets[] = null;
@@ -835,7 +841,6 @@ public class AutoPopulate {
                               );
                         }
                           
-                          
                                   
 
                        }
@@ -922,5 +927,45 @@ public class AutoPopulate {
         return recordList;
     }
     
+    
+    
+    public ArrayList<String> getLogicalFileName(List<JobEntryCopy> jobs) throws Exception{
+    	
+    	ArrayList<String> logicalFileNames = new ArrayList<String>();
+         System.out.println(" ------------ getLogicalFileName ------------- ");
+         String datasets[] = null;
+         String fieldName = "logical_file_name";//spray
+         
+         Object[] jec = jobs.toArray();
+
+         int k = 0;
+         
+         if(jec != null){
+             
+
+             for(int j = 0; j<jec.length; j++){
+                    String xml = ((JobEntryCopy)jec[j]).getXML();
+                    NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
+                    for (int temp = 0; temp < nl.getLength(); temp++){
+                        Node nNode = nl.item(temp);
+                        
+                        String type = XMLHandler.getNodeValue(
+                            XMLHandler.getSubNode(nNode, "type")
+                            );
+                        System.out.println("Type: " + type);
+                        if(type.equalsIgnoreCase("ECLSprayFile")){
+                            	System.out.println("Logical Lookup: ");
+                                 logicalFileNames.add(XMLHandler.getNodeValue(
+                                     XMLHandler.getSubNode(nNode, fieldName)
+                                 ));
+                            
+                        }
+                    }
+             }
+
+         }
+         return logicalFileNames;
+
+     }
     
 }

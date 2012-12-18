@@ -11,17 +11,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+//import java.io.StringWriter;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+//import org.apache.commons.io.IOUtils;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
+
+import org.hpccsystems.ecldirect.ECLSoap;
+
 
 /**
  *
@@ -31,6 +37,7 @@ public class EclDirect {
 
     private final String urlString;
     private final String clusterName;
+    
     private String serverHost;
     private String serverPort;
     private String jobName;
@@ -42,13 +49,35 @@ public class EclDirect {
     private String saltLib;
     private String wuid;
     private String outputName = "";
+    
+    private String userName = "";
+    private String password = "";
     private boolean isValid = true;
+    
     private String error = "";
+    
     private ArrayList<String[]> files = new ArrayList();
     private String resName = "";
 
     
     
+    public String getUserName() {
+		return userName;
+	}
+
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getError() {
 
     public String getSaltLib() {
 		return saltLib;
@@ -82,6 +111,8 @@ public class EclDirect {
 		this.error = error;
 	}
 
+	public String getClusterName() {
+		return clusterName;
 	public String getIncludeSALT() {
 		return includeSALT;
 	}
@@ -332,7 +363,11 @@ public class EclDirect {
         es.setMlPath(mlPath); 
         es.setOutputName(outputName);
         es.setPort(Integer.parseInt(this.serverPort));
+        es.setUser(userName);
+        es.setPass(password);
         if(this.includeML.equals("true")){
+            es.setIncludeML(true);
+        }else{
             es.setIncludeML(false);
         }
 
@@ -451,6 +486,7 @@ public class EclDirect {
                      for(int r = 0; r < al3Size ; r++){
 
                          if(((Column)al3.get(r)).getName().equals("Name")){
+                             String resName = ((Column)al3.get(r)).getValue();
                              resName = ((Column)al3.get(r)).getValue();
                              InputStream is = es.ResultsSoapCall(this.getWuid(), resName);
                              ArrayList results = es.parseResults(is);
@@ -492,11 +528,14 @@ public class EclDirect {
                                 for (int lCol = 0; lCol < columnList.size(); lCol++) {
                                  //"----------Column-------------"
                                     Column column = (Column) columnList.get(lCol);
+                                    if(column.getValue().contains(",")){
+                                    	outStr += "\"" + column.getValue() + "\"";
                                     String val = column.getValue().replace("\\", "\\\\");
                                     val = val.replace("\"", "\\\"");
                                     if(val.contains(",")){
                                     	outStr += "\"" + val + "\"";
                                     }else{
+                                    	outStr += column.getValue();
                                     	outStr += val;
                                     }
                                     //outStr += column.getValue();

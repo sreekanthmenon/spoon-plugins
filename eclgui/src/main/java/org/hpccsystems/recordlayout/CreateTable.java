@@ -435,28 +435,14 @@ public class CreateTable {
             	          //return;
             	        }
             	        int currentSel = ((CCombo)c.getControl()).getSelectionIndex();
-            	        //System.out.println("CurrentIndex: " + currIndex);
-            	        //System.out.println("CurrentSel: " + currentSel);
-            	        
+
             	        String key = Character.toString(e.character);
-            	        //System.out.println("Key Pressed: " + key);
             	        String[] items = ((CCombo)c.getControl()).getItems();
-            	      
-            	        /*try{
-            	        Robot robot = new Robot();
-            	        robot.keyPress(java.awt.event.KeyEvent.VK_DOWN);
-            	       }catch(Exception eRobot){
-            	    	   
-            	       }*/
-            	        
             	       
             	        for (int i = currentSel; i < items.length; i++) {
             	          if (items[i].toLowerCase().startsWith(key.toLowerCase())) {
             	        	  if(i != currentSel){
-            	        		  //((CCombo)c.getControl()).select(i);
             	        		  currIndex = i;
-            	        		 // selectedItem = items[i];
-            	        		//  System.out.println("found item: " + selectedItem);
             	        		  return;
             	        	  }
             	          }
@@ -465,11 +451,7 @@ public class CreateTable {
             	        for (int i = 1; i < items.length; i++) {
               	          if (items[i].toLowerCase().startsWith(key.toLowerCase())) {
               	        	  	  currIndex = i;
-              	        		  //((CCombo)c.getControl()).select(i);
-              	        		 // selectedItem = items[i];
-              	        		 // System.out.println("found item: " + selectedItem);
               	        		  return;
-              	        	  
               	          }
               	        }
               	        
@@ -477,17 +459,15 @@ public class CreateTable {
 
 					@Override
 					public void keyReleased(KeyEvent arg0) {
-						// TODO Auto-generated method stub
-						 
 						 int oldIndex = currIndex;
-						 System.out.println("CurrentIndex 1: " + currIndex);
 						 currIndex = ((CCombo)c.getControl()).getSelectionIndex();
-						 System.out.println("CurrentIndex 2: " + currIndex);
 						 
+						 //hack to fix double jump when box is open
+						 //if pentaho ever upgrades to new version of swing 
+						 //there is a cleaner way to do this
 						 if(Math.abs(currIndex-oldIndex) == 2){
 							 oldIndex--;
 						 }
-						 System.out.println("Set Index:" + oldIndex);
 						 ((CCombo)c.getControl()).select(oldIndex);
 					}
 

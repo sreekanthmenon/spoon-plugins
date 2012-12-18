@@ -26,7 +26,6 @@ import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 import org.hpccsystems.ecldirect.Column;
 import java.io.*;
-
 import org.hpccsystems.ecldirect.ECLSoap;
 import org.pentaho.di.ui.spoon.Spoon;
 import org.pentaho.di.core.*;
@@ -159,6 +158,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	@Override
     public Result execute(Result prevResult, int k) throws KettleException {
 		String error = "";
+        
 		String resName = "";
       //Result result = null;
 		//String xmlBuilder = "";
@@ -185,6 +185,8 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	        String eclccInstallDir = "";
 	        String mlPath = "";
 	        String includeML = "";
+	        String user = "";
+	        String pass = "";
 	        
 	        
 	        String SALTPath = "";
@@ -192,10 +194,6 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	        String saltIncludePath = "";
 	        
 	        AutoPopulate ap = new AutoPopulate();
-	        
-
-	        
-	        
 	        try{
 	        //Object[] jec = this.jobMeta.getJobCopies().toArray();
 	
@@ -208,6 +206,8 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	            eclccInstallDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"eclccInstallDir");
 	            mlPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"mlPath");
 	            includeML = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeML");
+	            user = ap.getGlobalVariable(jobMeta.getJobCopies(),"user_name");
+                pass = ap.getGlobalVariableEncrypted(jobMeta.getJobCopies(),"password");
 	            
 	            SALTPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"SALTPath");
 	            includeSALT = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeSALT");
@@ -338,6 +338,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
         
         
             ECLExecute.isReady=true;
+            //logBasic("not waiting: " + ECLExecute.isReady);
             result.setResult(true);
 
 
@@ -365,6 +366,11 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
             eclDirect.setJobName(jobName);
             eclDirect.setMlPath(mlPath);
             eclDirect.setOutputName(this.getName());
+            eclDirect.setUserName(user);
+            eclDirect.setPassword(pass);
+            //ArrayList dsList = null;
+          
+            //String outStr = "";
             
             eclDirect.setIncludeSALT(includeSALT);
             eclDirect.setSALTPath(SALTPath);
@@ -380,6 +386,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                     includes += "IMPORT * FROM ML.Cluster;\r\n\r\n";
                     includes += "IMPORT * FROM ML.Types;\r\n\r\n";
                 }
+               // System.out.println("Execute -- Finished Imports");
                 
                 if(includeSALT.equalsIgnoreCase("true")){
                     includes += "IMPORT SALT25;\r\n\r\n";
@@ -404,7 +411,6 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 	logError(eclDirect.getError());
                 	System.out.println(eclDirect.getError());
                 	error += eclDirect.getError();
-                	
                 }
                     
              }catch (Exception e){
@@ -433,6 +439,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
             } catch (IOException e) {
                  e.printStackTrace();
             }   
+             
             resName = eclDirect.getResName();
             System.out.println("++Spring HTML -------------------------" + resName);
             if(resName.equalsIgnoreCase("dataProfilingResults") || resName.equalsIgnoreCase("Dataprofiling_AllProfiles")){ 
@@ -446,6 +453,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
        return result;
     }
 	
+    
 	public String buildHygieneRule(String datasetName, String columnName, String columnType){
 		String xml = "";
         JobMeta jobMeta = super.parentJob.getJobMeta();
@@ -519,7 +527,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	}
      /*
     public void createOutputFile_old(ArrayList dsList,String fileName, int count){
-        String outStr = "";
+         String outStr = "";
          String header = "";
          if(dsList != null){
          String newline = System.getProperty("line.separator");
@@ -534,6 +542,8 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                                 for (int lCol = 0; lCol < columnList.size(); lCol++) {
                                  //   logBasic("----------Column-------------");
                                     Column column = (Column) columnList.get(lCol);
+                                    logBasic(column.getName() + "=" + column.getValue() + "|");
+                                    outStr += column.getValue();
                                  //   logBasic(column.getName() + "=" + column.getValue() + "|");
                                     //if column has , then wrap in "
                                     if(column.getValue().contains(",")){
@@ -545,6 +555,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                                         outStr += ",";
                                     }
                                     if(jRow == 0){
+                                        header += column.getName();
                                     	if(column.getName().contains(",")){
                                     		header += "\"" + column.getName() + "\"";
                                     	}else{
@@ -557,6 +568,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                                         }
                                     }
                                 }
+                                logBasic("newline");
                                // logBasic("newline");
                                 outStr += newline;
                             }
@@ -577,6 +589,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 e.printStackTrace();
             }  
          }
+    }
     }*/
 
     @Override

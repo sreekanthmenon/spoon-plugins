@@ -52,6 +52,8 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     
     private Text jobEntryName;
 
+    private Text userName;
+    private Text password;
     private Text serverIP;
     private Text serverPort;
     private Text landingZone;
@@ -74,6 +76,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     
     
     
+    private Button wOK, wCancel, mlFileOpenButton, eclFileOpenButton;
     private Button wOK, wCancel, mlFileOpenButton, eclFileOpenButton,saltFileOpenButton;
     private boolean backupChanged;
     private SelectionAdapter lsDef;
@@ -157,14 +160,16 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 360;
+        datasetGroupFormat.height = 320;
+        datasetGroupFormat.height = 375;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         varGroup.setLayoutData(datasetGroupFormat);
 
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
 
-        
-        serverIP = buildText("Server Host", null, lsMod, middle, margin, varGroup);
+        userName = buildText("Server Username", null, lsMod, middle, margin, varGroup);
+        password = buildText("Server Password", userName, lsMod, middle, margin, varGroup);
+        serverIP = buildText("Server Host", password, lsMod, middle, margin, varGroup);
         serverPort = buildText("Server Port", serverIP, lsMod, middle, margin, varGroup);
         landingZone = buildText("Landing Zone Dir", serverPort, lsMod, middle, margin, varGroup);
         
@@ -177,6 +182,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         eclccInstallDir = buildText("eclcc Install Dir", jobName, lsMod, middle, margin, varGroup);
         this.eclFileOpenButton = buildButton("Choose Location", eclccInstallDir, lsMod, middle, margin, varGroup);
         controls.put("fOpen", eclccInstallDir);
+        
         Listener eclFileOpenListener = new Listener() {
 
             public void handleEvent(Event e) {
@@ -320,6 +326,12 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
             includeSALT.setText(jobEntry.getIncludeSALT());
         }
 
+        if (jobEntry.getUser() != null) {
+            userName.setText(jobEntry.getUser());
+        }
+        if (jobEntry.getPass() != null) {
+            password.setText(jobEntry.getPass());
+        }
       
 
 
@@ -509,6 +521,9 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         jobEntry.setEclccInstallDir(eclccInstallDir.getText());
         jobEntry.setMlPath(mlPath.getText());
         jobEntry.setIncludeML(includeML.getText());
+        
+        jobEntry.setUser(userName.getText());
+        jobEntry.setPass(password.getText());
         
         jobEntry.setSALTPath(SALTPath.getText());
         jobEntry.setIncludeSALT(includeSALT.getText());

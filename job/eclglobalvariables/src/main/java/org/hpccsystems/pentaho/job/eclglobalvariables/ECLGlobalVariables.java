@@ -4,23 +4,27 @@
  */
 package org.hpccsystems.pentaho.job.eclglobalvariables;
 
-import java.util.ArrayList;
+
 import java.util.List;
+
+
+
 import org.pentaho.di.cluster.SlaveServer;
-import org.pentaho.di.compatibility.Value;
+
 import org.pentaho.di.core.Const;
 import org.pentaho.di.core.Result;
-import org.pentaho.di.core.RowMetaAndData;
+
 import org.pentaho.di.core.database.DatabaseMeta;
 import org.pentaho.di.core.exception.KettleException;
 import org.pentaho.di.core.exception.KettleXMLException;
 import org.pentaho.di.core.xml.XMLHandler;
-import org.pentaho.di.job.entry.JobEntryBase;
-import org.pentaho.di.job.entry.JobEntryInterface;
+
 import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 import org.hpccsystems.ecljobentrybase.*;
+
+import org.pentaho.di.core.encryption.*;
 
 /**
  *
@@ -42,9 +46,37 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
     private String cluster = "hthor";
     private boolean includeML = false;
     
+    private String user = "";
+    private String pass = "";
+    
     private String SALTPath = "";
     private boolean includeSALT = false;
 
+    private String keyStr = "saqwvdf023rkjas7ku,df9e4kt`q234rtuqrtadfads.faufrae";
+    
+    public String getUser() {
+		return user;
+	}
+
+	public void setUser(String user) {
+		this.user = user;
+	}
+
+	public String getPass() {
+		if(pass.equalsIgnoreCase("")){
+			return "";
+		}else{
+			return Encr.decryptPassword(pass);
+		}
+	}
+
+	public void setPass(String pass) {
+		if(!pass.equalsIgnoreCase("")){
+			this.pass = Encr.encryptPassword(pass);
+		}
+	}
+
+	public String getServerIP() {
    
 	public String getServerIP() {
         return serverIP;
@@ -203,6 +235,12 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
                 this.setSALTPath(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"SALTPath")));
            
             
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"user_name")) != null)
+                this.setUser(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"user_name")));
+            
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"password")) != null)
+                this.setPass(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"password")));
+            
         } catch (Exception e) {
             throw new KettleXMLException("ECL Distribute Job Plugin Unable to read step info from XML node", e);
         }
@@ -232,6 +270,10 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
         
         retval += "             <includeML><![CDATA["+this.getIncludeML() + "]]></includeML>"+Const.CR;
         
+        retval += "             <user_name><![CDATA["+this.getUser() + "]]></user_name>"+Const.CR;
+        
+        retval += "             <password><![CDATA["+this.getPass() + "]]></password>"+Const.CR;
+        
         retval += "             <includeSALT><![CDATA["+this.getIncludeSALT() + "]]></includeSALT>"+Const.CR;
         retval += "             <SALTPath><![CDATA["+this.getSALTPath()+"]]></SALTPath>"+Const.CR;
       
@@ -257,6 +299,9 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
             this.setCluster( rep.getStepAttributeString(id_jobentry, "cluster"));
             this.setIncludeML( rep.getStepAttributeString(id_jobentry, "includeML"));
             
+            this.setUser( rep.getStepAttributeString(id_jobentry, "user_name"));
+            this.setPass( rep.getStepAttributeString(id_jobentry, "password"));
+            
             this.setIncludeSALT( rep.getStepAttributeString(id_jobentry, "includeSALT"));
             this.setSALTPath( rep.getStepAttributeString(id_jobentry, "SALTPath"));
             
@@ -280,9 +325,10 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
             rep.saveStepAttribute(id_job, getObjectId(), "cluster", this.getCluster());
             rep.saveStepAttribute(id_job, getObjectId(), "includeML", this.getIncludeML());
             
+            rep.saveStepAttribute(id_job, getObjectId(), "user_name", this.getUser());
+            rep.saveStepAttribute(id_job, getObjectId(), "password", this.getPass());
             rep.saveStepAttribute(id_job, getObjectId(), "includeSALT", this.getIncludeSALT());
             rep.saveStepAttribute(id_job, getObjectId(), "SALTPath", this.getSALTPath());
-            
             
         
         } catch (Exception e) {
@@ -297,4 +343,7 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
     public boolean isUnconditional() {
         return true;
     }
+    
+    
+   
 }
