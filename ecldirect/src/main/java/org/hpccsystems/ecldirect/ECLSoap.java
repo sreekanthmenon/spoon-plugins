@@ -30,10 +30,8 @@ import java.util.regex.Pattern;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
 
@@ -52,6 +50,7 @@ import java.util.regex.Matcher;
  * @author ChambeJX
  */
 public class ECLSoap {
+    
     private String hostname = "192.168.80.132";
     private int port = 8010;
     
@@ -199,8 +198,8 @@ public class ECLSoap {
         this.mlPath = mlPath;
     }
     //end getters and setters
-    //end getters and setters
     
+    public ECLSoap() {
     public String getSALTPath() {
 		return SALTPath;
 	}
@@ -251,7 +250,6 @@ public class ECLSoap {
             String include = "";
             if(this.includeML){
                 include = " -I \"" + this.mlPath +"\"";
-                include += " -I \"" + this.mlPath +"\"";
             }
             
             if(this.includeSALT){
@@ -264,9 +262,10 @@ public class ECLSoap {
             
             String logFile = "--logfile \"" + this.tempDir + this.outputName.replace(' ', '_') + "_syntax_log.log\" ";
            // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
-            String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-c -syntax" + include + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" ";
+            //c += "-legacy ";
+            c += logFile + "-c -syntax" + include + " " + inFilePath;
 
-            
             ProcessBuilder pb = new ProcessBuilder(c);
             pb.redirectErrorStream(true); // merge stdout, stderr of process
             //System.out.println("Start Process Builder");
@@ -1151,6 +1150,10 @@ public class ECLSoap {
             }else{
             	//System.out.println("NO ML LIBRARY INCLUDED!");
             }
+            String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" ";
+            //c += "-legacy ";
+            c += logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
              
             //System.out.println("_________________________ECLCC_______________________________");
             if(this.includeSALT){
