@@ -76,8 +76,7 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
 		}
 	}
 
-	public String getServerIP() {
-   
+
 	public String getServerIP() {
         return serverIP;
     }

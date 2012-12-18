@@ -77,7 +77,7 @@ public class EclDirect {
 		this.password = password;
 	}
 
-	public String getError() {
+
 
     public String getSaltLib() {
 		return saltLib;
@@ -113,6 +113,7 @@ public class EclDirect {
 
 	public String getClusterName() {
 		return clusterName;
+	}
 	public String getIncludeSALT() {
 		return includeSALT;
 	}
@@ -577,4 +578,5 @@ public class EclDirect {
             }  
          }
     }
+}
 }

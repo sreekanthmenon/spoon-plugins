@@ -638,9 +638,9 @@ public class MainMapper {
 						if(item != null){
 							String help = "";
 							
-							if(Utils.getHelpMap().containsKey(item.getText())){
-								help += Utils.getHelpMap().get(item.getText());
-							}
+							//if(Utils.getHelpMap().containsKey(item.getText())){
+							//	help += Utils.getHelpMap().get(item.getText());
+							//}
 							//System.out.println("Show tool tip " + coords + " " + item.getText());
 							functionsTip.setText(item.getText());
 							

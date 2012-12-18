@@ -65,18 +65,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     private Combo includeML;
     private Text SALTPath;
     private Combo includeSALT;
- /*
-             *  private String mlPath = "ecl-ml";
-    private String eclccInstallDir = "C:\\Program Files\\HPCC Systems\\HPCC\\bin\\ver_3_0\\";
-    private String jobName = "Spoon-job";
-    private String cluster = "hthor";
-    private boolean includeML = true;
-             */
-                 
-    
-    
-    
-    private Button wOK, wCancel, mlFileOpenButton, eclFileOpenButton;
+
     private Button wOK, wCancel, mlFileOpenButton, eclFileOpenButton,saltFileOpenButton;
     private boolean backupChanged;
     private SelectionAdapter lsDef;

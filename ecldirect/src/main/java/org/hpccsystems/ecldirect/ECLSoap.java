@@ -52,8 +52,6 @@ import java.util.regex.Matcher;
  * @author ChambeJX
  */
 public class ECLSoap {
-    
-    private String hostname = "192.168.80.130";
     private String hostname = "192.168.80.132";
     private int port = 8010;
     
@@ -89,7 +87,6 @@ public class ECLSoap {
 		this.saltLib = saltLib;
 	}
 
-	public int getErrorCount() {
     public String getUser() {
 		return user;
 	}
@@ -204,10 +201,6 @@ public class ECLSoap {
     //end getters and setters
     //end getters and setters
     
-    public ECLSoap() {
-    
-   
-    
     public String getSALTPath() {
 		return SALTPath;
 	}
@@ -260,7 +253,6 @@ public class ECLSoap {
                 include = " -I \"" + this.mlPath +"\"";
                 include += " -I \"" + this.mlPath +"\"";
             }
-            String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";
             
             if(this.includeSALT){
                 include += " -I \"" + this.SALTPath +"\"";
@@ -272,7 +264,6 @@ public class ECLSoap {
             
             String logFile = "--logfile \"" + this.tempDir + this.outputName.replace(' ', '_') + "_syntax_log.log\" ";
            // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
-            String c = "\"" + eclccInstallDir + "eclcc\" " + logFile + "-c -syntax" + include + " " + inFilePath;
             String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-c -syntax" + include + " " + inFilePath;
 
             System.out.println("----------------syntaxCheck-------------------------------");
@@ -1168,9 +1159,7 @@ public class ECLSoap {
             }else{
             	//System.out.println("NO ML LIBRARY INCLUDED!");
             }
-            String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
-            String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
-            
+             
             //System.out.println("_________________________ECLCC_______________________________");
             if(this.includeSALT){
                 include = " -I \"" + this.SALTPath +"\"";
