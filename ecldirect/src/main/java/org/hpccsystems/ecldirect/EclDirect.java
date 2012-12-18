@@ -487,7 +487,7 @@ public class EclDirect {
                      for(int r = 0; r < al3Size ; r++){
 
                          if(((Column)al3.get(r)).getName().equals("Name")){
-                             String resName = ((Column)al3.get(r)).getValue();
+                             resName = ((Column)al3.get(r)).getValue();
                              resName = ((Column)al3.get(r)).getValue();
                              InputStream is = es.ResultsSoapCall(this.getWuid(), resName);
                              ArrayList results = es.parseResults(is);
@@ -529,14 +529,11 @@ public class EclDirect {
                                 for (int lCol = 0; lCol < columnList.size(); lCol++) {
                                  //"----------Column-------------"
                                     Column column = (Column) columnList.get(lCol);
-                                    if(column.getValue().contains(",")){
-                                    	outStr += "\"" + column.getValue() + "\"";
                                     String val = column.getValue().replace("\\", "\\\\");
                                     val = val.replace("\"", "\\\"");
                                     if(val.contains(",")){
                                     	outStr += "\"" + val + "\"";
                                     }else{
-                                    	outStr += column.getValue();
                                     	outStr += val;
                                     }
                                     //outStr += column.getValue();
@@ -579,4 +576,4 @@ public class EclDirect {
          }
     }
 }
-}
+

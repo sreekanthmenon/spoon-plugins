@@ -598,7 +598,8 @@ public class ECLSoap {
                 "</soap:Body>"+
                 "</soap:Envelope>";
         
-        String path = "/WsWorkunits/WUInfo";
+        //String path = "/WsWorkunits/WUInfo";
+        String path = "/WsWorkunits/WUResult?ver_=1.38";
         InputStream is = this.doSoap(xml, path);
         return is;
     }
@@ -708,7 +709,7 @@ public class ECLSoap {
      * @accepts String
      * @returns InputStream
      * 
-     * Calls the Thor clustor to get Info, not currently utilized
+     * Calls the Thor clustor to get Info
      */
     public InputStream InfoDetailsCall(String wuid){
         String xml = "<?xml version=\"1.0\" encoding=\"utf-8\"?>"
@@ -738,7 +739,7 @@ public class ECLSoap {
         InputStream is = this.doSoap(xml, path);
         return is;
     }
-    
+    //W20121218-222102
      public static ArrayList parseResultList(InputStream is) throws Exception {
         ArrayList results = new ArrayList();
 
@@ -759,13 +760,14 @@ public class ECLSoap {
             for (int i = 0; i < dsList.getLength(); i++) {
                 Element ds = (Element) dsList.item(i);
                 NodeList rowList = ds.getElementsByTagName("ECLResult");
-
+                //System.out.println("ECLResult------" + i);
                 if (rowList != null && rowList.getLength() > 0) {
 
                     ArrayList rowArray = new ArrayList();
                    // dsArray.add(rowArray);
 
                     for (int j = 0; j < rowList.getLength(); j++) {
+                    	//System.out.println("ECLResult row ------" + j);
                         Element row = (Element) rowList.item(j);
                         
                         NodeList columnList = row.getChildNodes();
@@ -775,7 +777,7 @@ public class ECLSoap {
                         //System.out.println("test");
                         ArrayList columnsArray = new ArrayList();
                         for (int k = 0; k < columnList.getLength(); k++) {
-                            
+                        	//System.out.println("ECLResult column ------" + k);
                             
                             if(columnList.item(k).getNodeName().equals("Name")){
                                 //System.out.println("Name: " + columnList.item(k).getNodeName());

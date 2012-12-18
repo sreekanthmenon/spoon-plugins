@@ -400,9 +400,9 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 boolean isValid = false;
                // System.out.println("---------------- submitToCluster");
                 isValid = eclDirect.execute(eclCode, this.debugLevel);
-               // System.out.println("---------------- finished submitToCluster");
+                //System.out.println("---------------- finished submitToCluster");
                 if(isValid){
-                	//System.out.println("---------------- writing file");
+                //	System.out.println("---------------- writing file");
                 	isValid = eclDirect.writeResultsToFile(this.fileName);
                 }
                 if(!isValid){
