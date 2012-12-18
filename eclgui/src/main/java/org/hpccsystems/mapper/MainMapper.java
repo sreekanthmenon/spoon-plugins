@@ -615,6 +615,7 @@ public class MainMapper {
 	    
 	    bhi.setUrl(url.toString().replace("%20", " ").replace("file:", ""));
 	    final HashMap<String,String> helpIndex = bhi.getMap();
+	   
 	    Listener functionsList = new Listener(){
 
 			@Override
@@ -630,28 +631,7 @@ public class MainMapper {
 				}
 				
 					case SWT.MouseHover: {
-						functionsTip.setVisible(false);
-						Point coords = new Point(event.x, event.y);
-						TreeItem item = treeFunctions.getItem(coords);
-						Point tipLocation = treeFunctions.getLocation();
 						
-						if(item != null){
-							String help = "";
-							
-							//if(Utils.getHelpMap().containsKey(item.getText())){
-							//	help += Utils.getHelpMap().get(item.getText());
-							//}
-							//System.out.println("Show tool tip " + coords + " " + item.getText());
-							functionsTip.setText(item.getText());
-							
-							
-							functionsTip.setMessage(help);
-							//functionsTip.setLocation(tipLocation.x,tipLocation.y);
-							functionsTip.setVisible(true);
-						}else{
-							//System.out.println("hide tool tip");
-							functionsTip.setVisible(false);
-						}
 						break;
 					}
 					case SWT.KeyDown: {
