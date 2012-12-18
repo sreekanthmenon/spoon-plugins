@@ -266,14 +266,6 @@ public class ECLSoap {
            // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
             String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-c -syntax" + include + " " + inFilePath;
 
-            System.out.println("----------------syntaxCheck-------------------------------");
-            System.out.println("-----------------------------------------------");
-            System.out.println("-----------------------------------------------");
-            System.out.println(c);
-            System.out.println("-----------------------------------------------");
-            System.out.println("-----------------------------------------------");
-            System.out.println("-----------------------------------------------");
-
             
             ProcessBuilder pb = new ProcessBuilder(c);
             pb.redirectErrorStream(true); // merge stdout, stderr of process
