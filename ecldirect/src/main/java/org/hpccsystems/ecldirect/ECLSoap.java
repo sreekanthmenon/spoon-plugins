@@ -202,7 +202,9 @@ public class ECLSoap {
             }
             String logFile = "--logfile \"" + this.tempDir + this.outputName + "_syntax_log.log\" ";
            // System.out.println("LogFIle: " + this.tempDir + this.outputName + "_syntax_log.log");
-            String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-c -syntax" + include + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" ";
+            //c += "-legacy ";
+            c += logFile + "-c -syntax" + include + " " + inFilePath;
 
 
             ProcessBuilder pb = new ProcessBuilder(c);
@@ -1090,7 +1092,9 @@ public class ECLSoap {
             	//System.out.println("NO ML LIBRARY INCLUDED!");
             }
             String logFile = "--logfile " + this.tempDir + this.outputName + "_log.log ";
-            String c = "\"" + eclccInstallDir + "eclcc.exe\" " + logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
+            String c = "\"" + eclccInstallDir + "eclcc.exe\" ";
+            //c += "-legacy ";
+            c += logFile + "-E -v" + include + " -o " + outFilePath + " " + inFilePath;
             
             //System.out.println("_________________________ECLCC_______________________________");
            // System.out.println(c);
