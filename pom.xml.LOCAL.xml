@@ -90,7 +90,7 @@
 			</activation>
 			<modules>
 				<module>eclgui</module>
-				<module>eclsalt</module>
+				<module>ecldirect</module>
 				<module>perspectives</module>
 				<module>job</module>
 			</modules>

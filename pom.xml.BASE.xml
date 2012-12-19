@@ -96,23 +96,6 @@
 			<build>
 				<finalName>${project.artifactId}</finalName>
 				<plugins>
-				<plugin>
-					  <groupId>org.apache.xmlbeans</groupId>
-					  <artifactId>xmlbeans</artifactId>
-					  <version>2.4.0</version>
-					  <executions>
-						 <execution>
-							<phase>generate-sources</phase>
-							<goals>
-							  <goal>xmlbeans</goal>
-							</goals>
-						 </execution>
-					  </executions>
-					  <inherited>true</inherited>
-					  <configuration>
-						<schemaDirectory>ecldirect\src\main\java\com\hpccsystems\salt\dataprofiling\schemas</schemaDirectory>
-					  </configuration>
-				 </plugin>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-compiler-plugin</artifactId>
@@ -128,7 +111,6 @@
 									<goal>compile</goal>
 								</goals>
 							</execution>
-							
 						</executions>
 					</plugin>
 					<plugin>
@@ -173,12 +155,6 @@
 						<version>4.10</version>
 						<scope>test</scope>
 					</dependency>
-					<dependency>
-						<groupId>org.apache.xmlbeans</groupId>
-						<artifactId>xmlbeans-xpath</artifactId>
-						<version>2.4.0</version>
-					</dependency>
-            
 				</dependencies>
 			</dependencyManagement>
 
@@ -192,12 +168,6 @@
 					<artifactId>junit</artifactId>
 					<scope>test</scope>
 				</dependency>
-				<dependency>
-					<groupId>org.apache.xmlbeans</groupId>
-					<artifactId>xmlbeans-xpath</artifactId>
-					<version>2.4.0</version>
-				</dependency>
-            
 			</dependencies>
 		</profile>
 		<profile>
@@ -224,7 +194,6 @@
 									<goal>run</goal>
 								</goals>
 							</execution>
-							 							
 						</executions>
 					</plugin>
 				</plugins>
