@@ -45,13 +45,13 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
+import org.hpccsystems.javaecl.HPCCServerInfo;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.eclguifeatures.ErrorNotices;
 import org.hpccsystems.recordlayout.CreateTable;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
 import org.hpccsystems.ecljobentrybase.*;
-import org.hpccsystems.javaecl.HPCCServerInfo;
 /**
  *
  * @author ChambersJ
@@ -217,6 +217,7 @@ public class ECLDatasetDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         recordName = buildText("Record Name", null, lsMod, middle, margin, recordGroup);
         
        // recordDef = buildMultiText("Record Definition", recordName, lsMod, middle, margin, recordGroup);
+        
         
         fileName.addSelectionListener(new SelectionListener(){
 
