@@ -30,7 +30,7 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 import org.hpccsystems.ecljobentrybase.*;
-import org.hpccsystems.ecldirect.SaltHygieneReport;
+import org.hpccsystems.javaecl.SaltHygieneReport;
 /**
  *
  * @author ChambersJ

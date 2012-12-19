@@ -1,4 +1,4 @@
-package org.hpccsystems.ecldirect;
+package org.hpccsystems.javaecl;
 
 
 
