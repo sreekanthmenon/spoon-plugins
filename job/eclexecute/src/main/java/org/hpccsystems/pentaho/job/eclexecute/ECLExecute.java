@@ -6,8 +6,7 @@ package org.hpccsystems.pentaho.job.eclexecute;
 
 import java.util.ArrayList;
 import java.util.List;
-//import org.hpccsystems.ecldirect.Output;
-import org.hpccsystems.ecldirect.EclDirect;
+//import org.hpccsystems.javaecl.Output;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -22,9 +21,7 @@ import org.pentaho.di.job.entry.JobEntryInterface;
 import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
-import org.hpccsystems.ecldirect.Column;
 import java.io.*;
-import org.hpccsystems.ecldirect.ECLSoap;
 import org.pentaho.di.ui.spoon.Spoon;
 import org.pentaho.di.core.*;
 import org.pentaho.di.core.gui.SpoonFactory;
@@ -34,6 +31,9 @@ import org.pentaho.di.plugins.perspectives.eclresults.*;
 import org.hpccsystems.eclguifeatures.*;
 import org.pentaho.di.job.JobMeta;
 import org.hpccsystems.ecljobentrybase.*;
+import org.hpccsystems.javaecl.Column;
+import org.hpccsystems.javaecl.ECLSoap;
+import org.hpccsystems.javaecl.EclDirect;
 /**
  *
  * @author ChambersJ

@@ -45,13 +45,13 @@ import org.pentaho.di.ui.job.dialog.JobDialog;
 import org.pentaho.di.ui.job.entry.JobEntryDialog;
 import org.pentaho.di.ui.trans.step.BaseStepDialog;
 
-import org.hpccsystems.ecldirect.HPCCServerInfo;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.eclguifeatures.ErrorNotices;
 import org.hpccsystems.recordlayout.CreateTable;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
 import org.hpccsystems.ecljobentrybase.*;
+import org.hpccsystems.javaecl.HPCCServerInfo;
 /**
  *
  * @author ChambersJ

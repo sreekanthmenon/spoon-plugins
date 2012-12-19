@@ -9,8 +9,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.hpccsystems.ecldirect.Spray;
-import org.hpccsystems.ecldirect.EclDirect;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -29,6 +27,8 @@ import org.w3c.dom.Node;
 import org.pentaho.di.job.JobMeta;
 import org.hpccsystems.eclguifeatures.*;
 import org.hpccsystems.ecljobentrybase.*;
+import org.hpccsystems.javaecl.EclDirect;
+import org.hpccsystems.javaecl.Spray;
 
 /**
  *

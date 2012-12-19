@@ -7,7 +7,6 @@ package org.hpccsystems.pentaho.job.ecltable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.hpccsystems.ecldirect.Table;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -25,6 +24,7 @@ import org.w3c.dom.Node;
 
 import org.hpccsystems.eclguifeatures.*;
 import org.hpccsystems.ecljobentrybase.*;
+import org.hpccsystems.javaecl.Table;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
 
