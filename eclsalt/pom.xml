@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>eclsalt</artifactId>
 	<packaging>jar</packaging>
-	<name>HPCC Systems Pentaho Data Integration Salt Lib</name>
+	<name>HPCC Systems Pentaho Data Integration ECLSalt</name>
 	<description></description>
 	<parent>
 		<groupId>org.hpccsystems.pentaho</groupId>
@@ -62,7 +62,11 @@
 					<artifactId>xmlbeans</artifactId>
 					<version>2.4.0</version>
 				</dependency>
-		
+				<dependency>
+					<groupId>org.hpccsystems</groupId>
+					<artifactId>javaecl</artifactId>
+					<version>0.1-SNAPSHOT</version>
+				</dependency>
 			</dependencies>
 		</dependencyManagement>
 
@@ -72,6 +76,9 @@
 				<artifactId>xmlbeans</artifactId>
 				<version>2.4.0</version>
 			</dependency>
-		
+			<dependency>
+				<groupId>org.hpccsystems</groupId>
+				<artifactId>javaecl</artifactId>
+			</dependency>
 		</dependencies>
 </project>
