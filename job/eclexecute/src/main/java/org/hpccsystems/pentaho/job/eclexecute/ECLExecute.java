@@ -7,6 +7,7 @@ package org.hpccsystems.pentaho.job.eclexecute;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+//import org.hpccsystems.javaecl.Output;
 import org.hpccsystems.javaecl.EclDirect;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
@@ -399,8 +400,10 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 boolean isValid = false;
                // System.out.println("---------------- submitToCluster");
                 isValid = eclDirect.execute(eclCode, this.debugLevel);
+               // System.out.println("---------------- finished submitToCluster");
                 //System.out.println("---------------- finished submitToCluster");
                 if(isValid){
+                	//System.out.println("---------------- writing file");
                 //	System.out.println("---------------- writing file");
                 	isValid = eclDirect.writeResultsToFile(this.fileName);
                 }

@@ -48,6 +48,7 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.job.JobHopMeta;
 
 import org.pentaho.di.job.entry.JobEntryCopy;
+import org.hpccsystems.javaecl.HPCCServerInfo;
 import org.hpccsystems.eclguifeatures.*;
 import org.hpccsystems.ecljobentrybase.*;
 //JobEntry
@@ -65,7 +66,6 @@ import org.eclipse.swt.graphics.RGB;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.GridData;
 import org.hpccsystems.ecljobentrybase.*;
-import org.hpccsystems.javaecl.HPCCServerInfo;
 
 
 /**

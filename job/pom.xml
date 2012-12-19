@@ -80,9 +80,9 @@
 				<version>3.3.0-I20070606-0010</version>
 			</dependency>
 			<dependency>
-				<groupId>org.hpccsystems.pentaho</groupId>
-				<artifactId>ecldirect</artifactId>
-				<version>0.1-SNAPSHOT</version>
+				<groupId>org.hpccsystems</groupId>
+				<artifactId>javaecl</artifactId>
+				<version>[0.1.0,)</version>
 			</dependency>
             <dependency>
                 <groupId>org.hpccsystems.pentaho</groupId>
@@ -115,8 +115,8 @@
 			<artifactId>jface</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>org.hpccsystems.pentaho</groupId>
-			<artifactId>ecldirect</artifactId>
+			<groupId>org.hpccsystems</groupId>
+			<artifactId>javaecl</artifactId>
 		</dependency>
         <dependency>
             <groupId>org.hpccsystems.pentaho</groupId>
