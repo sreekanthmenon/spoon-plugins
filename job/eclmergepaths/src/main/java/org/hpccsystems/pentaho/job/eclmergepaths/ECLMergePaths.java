@@ -6,8 +6,6 @@ package org.hpccsystems.pentaho.job.eclmergepaths;
 
 import java.util.ArrayList;
 import java.util.List;
-import org.hpccsystems.ecldirect.Output;
-import org.hpccsystems.ecldirect.EclDirect;
 import org.hpccsystems.javaecl.Output;
 import org.hpccsystems.javaecl.EclDirect;
 import org.pentaho.di.cluster.SlaveServer;
