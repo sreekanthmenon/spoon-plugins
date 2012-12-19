@@ -488,7 +488,7 @@ public class EclDirect {
 
                          if(((Column)al3.get(r)).getName().equals("Name")){
                              resName = ((Column)al3.get(r)).getValue();
-                             resName = ((Column)al3.get(r)).getValue();
+                     
                              InputStream is = es.ResultsSoapCall(this.getWuid(), resName);
                              ArrayList results = es.parseResults(is);
                              resName = resName.replace(" ", "_");
