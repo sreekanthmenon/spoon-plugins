@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 //import org.hpccsystems.ecldirect.Output;
-import org.hpccsystems.ecldirect.EclDirect;
+import org.hpccsystems.javaecl.EclDirect;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
