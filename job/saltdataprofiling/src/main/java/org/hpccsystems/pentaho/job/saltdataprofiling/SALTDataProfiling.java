@@ -82,7 +82,7 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
 
         }
         
-        SaltDataProfiling sdp = new SaltDataProfiling();
+        org.hpccsystems.javaecl.SaltDataProfiling sdp = new org.hpccsystems.javaecl.SaltDataProfiling();
         
         sdp.setDatasetName(this.getDatasetName());
         sdp.setLayout(this.getLayout());
