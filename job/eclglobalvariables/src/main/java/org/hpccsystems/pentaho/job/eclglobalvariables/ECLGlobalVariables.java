@@ -76,7 +76,6 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
 		}
 	}
 
-
 	public String getServerIP() {
         return serverIP;
     }
@@ -238,7 +237,7 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
                 this.setUser(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"user_name")));
             
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"password")) != null)
-                this.setPass(XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"password")));
+            	pass = (XMLHandler.getNodeValue(XMLHandler.getSubNode(node,"password")));
             
         } catch (Exception e) {
             throw new KettleXMLException("ECL Distribute Job Plugin Unable to read step info from XML node", e);
@@ -271,7 +270,7 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
         
         retval += "             <user_name><![CDATA["+this.getUser() + "]]></user_name>"+Const.CR;
         
-        retval += "             <password><![CDATA["+this.getPass() + "]]></password>"+Const.CR;
+        retval += "             <password><![CDATA["+ pass + "]]></password>"+Const.CR;
         
         retval += "             <includeSALT><![CDATA["+this.getIncludeSALT() + "]]></includeSALT>"+Const.CR;
         retval += "             <SALTPath><![CDATA["+this.getSALTPath()+"]]></SALTPath>"+Const.CR;
@@ -299,7 +298,7 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
             this.setIncludeML( rep.getStepAttributeString(id_jobentry, "includeML"));
             
             this.setUser( rep.getStepAttributeString(id_jobentry, "user_name"));
-            this.setPass( rep.getStepAttributeString(id_jobentry, "password"));
+            pass = ( rep.getStepAttributeString(id_jobentry, "password"));
             
             this.setIncludeSALT( rep.getStepAttributeString(id_jobentry, "includeSALT"));
             this.setSALTPath( rep.getStepAttributeString(id_jobentry, "SALTPath"));
@@ -325,7 +324,7 @@ public class ECLGlobalVariables extends ECLJobEntry{//extends JobEntryBase imple
             rep.saveStepAttribute(id_job, getObjectId(), "includeML", this.getIncludeML());
             
             rep.saveStepAttribute(id_job, getObjectId(), "user_name", this.getUser());
-            rep.saveStepAttribute(id_job, getObjectId(), "password", this.getPass());
+            rep.saveStepAttribute(id_job, getObjectId(), "password", pass);
             rep.saveStepAttribute(id_job, getObjectId(), "includeSALT", this.getIncludeSALT());
             rep.saveStepAttribute(id_job, getObjectId(), "SALTPath", this.getSALTPath());
             

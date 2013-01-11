@@ -208,6 +208,8 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	            includeML = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeML");
 	            user = ap.getGlobalVariable(jobMeta.getJobCopies(),"user_name");
                 pass = ap.getGlobalVariableEncrypted(jobMeta.getJobCopies(),"password");
+
+
 	            
 	            SALTPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"SALTPath");
 	            includeSALT = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeSALT");
@@ -399,8 +401,10 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 
                 boolean isValid = false;
                // System.out.println("---------------- submitToCluster");
+
                 isValid = eclDirect.execute(eclCode, this.debugLevel);
                // System.out.println("---------------- finished submitToCluster");
+
                 //System.out.println("---------------- finished submitToCluster");
                 if(isValid){
                 	//System.out.println("---------------- writing file");
