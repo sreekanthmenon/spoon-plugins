@@ -370,6 +370,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     	
     	boolean eclccExists = true;
     	boolean mlExists = true;
+    	boolean saltExists = true;
     	
     	String errorTxt = "Some Fields Were Not Correct:\r\n";
     	
@@ -387,7 +388,16 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     			System.out.println("No ML Library found");
     		}
     	}
-    	if(eclccExists && mlExists){
+    	
+    	if(includeSALT.getText().equals("true")){
+    		saltExists = (new File(SALTPath.getText())).exists();
+    		if(!saltExists){
+    			//warn
+    			errorTxt += "The \"Path to SALT Library\" could not be located\r\n";
+    			System.out.println("No SALT Library found");
+    		}
+    	}
+    	if(saltExists && eclccExists && mlExists){
     		isReady = true;
     		System.out.println("paths validated");
     	}else{

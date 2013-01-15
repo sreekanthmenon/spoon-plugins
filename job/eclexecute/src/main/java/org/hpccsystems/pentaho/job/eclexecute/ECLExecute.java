@@ -4,6 +4,7 @@
  */
 package org.hpccsystems.pentaho.job.eclexecute;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 import org.hpccsystems.javaecl.Column;
 import java.io.*;
+
 import org.hpccsystems.javaecl.ECLSoap;
 import org.pentaho.di.ui.spoon.Spoon;
 import org.pentaho.di.core.*;
@@ -54,6 +56,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
     private String serverAddress = "";
     private String serverPort = "";
     private String debugLevel = "";
+    private String error = "";
     
     public static boolean isReady = false;
     boolean isValid = true;
@@ -108,29 +111,48 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	}
 	 
 	
-	public void compileSalt(String saltPath, String spcFile, String outputDir){
-		String cmd = "\"" + saltPath + "\\salt.exe\" -gh -D\"" + outputDir + "\" \"" + spcFile + "\"";
-		System.out.println("-->" + cmd + "<--");
-		 try{
-			 System.out.println("runtime");
-			 File path = new File(saltPath);
-			 Runtime rt = java.lang.Runtime.getRuntime();
-			rt.exec(cmd, null, path);
-			
-			
-			
-			
-	        //ProcessBuilder pb = new ProcessBuilder(cmd);
-	        //pb.redirectErrorStream(true); // merge stdout, stderr of process
-	        
-	        //pb.directory(path);
-	        //Process p = pb.start();
-	        
+	public boolean compileSalt(String saltPath, String spcFile, String outputDir, String jobNameNoSpace){
+		boolean saltExists = (new File(saltPath + "\\salt.exe")).exists();
+		boolean outExists = (new File(outputDir).exists());
+		boolean success = false;
+		if(saltExists && outExists){
+			String cmd = "\"" + saltPath + "\\salt.exe\" -gh -D\"" + outputDir + "\" \"" + spcFile + "\"";
+			//System.out.println("-->" + cmd + "<--");
+		 	try{
+				 System.out.println("runtime");
+				 File path = new File(saltPath);
+				 Runtime rt = java.lang.Runtime.getRuntime();
+				 Process p = rt.exec(cmd, null, path);
+				 
+				//block until salt compile is completed
+	                int b = 0;
+	                while(!(new File(this.fileName + "\\" + jobNameNoSpace + "_module")).exists() && b < 150){
+	                	Thread.sleep(1000);
+	                	b++;
+	                }
+	                
+				// if(p.exitValue() == 0){
+					 if((new File(this.fileName + "\\" + jobNameNoSpace + "_module")).exists()){
+						 success = true;
+					 }
+				// }
+				 
+				 
                     
-		 }catch (Exception e){
+		 	}catch (Exception e){
 	            System.out.println(e.toString());
 	            e.printStackTrace();
+	            error += "Couldn't Locate the Salt Install and/or the output Directory Please Verify settings!";
+	            return false;
 	        }
+		}else{
+			//salt install doesn't exist
+			if(!saltExists){error += "Salt not found in provided path, please check Global Variables! \r\n";}
+			if(!outExists){error += "Output Directory defined in Execute step doesn't exist";}
+			success = false;
+		}
+		
+		return success;
 	}
 	 
 	public void fixEclFiles(String dir){
@@ -157,7 +179,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	}
 	@Override
     public Result execute(Result prevResult, int k) throws KettleException {
-		String error = "";
+		
         
 		String resName = "";
       //Result result = null;
@@ -283,7 +305,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 										    "<hyg:file-name>" + file_name + "</hyg:file-name>" +"\r\n"+
 										    xmlHygieneBuilder +
 										    "</hyg:hygiene-spec>";
-		        	
+		        	//System.out.println("-------------------------------------SALT COMPILE--------------------------------");
 		        	try {              
 		             
 		                
@@ -301,19 +323,36 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		                out2.close();
 		                
 		                String modFile = "";
-		                compileSalt(SALTPath, this.fileName + "\\salt.spc", this.fileName+ "");
+		                //System.out.println("-------------------------------------SALT COMPILE2--------------------------------");
+		                boolean compileSuccess = compileSalt(SALTPath, this.fileName + "\\salt.spc", this.fileName+ "",jobNameNoSpace);
 		                
-		                //block until salt compile is completed
-		                int b = 0;
-		                while(!(new File(this.fileName + "\\" + jobNameNoSpace + "_module")).exists() && b < 15){
-		                	Thread.sleep(1000);
-		                	b++;
+		                if(!compileSuccess){
+		                	 String SaltError = "Unable to create the SALT files! Please check your salt path in Global Variables, and your output path in Execute.";
+		                	 result.setResult(false);
+		                	 result.setStopped(true);
+		                	 result.setLogText(SaltError);
+		                 	 logError(SaltError);
+		                 	 System.out.println(SaltError);
+		                 	 error += SaltError;
+		                 	 return result;
+		                }else{
+		                	logBasic("Salt Compiled");
+		                	//System.out.println("Salt Compiled moving on");
 		                }
+		                
 		                //fixEclFiles(this.fileName + "\\" + jobNameNoSpace + "_module");
 		                saltIncludePath = this.fileName+ "";
 		        		
 		            } catch (IOException e) {
 		                 e.printStackTrace();
+		                 String SaltError = "Unable to create the SALT files! Please check your salt path in Global Variables, and your output path in Execute.";
+	                	 result.setResult(false);
+	                	 result.setStopped(true);
+	                	 result.setLogText(SaltError);
+	                 	 logError(SaltError);
+	                 	 System.out.println(SaltError);
+	                 	 error += SaltError;
+	                 	 return result;
 		            }   
 		        	
 		        	
