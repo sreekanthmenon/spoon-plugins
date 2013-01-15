@@ -116,7 +116,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		boolean outExists = (new File(outputDir).exists());
 		boolean success = false;
 		if(saltExists && outExists){
-			String cmd = "\"" + saltPath + "\\salt.exe\" -gh -D\"" + outputDir + "\" \"" + spcFile + "\"";
+			String cmd = "\"" + saltPath + "\\salt.exe\" -gh -ma -D\"" + outputDir + "\" \"" + spcFile + "\"";
 			//System.out.println("-->" + cmd + "<--");
 		 	try{
 				 System.out.println("runtime");
