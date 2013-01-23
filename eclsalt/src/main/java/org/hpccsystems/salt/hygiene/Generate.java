@@ -28,6 +28,9 @@ public class Generate {
 
             specStr.appendLine("MODULE:" + spec.getModuleName());
             specStr.appendLine("FILENAME:" + spec.getFileName());
+           // specStr.appendLine("IDFIELD:" + spec.getIdfield());
+            specStr.appendLine("IDNAME:" + spec.getIdname());
+            
 
             FieldHygieneRule rules[] = spec.getFieldRuleArray();
             for (int i = 0; i < rules.length; i++) {
@@ -89,7 +92,7 @@ public class Generate {
 
     public static void main(String[] args) throws Exception {
         //String fileContent = readFileAsString("../../../../../xsd/SALT-Hygiene.xml");
-        String fileContent = readFileAsString("C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/ecldirect/src/main/xsd/SALT-Hygiene.xml");
+        String fileContent = readFileAsString("C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/eclsalt/src/main/xsd/SALT-Hygiene.xml");
         Generate gen = new Generate();
         System.out.println(gen.generateHygieneSpec(fileContent));
 
@@ -97,6 +100,8 @@ public class Generate {
         HygieneSpecDocument.HygieneSpec spec = doc.addNewHygieneSpec();
         spec.setModuleName("HelloWorld");
         spec.setFileName("HelloWorld_File");
+       // spec.setIdfield("HelloWorld_File_ID");
+        spec.setIdname("HellowWOrldIDName");
         FieldHygieneRule rule = spec.addNewFieldRule();
         rule.setFieldName("First");
         rule.setLeftTrim(true);

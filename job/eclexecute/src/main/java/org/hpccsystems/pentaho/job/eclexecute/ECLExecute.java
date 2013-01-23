@@ -116,7 +116,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		boolean outExists = (new File(outputDir).exists());
 		boolean success = false;
 		if(saltExists && outExists){
-			String cmd = "\"" + saltPath + "\\salt.exe\" -gh -ma -D\"" + outputDir + "\" \"" + spcFile + "\"";
+			String cmd = "\"" + saltPath + "\\salt.exe\" -ga -D\"" + outputDir + "\" \"" + spcFile + "\"";
 			//System.out.println("-->" + cmd + "<--");
 		 	try{
 				 System.out.println("runtime");
@@ -274,7 +274,9 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		                    					"<datatype>" + obj.getColumnType() + "</datatype>\r\n" +
 		                    				"</fielddef>\r\n";
 		        			*/
-		        			xmlHygieneBuilder += buildHygieneRule(datasets[i], obj.getColumnName(),obj.getColumnType());
+		        			if(!obj.getColumnName().equals("spoonGeneratedID")){
+		        				xmlHygieneBuilder += buildHygieneRule(datasets[i], obj.getColumnName(),obj.getColumnType());
+		        			}
 		        		}
 		        		//jobMeta.getJob
 		        		file_name = ap.getDatasetsField("record_name", datasets[i],jobMeta.getJobCopies());
@@ -298,11 +300,13 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        				"</fields>\r\n" +
 		        				"</salt-specification>";
 		        	*/
-		        	//write file to output directory
-		        	
+		        	//write file to output directory				
+		
+					
 		        	xmlHygieneBuilder = "<hyg:hygiene-spec xmlns:hyg=\"http://hpccsystems.org/salt/hygiene/bean\">" +"\r\n"+
 										    "<hyg:module-name>" + jobNameNoSpace + "_module</hyg:module-name>" +"\r\n"+
 										    "<hyg:file-name>" + file_name + "</hyg:file-name>" +"\r\n"+
+										    "<hyg:idname>" + "spoonGeneratedID" + "</hyg:idname>" +"\r\n"+
 										    xmlHygieneBuilder +
 										    "</hyg:hygiene-spec>";
 		        	//System.out.println("-------------------------------------SALT COMPILE--------------------------------");

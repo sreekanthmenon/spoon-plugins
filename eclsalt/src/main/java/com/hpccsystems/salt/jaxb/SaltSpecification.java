@@ -118,6 +118,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlType(name = "", propOrder = {
     "moduleName",
     "fileName",
+    "idname",
     "fields",
     "matchingRules",
     "hygieneRules",
@@ -131,6 +132,14 @@ public class SaltSpecification {
     protected String moduleName;
     @XmlElement(name = "file-name", required = true)
     protected String fileName;
+    
+    //@XmlElement(name = "idfield", required = true)
+    //protected String idfield;
+    
+    @XmlElement(name = "idname", required = true)
+    protected String idname;
+    
+    
     @XmlElement(required = true)
     protected SaltSpecification.Fields fields;
     @XmlElement(name = "matching-rules", required = true)
@@ -310,8 +319,27 @@ public class SaltSpecification {
         this.matchingRuleMap = value;
     }
 
+    
 
-    /**
+    //public String getIdfield() {
+	//	return idfield;
+	//}
+
+	//public void setIdfield(String idfield) {
+	//	this.idfield = idfield;
+	//}
+
+	public String getIdname() {
+		return idname;
+	}
+
+	public void setIdname(String idname) {
+		this.idname = idname;
+	}
+
+
+
+	/**
      * <p>Java class for anonymous complex type.
      * 
      * <p>The following schema fragment specifies the expected content contained within this class.

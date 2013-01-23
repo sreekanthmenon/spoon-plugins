@@ -40,6 +40,7 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
 	
     private String datasetName;
     private String layout;
+    private String cleanData;
 	//private String rules;
 	private EntryList entryList = new EntryList();
 	private HygieneRuleList fieldTypeList = new HygieneRuleList();
@@ -71,6 +72,12 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
 	
 	
 	
+	public String getCleanData() {
+		return cleanData;
+	}
+	public void setCleanData(String cleanData) {
+		this.cleanData = cleanData;
+	}
 	public String saveEntryList(){
         String out = "";
         ArrayList<EntryBO> list = entryList.getEntries();
@@ -258,6 +265,8 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
                 openEntryList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "entryList")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fieldTypeList")) != null)
                 openFieldTypeList(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "fieldTypeList")));
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "cleanedData")) != null)
+                setCleanData(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "cleanedData")));
             
         } catch (Exception e) {
             throw new KettleXMLException("ECL Dataset Job Plugin Unable to read step info from XML node", e);
@@ -274,6 +283,7 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
         retval += "		<layout><![CDATA[" + layout + "]]></layout>" + Const.CR;
         retval += "		<entryList><![CDATA[" + this.saveEntryList() + "]]></entryList>" + Const.CR;
         retval += "		<fieldTypeList><![CDATA[" + this.saveFieldTypeList() + "]]></fieldTypeList>" + Const.CR;
+        retval += "		<cleanedData><![CDATA[" + this.cleanData + "]]></cleanedData>" + Const.CR;
         return retval;
 
     }
@@ -291,6 +301,9 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
             
             if(rep.getStepAttributeString(id_jobentry, "fieldTypeList") != null)
                 this.openFieldTypeList(rep.getStepAttributeString(id_jobentry, "fieldTypeList")); //$NON-NLS-1$
+            
+            if(rep.getStepAttributeString(id_jobentry, "cleanedData") != null)
+                this.setCleanData(rep.getStepAttributeString(id_jobentry, "cleanedData")); //$NON-NLS-1$
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -304,6 +317,7 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
             rep.saveStepAttribute(id_job, getObjectId(), "layout", layout); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "entryList", this.saveEntryList()); //$NON-NLS-1$.
             rep.saveStepAttribute(id_job, getObjectId(), "fieldTypeList", this.saveFieldTypeList()); //$NON-NLS-1$
+            rep.saveStepAttribute(id_job, getObjectId(), "cleanedData", this.getCleanData()); //$NON-NLS-1$
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

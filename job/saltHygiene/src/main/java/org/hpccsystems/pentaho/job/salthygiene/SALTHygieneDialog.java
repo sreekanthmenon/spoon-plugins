@@ -61,6 +61,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
     private Text jobEntryName;
     private Combo datasetName;
     private Combo layout;
+    private Combo cleanedOutput;
     
     private Button wOK, wCancel;
     private boolean backupChanged;
@@ -173,6 +174,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
 
         item1.setControl(compForGrp);
         this.datasetName = buildCombo("Dataset Name", null, lsMod, middle, margin, joinGroup,datasets);
+        this.cleanedOutput = buildCombo("Output Cleaned Dataset?", this.datasetName, lsMod,middle,margin,joinGroup,new String[]{"yes","no"});
         //this.layout = buildCombo("Layout", this.datasetName, lsMod, middle, margin, joinGroup,datasets);
         
         createTable = new CreateTable(shell);
@@ -274,7 +276,9 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
        // if (jobEntry.getLayout() != null) {
         //    this.layout.setText(jobEntry.getLayout());
         //}
-        
+        if (jobEntry.getCleanData() != null) {
+            this.cleanedOutput.setText(jobEntry.getCleanData());
+        }
 
         shell.pack();
         shell.open();
@@ -432,6 +436,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         //jobEntry.setLayout(layout.getText());
         jobEntry.setEntryList(createTable.getEntryList());
         jobEntry.setFieldTypeList(createTable.getRuleList());
+        jobEntry.setCleanData((this.cleanedOutput.getText()));
         dispose();
     }
 

@@ -1,6 +1,8 @@
 <hyg:hygiene-spec xmlns:hyg="http://hpccsystems.org/salt/hygiene/bean">
-    <hyg:module-name>Customers</hyg:module-name>
+    <hyg:module-name>Customers2</hyg:module-name>
     <hyg:file-name>Customers_File</hyg:file-name>
+	<hyg:idname>Customers_File</hyg:idname>
+	<hyg:idfield>Customers_File</hyg:idfield>
     <hyg:field-rule>
         <hyg:field-name>first_name</hyg:field-name>
         <hyg:field-type>STRING50</hyg:field-type>

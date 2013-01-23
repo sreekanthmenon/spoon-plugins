@@ -48,7 +48,7 @@ public class Generator {
 	public static void main(String args[]) throws Exception {
 
 		FileInputStream fis = new FileInputStream(
-				"example/example.xml");
+				"C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/eclsalt/src/main/xsd/SALT-Hygiene.xml");
 
 		Generator gen = new Generator(fis);
 
