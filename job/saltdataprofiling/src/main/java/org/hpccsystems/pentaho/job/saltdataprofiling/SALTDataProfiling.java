@@ -87,7 +87,7 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
         sdp.setDatasetName(this.getDatasetName());
         sdp.setLayout(this.getLayout());
         sdp.setName(this.getName());
-        sdp.setSaltLib(jobNameNoSpace + "_module");
+        sdp.setSaltLib(jobNameNoSpace + "module");
 
         logBasic("{Dataset Job} Execute = " + sdp.ecl());
         

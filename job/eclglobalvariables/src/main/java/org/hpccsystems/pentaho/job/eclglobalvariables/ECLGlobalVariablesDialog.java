@@ -150,7 +150,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 385;
+        datasetGroupFormat.height = 405;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         varGroup.setLayoutData(datasetGroupFormat);
 

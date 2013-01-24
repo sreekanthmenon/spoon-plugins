@@ -164,7 +164,7 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
         SaltHygieneReport shr = new SaltHygieneReport();
         shr.setDatasetName(datasetName);
         shr.setName(this.getName());
-        shr.setSaltLib(jobNameNoSpace + "_module");
+        shr.setSaltLib(jobNameNoSpace + "module");
         shr.setLayout(this.getLayout());
         if(cleanData.equalsIgnoreCase("yes")){
         	shr.setOutputCleanedDataset(true);

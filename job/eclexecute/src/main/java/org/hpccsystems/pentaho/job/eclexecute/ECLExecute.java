@@ -126,13 +126,13 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 				 
 				//block until salt compile is completed
 	                int b = 0;
-	                while(!(new File(this.fileName + "\\" + jobNameNoSpace + "_module")).exists() && b < 150){
+	                while(!(new File(this.fileName + "\\" + jobNameNoSpace + "module")).exists() && b < 150){
 	                	Thread.sleep(1000);
 	                	b++;
 	                }
 	                
 				// if(p.exitValue() == 0){
-					 if((new File(this.fileName + "\\" + jobNameNoSpace + "_module")).exists()){
+					 if((new File(this.fileName + "\\" + jobNameNoSpace + "module")).exists()){
 						 success = true;
 					 }
 				// }
@@ -225,7 +225,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	
 	            cluster = ap.getGlobalVariable(jobMeta.getJobCopies(),"cluster");
 	            jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
-	            jobNameNoSpace = jobName.replace(" ", "_"); 
+	            jobNameNoSpace = jobName.replaceAll("[^A-Za-z0-9]", "");//jobName.replace(" ", "_"); 
 	            maxReturn = ap.getGlobalVariable(jobMeta.getJobCopies(),"maxReturn");
 	            eclccInstallDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"eclccInstallDir");
 	            mlPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"mlPath");
@@ -296,7 +296,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	/*
 		        	xmlBuilder = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" +
 		        				"<salt-specification xmlns=\"http://hpccsystems.com/SALT\">\r\n" +
-		        				"<module-name>" + jobNameNoSpace + "_module</module-name>\r\n" +
+		        				"<module-name>" + jobNameNoSpace + "module</module-name>\r\n" +
 		        				"<file-name>" + file_name + "</file-name>\r\n" +
 		        				"<fields>\r\n" + xmlBuilder +
 		        				"</fields>\r\n" +
@@ -306,7 +306,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		
 					
 		        	xmlHygieneBuilder = "<hyg:hygiene-spec xmlns:hyg=\"http://hpccsystems.org/salt/hygiene/bean\">" +"\r\n"+
-										    "<hyg:module-name>" + jobNameNoSpace + "_module</hyg:module-name>" +"\r\n"+
+										    "<hyg:module-name>" + jobNameNoSpace + "module</hyg:module-name>" +"\r\n"+
 										    "<hyg:file-name>" + file_name + "</hyg:file-name>" +"\r\n"+
 										    "<hyg:idname>" + "spoonGeneratedID" + "</hyg:idname>" +"\r\n"+
 										    xmlHygieneBuilder +
@@ -346,7 +346,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		                	//System.out.println("Salt Compiled moving on");
 		                }
 		                
-		                //fixEclFiles(this.fileName + "\\" + jobNameNoSpace + "_module");
+		                //fixEclFiles(this.fileName + "\\" + jobNameNoSpace + "module");
 		                saltIncludePath = this.fileName+ "";
 		        		
 		            } catch (IOException e) {
@@ -364,7 +364,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	
 		        	try {              
 
-		                BufferedWriter out = new BufferedWriter(new FileWriter(this.fileName + "\\" + jobNameNoSpace + "_module\\layout_" + file_name + ".ecl"));
+		                BufferedWriter out = new BufferedWriter(new FileWriter(this.fileName + "\\" + jobNameNoSpace + "module\\layout_" + file_name + ".ecl"));
 		                out.write(layoutECL);
 		                out.close();
 		            } catch (IOException e) {
@@ -439,7 +439,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 if(includeSALT.equalsIgnoreCase("true")){
                     includes += "IMPORT SALT25;\r\n\r\n";
                     includes += "IMPORT ut;\r\n\r\n";
-                    includes += "IMPORT " +jobNameNoSpace + "_module;\r\n\r\n";
+                    includes += "IMPORT " +jobNameNoSpace + "module;\r\n\r\n";
                 }
                 
                 System.out.println("Execute -- Finished Imports");

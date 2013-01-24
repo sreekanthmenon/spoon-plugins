@@ -62,6 +62,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
     private Combo datasetName;
     private Combo layout;
     private Combo cleanedOutput;
+    private Label outLabel;
     
     private Button wOK, wCancel;
     private boolean backupChanged;
@@ -176,7 +177,8 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         this.datasetName = buildCombo("Dataset Name", null, lsMod, middle, margin, joinGroup,datasets);
         this.cleanedOutput = buildCombo("Output Cleaned Dataset?", this.datasetName, lsMod,middle,margin,joinGroup,new String[]{"yes","no"});
         //this.layout = buildCombo("Layout", this.datasetName, lsMod, middle, margin, joinGroup,datasets);
-        Label lb = buildLabel("The Output will be stored as a file on the cluster ~SPOONFILES::[Dataset Name]_CleanedData.\r\n\r\n", this.cleanedOutput, lsMod, 0, margin, joinGroup);
+        outLabel = buildLabel("The Output will be stored as a file on the cluster as \r\n" +
+        		"~SPOONFILES::[Dataset Name]_CleanedData.\r\n\r\n", this.cleanedOutput, lsMod, 0, margin, joinGroup);
 
         createTable = new CreateTable(shell);
         try{
@@ -193,6 +195,7 @@ public class SALTHygieneDialog extends ECLJobEntryDialog{//extends JobEntryDialo
                 try{
                 	String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
                 	createTable.loadFields(items);
+                	outLabel.setText("The Output will be stored as a file on the cluster as \r\n~SPOONFILES::" + datasetName.getText() + "_CleanedData.\r\n\r\n");
                 }catch (Exception exc){
                 	System.out.println("error loading dataset fields");
                 }
