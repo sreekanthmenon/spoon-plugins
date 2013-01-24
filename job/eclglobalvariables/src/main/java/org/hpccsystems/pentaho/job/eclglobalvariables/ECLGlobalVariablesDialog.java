@@ -60,6 +60,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     
     private Text cluster;
     private Text jobName;
+    private Text maxReturn;
     private Text eclccInstallDir;
     private Text mlPath;
     private Combo includeML;
@@ -149,8 +150,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
-        datasetGroupFormat.height = 320;
-        datasetGroupFormat.height = 375;
+        datasetGroupFormat.height = 385;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         varGroup.setLayoutData(datasetGroupFormat);
 
@@ -165,10 +165,10 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         //move thes to Job Information
         cluster = buildText("Cluster", landingZone, lsMod, middle, margin, varGroup);
         jobName = buildText("Job Name", cluster, lsMod, middle, margin, varGroup);
-        
+        maxReturn = buildText("Preview Rows", jobName, lsMod, middle, margin, varGroup);
         //move these to Library(s)
         
-        eclccInstallDir = buildText("eclcc Install Dir", jobName, lsMod, middle, margin, varGroup);
+        eclccInstallDir = buildText("eclcc Install Dir", maxReturn, lsMod, middle, margin, varGroup);
         this.eclFileOpenButton = buildButton("Choose Location", eclccInstallDir, lsMod, middle, margin, varGroup);
         controls.put("fOpen", eclccInstallDir);
         
@@ -298,6 +298,9 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         if (jobEntry.getJobName() != null) {
             jobName.setText(jobEntry.getJobName());
         }
+        if (jobEntry.getMaxReturn() != null) {
+            maxReturn.setText(jobEntry.getMaxReturn());
+        }
         if (jobEntry.getEclccInstallDir() != null) {
             eclccInstallDir.setText(jobEntry.getEclccInstallDir());
         }
@@ -388,6 +391,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     			System.out.println("No ML Library found");
     		}
     	}
+    	if(eclccExists && mlExists){
     	
     	if(includeSALT.getText().equals("true")){
     		saltExists = (new File(SALTPath.getText())).exists();
@@ -516,6 +520,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         
         jobEntry.setCluster(cluster.getText());
         jobEntry.setJobName(jobName.getText());
+        jobEntry.setMaxReturn(maxReturn.getText());
         
         jobEntry.setEclccInstallDir(eclccInstallDir.getText());
         jobEntry.setMlPath(mlPath.getText());

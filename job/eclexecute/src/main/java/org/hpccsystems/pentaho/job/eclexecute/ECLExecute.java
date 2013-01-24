@@ -204,6 +204,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	        String cluster = "";
 	        String jobName = "";
 	        String jobNameNoSpace ="";
+	        String maxReturn = "";
 	        String eclccInstallDir = "";
 	        String mlPath = "";
 	        String includeML = "";
@@ -225,6 +226,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	            cluster = ap.getGlobalVariable(jobMeta.getJobCopies(),"cluster");
 	            jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
 	            jobNameNoSpace = jobName.replace(" ", "_"); 
+	            maxReturn = ap.getGlobalVariable(jobMeta.getJobCopies(),"maxReturn");
 	            eclccInstallDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"eclccInstallDir");
 	            mlPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"mlPath");
 	            includeML = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeML");
@@ -409,6 +411,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
             eclDirect.setEclccInstallDir(eclccInstallDir);
             eclDirect.setIncludeML(includeML);
             eclDirect.setJobName(jobName);
+            eclDirect.setMaxReturn(maxReturn);
             eclDirect.setMlPath(mlPath);
             eclDirect.setOutputName(this.getName());
             eclDirect.setUserName(user);
