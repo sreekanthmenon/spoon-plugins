@@ -152,7 +152,6 @@ public class ECLJobEntryDialog extends JobEntryDialog implements JobEntryDialogI
 
             return text;
         }
-    
     public Text buildPassword(String strLabel, Control prevControl,
             ModifyListener lsMod, int middle, int margin, Composite groupBox) {
         // label
