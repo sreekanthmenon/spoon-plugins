@@ -985,4 +985,32 @@ public class AutoPopulate {
 
      }
     
+    
+    public boolean hasNodeofType(List<JobEntryCopy> jobs, String ofType) throws Exception{
+        // System.out.println(" ------------ " + ofTYpe + " ------------- ");
+    	 boolean isType = false;
+         Object[] jec = jobs.toArray();
+         if(jec != null){
+            
+             for(int j = 0; j<jec.length; j++){
+                    String xml = ((JobEntryCopy)jec[j]).getXML();
+                    NodeList nl = (XMLHandler.loadXMLString(xml)).getChildNodes(); 
+                    for (int temp = 0; temp < nl.getLength(); temp++){
+                        Node nNode = nl.item(temp);
+                        
+                        String type = XMLHandler.getNodeValue(
+                            XMLHandler.getSubNode(nNode, "type")
+                            );
+                        //System.out.println("Type: " + type);
+                        if(type.equalsIgnoreCase(ofType)){
+                        	isType = true;
+                            return isType;//no need to keep looping;
+                        }
+                    }
+             }
+         }
+         return isType;
+
+     }
+    
 }

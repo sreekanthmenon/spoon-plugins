@@ -166,6 +166,12 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
         shr.setName(this.getName());
         shr.setSaltLib(jobNameNoSpace + "_module");
         shr.setLayout(this.getLayout());
+        if(cleanData.equalsIgnoreCase("yes")){
+        	shr.setOutputCleanedDataset(true);
+        }else{
+        	shr.setOutputCleanedDataset(false);
+        }
+        
        
         logBasic("{Dataset Job} Execute = " + shr.ecl());
         logBasic("{Dataset Job} Previous =" + result.getLogText());
