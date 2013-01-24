@@ -165,7 +165,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         //name = buildText("Distribute Name", null, lsMod, middle, margin, distributeGroup);
 
         userName = buildText("Server Username", null, lsMod, middle, margin, varGroup);
-        password = buildText("Server Password", userName, lsMod, middle, margin, varGroup);
+        password = buildPassword("Server Password", userName, lsMod, middle, margin, varGroup);
         serverIP = buildText("Server Host", password, lsMod, middle, margin, varGroup);
         serverPort = buildText("Server Port", serverIP, lsMod, middle, margin, varGroup);
         landingZone = buildText("Landing Zone Dir", serverPort, lsMod, middle, margin, varGroup);
