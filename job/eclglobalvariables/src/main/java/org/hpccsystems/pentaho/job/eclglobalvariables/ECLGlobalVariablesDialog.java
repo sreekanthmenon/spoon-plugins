@@ -356,9 +356,9 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     }
     private boolean verifySettings(){
     	boolean isReady = false;
-    	
     	boolean eclccExists = true;
     	boolean mlExists = true;
+    	boolean saltExists = true;
     	
     	String errorTxt = "Some Fields Were Not Correct:\r\n";
     	
@@ -377,43 +377,48 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     		}
     	}
     	if(eclccExists && mlExists){
-    		isReady = true;
-    		System.out.println("paths validated");
-    	}else{
-    		Shell parentShell = getParent();
-            //Display display = parentShell.getDisplay();
-    		//final Shell dialog = new Shell (display, SWT.DIALOG_TRIM);
-    		final Shell dialog = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
+    	
 
-    		Label label = new Label (dialog, SWT.NONE);
-    		label.setText (errorTxt);
-    		Button okButton = new Button (dialog, SWT.PUSH);
-    		okButton.setText ("&OK");
-   
-	        Listener cancelListener = new Listener() {
-
-	            public void handleEvent(Event e) {
-	                dialog.close();
-	            }
-	        };
-	        
-	        okButton.addListener(SWT.Selection, cancelListener);
-	        
-	        FormLayout form = new FormLayout ();
-	    	form.marginWidth = form.marginHeight = 8;
-	    	dialog.setLayout (form);
-	    	FormData okData = new FormData ();
-	    	okData.top = new FormAttachment (label, 8);
-	    	okButton.setLayoutData (okData);
+	    	if(eclccExists && mlExists){
+	    		isReady = true;
+	    		System.out.println("paths validated");
+	    	}else{
+	    		Shell parentShell = getParent();
+	            //Display display = parentShell.getDisplay();
+	    		//final Shell dialog = new Shell (display, SWT.DIALOG_TRIM);
+	    		final Shell dialog = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
+	
+	    		Label label = new Label (dialog, SWT.NONE);
+	    		label.setText (errorTxt);
+	    		Button okButton = new Button (dialog, SWT.PUSH);
+	    		okButton.setText ("&OK");
+	   
+		        Listener cancelListener = new Listener() {
+	
+		            public void handleEvent(Event e) {
+		                dialog.close();
+		            }
+		        };
+		        
+		        okButton.addListener(SWT.Selection, cancelListener);
+		        
+		        FormLayout form = new FormLayout ();
+		    	form.marginWidth = form.marginHeight = 8;
+		    	dialog.setLayout (form);
+		    	FormData okData = new FormData ();
+		    	okData.top = new FormAttachment (label, 8);
+		    	okButton.setLayoutData (okData);
+		    	
+		        
+		        dialog.setDefaultButton (okButton);
+		    	dialog.pack ();
+		    	dialog.open ();
 	    	
-	        
-	        dialog.setDefaultButton (okButton);
-	    	dialog.pack ();
-	    	dialog.open ();
+	    	
+	    	}
     	}
     	return isReady;
     }
-
 
     private boolean validate(){
     	boolean isValid = true;
