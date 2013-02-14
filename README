@@ -43,3 +43,6 @@ To build a "drop-in" installable zip file to use in Pentaho Data Integration (Ke
 NOTE: If so desired you may incorporate the Maven settings into your
 .m2/settings.xml file, eliminating the need to specify this project's
 settings.xml file on the command line.
+
+You will also need the java-ecl-api located at https://github.com/hpcc-systems/java-ecl-api.  
+You will need to build java-ecl-api and copy the resulting javaecl-0.1.0.jar into the plugins/hpcc-common folder.
