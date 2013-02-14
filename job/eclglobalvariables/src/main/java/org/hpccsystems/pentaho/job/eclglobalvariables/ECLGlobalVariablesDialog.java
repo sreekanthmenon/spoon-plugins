@@ -64,6 +64,17 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     private Text eclccInstallDir;
     private Text mlPath;
     private Combo includeML;
+ /*
+             *  private String mlPath = "ecl-ml";
+    private String eclccInstallDir = "C:\\Program Files\\HPCC Systems\\HPCC\\bin\\ver_3_0\\";
+    private String jobName = "Spoon-job";
+    private String cluster = "hthor";
+    private boolean includeML = true;
+             */
+                 
+    
+    
+    
     private Text SALTPath;
     private Combo includeSALT;
 
@@ -150,6 +161,7 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
         FormData datasetGroupFormat = new FormData();
         datasetGroupFormat.top = new FormAttachment(generalGroup, margin);
         datasetGroupFormat.width = 400;
+        datasetGroupFormat.height = 355;
         datasetGroupFormat.height = 425;
         datasetGroupFormat.left = new FormAttachment(middle, 0);
         varGroup.setLayoutData(datasetGroupFormat);
@@ -389,6 +401,41 @@ public class ECLGlobalVariablesDialog extends ECLJobEntryDialog{//extends JobEnt
     			errorTxt += "The \"Path to ML Library\" could not be located\r\n";
     			System.out.println("No ML Library found");
     		}
+    	}
+    	if(eclccExists && mlExists){
+    		isReady = true;
+    		System.out.println("paths validated");
+    	}else{
+    		Shell parentShell = getParent();
+            //Display display = parentShell.getDisplay();
+    		//final Shell dialog = new Shell (display, SWT.DIALOG_TRIM);
+    		final Shell dialog = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
+
+    		Label label = new Label (dialog, SWT.NONE);
+    		label.setText (errorTxt);
+    		Button okButton = new Button (dialog, SWT.PUSH);
+    		okButton.setText ("&OK");
+   
+	        Listener cancelListener = new Listener() {
+
+	            public void handleEvent(Event e) {
+	                dialog.close();
+	            }
+	        };
+	        
+	        okButton.addListener(SWT.Selection, cancelListener);
+	        
+	        FormLayout form = new FormLayout ();
+	    	form.marginWidth = form.marginHeight = 8;
+	    	dialog.setLayout (form);
+	    	FormData okData = new FormData ();
+	    	okData.top = new FormAttachment (label, 8);
+	    	okButton.setLayoutData (okData);
+	    	
+	        
+	        dialog.setDefaultButton (okButton);
+	    	dialog.pack ();
+	    	dialog.open ();
     	}
 		if(includeSALT.getText().equals("true")){
 			saltExists = (new File(SALTPath.getText())).exists();
