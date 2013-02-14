@@ -70,7 +70,7 @@ public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntr
         super(parent, jobEntryInt, rep, jobMeta);
         jobEntry = (SALTDataProfiling) jobEntryInt;
         if (this.jobEntry.getName() == null) {
-            this.jobEntry.setName("Dataset");
+            this.jobEntry.setName("SaltDataProfling");
         }
     }
 

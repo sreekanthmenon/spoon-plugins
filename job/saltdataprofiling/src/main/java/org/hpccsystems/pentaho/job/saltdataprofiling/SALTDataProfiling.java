@@ -7,7 +7,7 @@ package org.hpccsystems.pentaho.job.saltdataprofiling;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.hpccsystems.javaecl.SaltDataProfiling;
+import org.hpccsystems.javaecl.SaltDataProfilingAPI;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
@@ -71,7 +71,7 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
         //Object[] jec = this.jobMeta.getJobCopies().toArray();
 
             String jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
-            jobNameNoSpace = jobName.replace(" ", "_"); 
+            jobNameNoSpace = jobName.replace(" ", ""); 
             
             this.setLayout(ap.getDatasetsField("record_name", this.getDatasetName(),jobMeta.getJobCopies()));
             
@@ -82,13 +82,13 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
 
         }
         
-        org.hpccsystems.javaecl.SaltDataProfiling sdp = new org.hpccsystems.javaecl.SaltDataProfiling();
+        SaltDataProfilingAPI sdp = new SaltDataProfilingAPI();
         
         sdp.setDatasetName(this.getDatasetName());
         sdp.setLayout(this.getLayout());
         sdp.setName(this.getName());
         sdp.setSaltLib(jobNameNoSpace + "module");
-
+        logBasic("{----DATAPROFILING----}");
         logBasic("{Dataset Job} Execute = " + sdp.ecl());
         
         logBasic("{Dataset Job} Previous =" + result.getLogText());

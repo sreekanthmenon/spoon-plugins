@@ -29,7 +29,9 @@ public class Generate {
             specStr.appendLine("MODULE:" + spec.getModuleName());
             specStr.appendLine("FILENAME:" + spec.getFileName());
            // specStr.appendLine("IDFIELD:" + spec.getIdfield());
-            specStr.appendLine("IDNAME:" + spec.getIdname());
+            if(spec.getIdname() != null){
+            	specStr.appendLine("IDNAME:" + spec.getIdname());
+            }
             
 
             FieldHygieneRule rules[] = spec.getFieldRuleArray();
@@ -101,7 +103,7 @@ public class Generate {
         spec.setModuleName("HelloWorld");
         spec.setFileName("HelloWorld_File");
        // spec.setIdfield("HelloWorld_File_ID");
-        spec.setIdname("HellowWOrldIDName");
+       spec.setIdname("HellowWorldIDName");
         FieldHygieneRule rule = spec.addNewFieldRule();
         rule.setFieldName("First");
         rule.setLeftTrim(true);

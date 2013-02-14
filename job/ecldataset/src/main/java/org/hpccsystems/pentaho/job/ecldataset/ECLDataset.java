@@ -148,6 +148,7 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
         	
         }
         if(isSaltHygiene){//need to check to see if saltHygine is enabled if so trigger this.
+        	 logBasic("{Dataset Job} ADD HYGINE SETTINGS");
         	RecordBO saltID = new RecordBO();
         	saltID.setColumnName("spoonGeneratedID");
         	saltID.setColumnType("INTEGER");

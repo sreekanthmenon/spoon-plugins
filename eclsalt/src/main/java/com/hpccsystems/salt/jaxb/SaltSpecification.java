@@ -136,7 +136,7 @@ public class SaltSpecification {
     //@XmlElement(name = "idfield", required = true)
     //protected String idfield;
     
-    @XmlElement(name = "idname", required = true)
+    @XmlElement(name = "idname", required = false)
     protected String idname;
     
     

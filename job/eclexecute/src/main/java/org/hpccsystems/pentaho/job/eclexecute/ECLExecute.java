@@ -277,7 +277,11 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		                    				"</fielddef>\r\n";
 		        			*/
 		        			if(!obj.getColumnName().equals("spoonGeneratedID")){
+		        				
 		        				xmlHygieneBuilder += buildHygieneRule(datasets[i], obj.getColumnName(),obj.getColumnType());
+		        			}
+		        			if(obj.getColumnName().equals("spoonGeneratedID")){
+		        				xmlHygieneBuilder +="<hyg:idname>" + "spoonGeneratedID" + "</hyg:idname>" +"\r\n";
 		        			}
 		        		}
 		        		//jobMeta.getJob
@@ -308,7 +312,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	xmlHygieneBuilder = "<hyg:hygiene-spec xmlns:hyg=\"http://hpccsystems.org/salt/hygiene/bean\">" +"\r\n"+
 										    "<hyg:module-name>" + jobNameNoSpace + "module</hyg:module-name>" +"\r\n"+
 										    "<hyg:file-name>" + file_name + "</hyg:file-name>" +"\r\n"+
-										    "<hyg:idname>" + "spoonGeneratedID" + "</hyg:idname>" +"\r\n"+
+										    
 										    xmlHygieneBuilder +
 										    "</hyg:hygiene-spec>";
 		        	//System.out.println("-------------------------------------SALT COMPILE--------------------------------");
