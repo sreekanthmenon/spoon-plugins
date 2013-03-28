@@ -6,7 +6,7 @@ import org.eclipse.jface.viewers.ITableLabelProvider;
 import org.eclipse.jface.viewers.LabelProvider;
 import org.eclipse.swt.graphics.Image;
 
-public class EntryLabels extends LabelProvider implements ITableLabelProvider{
+public class ConceptEntryLabels extends LabelProvider implements ITableLabelProvider{
 	
 	// Names of images used. This are the actually file names
 	public static final String CHECKED_IMAGE = "checked";
@@ -32,7 +32,7 @@ public class EntryLabels extends LabelProvider implements ITableLabelProvider{
 	
 	public String getColumnText(Object element, int columnIndex) {
 		String result = "";
-		EntryBO objRecord = (EntryBO) element;
+		ConceptEntryBO objRecord = (ConceptEntryBO) element;
 		switch(columnIndex){
 		case 0:
 			result = objRecord.getField();

@@ -1,31 +1,31 @@
-package org.hpccsystems.saltui.concept;
+package org.hpccsystems.saltui.hygiene;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-public class EntryList {
-	private ArrayList<EntryBO> entries = new ArrayList<EntryBO>();
-	private Set<IEntryListViewer> changeListeners = new HashSet<IEntryListViewer>();
+public class HygieneEntryList {
+	private ArrayList<HygieneEntryBO> entries = new ArrayList<HygieneEntryBO>();
+	private Set<IHygieneEntryListViewer> changeListeners = new HashSet<IHygieneEntryListViewer>();
 
-	public ArrayList<EntryBO> getEntries() {
+	public ArrayList<HygieneEntryBO> getEntries() {
 		return entries;
 	}
 
-	public void setEntries(ArrayList<EntryBO> entries) {
+	public void setEntries(ArrayList<HygieneEntryBO> entries) {
 		this.entries = entries;
 	}
 	
-	public void add(EntryBO eb){
+	public void add(HygieneEntryBO eb){
 		entries.add(eb);
 	}
 	
-	public EntryBO getEntry(int index){
+	public HygieneEntryBO getEntry(int index){
 		return entries.get(index);
 	}
 	
-	public void updateEntry(int index, EntryBO r){
+	public void updateEntry(int index, HygieneEntryBO r){
 		System.out.println("Update Entry: " + index + " - " + r.getField());
 		entries.set(index, r);
 	}
@@ -50,13 +50,13 @@ public class EntryList {
 	
 	//Add a new Record to the existing list
 	public void addEntry(int index) {
-		EntryBO entry = new EntryBO();
+		HygieneEntryBO entry = new HygieneEntryBO();
 		if(index >= 0){
 			entries.add(index+1, entry);
 		} else {
 			entries.add(entries.size(), entry);
 		}
-		Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+		Iterator<IHygieneEntryListViewer> iterator = changeListeners.iterator();
 		while (iterator.hasNext()){
 			iterator.next().addEntry(entry);
 		}
@@ -81,29 +81,29 @@ public class EntryList {
 	public void removeEntry(int index) {
 		if(entries.size()>index){
 			entries.remove(index);
-			Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+			Iterator<IHygieneEntryListViewer> iterator = changeListeners.iterator();
 			while (iterator.hasNext())
 				iterator.next().removeEntry(index);
 		}
 	}
 
-	public void modifyEntry(EntryBO record) {
-		Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+	public void modifyEntry(HygieneEntryBO record) {
+		Iterator<IHygieneEntryListViewer> iterator = changeListeners.iterator();
 		while (iterator.hasNext())
 			iterator.next().modifyEntry(record);
 	}
 	
-	public void removeChangeListener(IEntryListViewer viewer) {
+	public void removeChangeListener(IHygieneEntryListViewer viewer) {
 		changeListeners.remove(viewer);
 	}
 
-	public void addChangeListener(IEntryListViewer viewer) {
+	public void addChangeListener(IHygieneEntryListViewer viewer) {
 		changeListeners.add(viewer);
 	}
         
-     public void addEntryBO(EntryBO r){
+     public void addEntryBO(HygieneEntryBO r){
     	entries.add(entries.size(), r);
-        Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+        Iterator<IHygieneEntryListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext()){
                 iterator.next().addEntry(r);
         }

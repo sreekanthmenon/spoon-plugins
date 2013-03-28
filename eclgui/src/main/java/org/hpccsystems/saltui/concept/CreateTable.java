@@ -54,7 +54,7 @@ public class CreateTable {
 	private Shell shell;
 	private Table table;
 	private TableViewer tableViewer;
-	private EntryList entryList;
+	private ConceptEntryList entryList;
 	private ConceptRuleBO activeRule = new ConceptRuleBO();
 	private Composite compForGrp2;
 	private ArrayList<TableEditor> tableEditEditor = new ArrayList<TableEditor>();
@@ -88,7 +88,7 @@ public class CreateTable {
 
 	private String fields[];
 	
-	public void setEntryList(EntryList entryList) {
+	public void setEntryList(ConceptEntryList entryList) {
 		this.entryList = entryList;
 	}
 	public ConceptRuleList getRuleList() {
@@ -97,7 +97,7 @@ public class CreateTable {
 	public void setRuleList(ConceptRuleList ruleList) {
 		this.ruleList = ruleList;
 	}
-	public EntryList getEntryList() {
+	public ConceptEntryList getEntryList() {
 		return entryList;	
 	}
 	
@@ -310,7 +310,7 @@ public class CreateTable {
 		ruleList.createDefault();
 	}
 	public static void main(String[] args) {
-		EntryBO e = new EntryBO();
+		ConceptEntryBO e = new ConceptEntryBO();
 		e.setField("test");
 		e.setRuleName("To Uppercase");
 		CreateTable ct = new CreateTable();
@@ -326,10 +326,10 @@ public class CreateTable {
 		
 	}
 
-	private void createEditDialog(int entryIndex, EntryBO newEntry){
+	private void createEditDialog(int entryIndex, ConceptEntryBO newEntry){
 			//tableViewer.getElementAt(index).
 		
-			final EntryBO entry = newEntry;//entryList.getEntry(index);
+			final ConceptEntryBO entry = newEntry;//entryList.getEntry(index);
 			final int thisEntryIndex = entryIndex;
 			final String oldRuleName = newEntry.getRuleName();
 			currentRuleName = newEntry.getRuleName();
@@ -592,7 +592,7 @@ public class CreateTable {
 			
 	};
 	
-	private void saveEditDialog(String oldRuleName, EntryBO entry, int thisEntryIndex){
+	private void saveEditDialog(String oldRuleName, ConceptEntryBO entry, int thisEntryIndex){
 
 		String errors = "";
 		Boolean isValid = true;
@@ -1000,7 +1000,7 @@ private void createButtons(Composite parent) {
 		eb4.setRuleName("test Rule");
 		entryList.add(eb4);*/
 		tableViewer.setContentProvider(new ExampleContentProvider());	//Set the Content Provider for the table	
-		tableViewer.setLabelProvider(new EntryLabels());	//Set the Label Provider for the table
+		tableViewer.setLabelProvider(new ConceptEntryLabels());	//Set the Label Provider for the table
 		tableViewer.setInput(entryList);
 		
 		table.setRedraw(true);
@@ -1019,13 +1019,13 @@ private void createButtons(Composite parent) {
 	 * InnerClass that acts as a proxy for the RecordList providing content for the Table. It implements the IRecordListViewer 
 	 * interface since it must register changeListeners with the RecordList 
 	 */
-	class ExampleContentProvider implements IStructuredContentProvider, IEntryListViewer {
+	class ExampleContentProvider implements IStructuredContentProvider, IConceptEntryListViewer {
 		public void inputChanged(Viewer v, Object oldInput, Object newInput) {
 			if (newInput != null) {
-				((EntryList) newInput).addChangeListener(this);
+				((ConceptEntryList) newInput).addChangeListener(this);
 			}
 			if (oldInput != null)
-				((EntryList) oldInput).removeChangeListener(this);
+				((ConceptEntryList) oldInput).removeChangeListener(this);
 		}
 
 		public void dispose() {
@@ -1037,7 +1037,7 @@ private void createButtons(Composite parent) {
 			return entryList.getEntries().toArray();
 		}
 
-		public void addEntry(EntryBO record) {
+		public void addEntry(ConceptEntryBO record) {
                     //System.out.println("addRecord");
 			//Insert the record at a specific position
                    // removeRowButtons();
@@ -1057,7 +1057,7 @@ private void createButtons(Composite parent) {
 			
 		}
 
-		public void modifyEntry(EntryBO record) {
+		public void modifyEntry(ConceptEntryBO record) {
 			tableViewer.update(record, null);	
 		}
 	}

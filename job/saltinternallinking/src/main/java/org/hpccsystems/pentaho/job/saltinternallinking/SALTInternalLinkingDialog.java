@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.saltdataprofiling;
+package org.hpccsystems.pentaho.job.saltinternallinking;
 
+import java.io.File;
 import java.util.Iterator;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -52,43 +53,49 @@ import org.hpccsystems.ecljobentrybase.*;
  *
  * @author ChambersJ
  */
-public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
+public class SALTInternalLinkingDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
 
-    private SALTDataProfiling jobEntry;
+    private SALTInternalLinking jobEntry;
     private Text jobEntryName;
-    private Combo datasetName;
-    private Combo layout;
+    private Text hygieneOutputFolder;
+    private Text specificitiesOutputFolder;
     
-    private Button wOK, wCancel;
+    private Combo doAgain;
+    private Text iteration;
+    
+    private Button wOK, wCancel,hygieneOpenButton,specificitiesOpenButton;
     private boolean backupChanged;
     private SelectionAdapter lsDef;
     
 
 
 
-    public SALTDataProfilingDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+    public SALTInternalLinkingDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (SALTDataProfiling) jobEntryInt;
+        jobEntry = (SALTInternalLinking) jobEntryInt;
         if (this.jobEntry.getName() == null) {
             this.jobEntry.setName("SaltDataProfling");
         }
     }
 
     public JobEntryInterface open() {
-        Shell parentShell = getParent();
-        Display display = parentShell.getDisplay();
+        System.out.println(" ------------ open ------------- ");
         String datasets[] = null;
+        
         AutoPopulate ap = new AutoPopulate();
         try{
             //Object[] jec = this.jobMeta.getJobCopies().toArray();
             
-            datasets = ap.parseDatasetsRecordsets(this.jobMeta.getJobCopies());
+            datasets = ap.parseDatasets(this.jobMeta.getJobCopies());
         }catch (Exception e){
             System.out.println("Error Parsing existing Datasets");
             System.out.println(e.toString());
             datasets = new String[]{""};
         }
-        
+    
+        Shell parentShell = getParent();
+        Display display = parentShell.getDisplay();
+
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
 
         props.setLook(shell);
@@ -109,13 +116,11 @@ public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntr
 
 
         shell.setLayout(formLayout);
-        shell.setText("Join");
+        shell.setText("SALt Internal Linking");
 
         int middle = props.getMiddlePct();
         int margin = Const.MARGIN;
 
-        shell.setLayout(formLayout);
-        shell.setText("Define an ECL Join");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -135,76 +140,73 @@ public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntr
         
         jobEntryName = buildText("Job Entry Name", null, lsMod, middle, margin, generalGroup);
 
-        //All other contols
-        //Join Declaration
-        Group joinGroup = new Group(shell, SWT.SHADOW_NONE);
-        props.setLook(joinGroup);
-        joinGroup.setText("Data Profiling Details");
-        joinGroup.setLayout(groupLayout);
-        FormData joinGroupFormat = new FormData();
-        joinGroupFormat.top = new FormAttachment(generalGroup, margin);
-        joinGroupFormat.width = 400;
-        joinGroupFormat.height = 150;
-        joinGroupFormat.left = new FormAttachment(middle, 0);
-        joinGroup.setLayoutData(joinGroupFormat);
 
+           //All other contols
+        //Output Declaration
+        Group fileGroup = new Group(shell, SWT.SHADOW_NONE);
+        props.setLook(fileGroup);
+        fileGroup.setText("Configuration Details");
+        fileGroup.setLayout(groupLayout);
+        FormData fileGroupFormat = new FormData();
+        fileGroupFormat.top = new FormAttachment(generalGroup, margin);
+        fileGroupFormat.width = 400;
+        fileGroupFormat.height = 200;
+        fileGroupFormat.left = new FormAttachment(middle, 0);
+        fileGroup.setLayoutData(fileGroupFormat);
         
-        this.datasetName = buildCombo("Dataset Name", null, lsMod, middle, margin, joinGroup,datasets);
-        //this.layout = buildCombo("Layout", this.datasetName, lsMod, middle, margin, joinGroup,datasets);
-       
+        
+        // private Text hygieneOutputFolder;
+        // private Text specificitiesOutputFolder;
+        //hygieneOpenButton,specificitiesOpenButton
+        
+        this.specificitiesOutputFolder = buildText("Specificities Output Directory", null, lsMod, middle, margin, fileGroup);
+        controls.put("specificitiesOutputFolder", specificitiesOutputFolder);
+        
+        this.specificitiesOpenButton = buildButton("Choose Location", specificitiesOutputFolder, lsMod, middle, margin, fileGroup);
+        controls.put("fOpen", specificitiesOpenButton);
+        
+        Listener specificitiesOpenListener = new Listener() {
+
+            public void handleEvent(Event e) {
+                String newFile = buildDirectoryDialog();
+                if(newFile != ""){
+                	specificitiesOutputFolder.setText(newFile);
+                }
+            }
+        };
+        this.specificitiesOpenButton.addListener(SWT.Selection, specificitiesOpenListener);
+        
+        
+        this.hygieneOutputFolder = buildText("Hygiene Output Directory", specificitiesOpenButton, lsMod, middle, margin, fileGroup);
+        controls.put("hygieneOutputFolder", hygieneOutputFolder);
+        
+        this.hygieneOpenButton = buildButton("Choose Location", hygieneOutputFolder, lsMod, middle, margin, fileGroup);
+        controls.put("fOpen", hygieneOpenButton);
+        
+        Listener hygieneOpenListener = new Listener() {
+
+            public void handleEvent(Event e) {
+                String newFile = buildDirectoryDialog();
+                if(newFile != ""){
+                	hygieneOutputFolder.setText(newFile);
+                }
+            }
+        };
+        this.hygieneOpenButton.addListener(SWT.Selection, hygieneOpenListener);
+        
+        this.iteration = buildText("Iteration", hygieneOpenButton, lsMod, middle, margin, fileGroup);
+        //controls.put("iteration", iteration);
+        this.doAgain = buildCombo("Repeate Iteration", iteration, lsMod, middle, margin, fileGroup, new String[]{"no", "yes"});
+        
+        //controls.put("fOpen", fOpen);
+
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
         wCancel = new Button(shell, SWT.PUSH);
         wCancel.setText("Cancel");
 
-        BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, joinGroup);
+       BaseStepDialog.positionBottomButtons(shell, new Button[]{wOK, wCancel}, margin, fileGroup);
 
-        
-        /*leftRecordSet.addModifyListener(new ModifyListener(){
-            public void modifyText(ModifyEvent e){
-                System.out.println("left RS changed");
-                AutoPopulate ap = new AutoPopulate();
-                try{
-                    System.out.println("Load items for select");
-                    String[] items = ap.fieldsByDataset( leftRecordSet.getText(),jobMeta.getJobCopies());
-                    System.out.println("++++++"+items.length+"+++++");
-                    leftJoinCondition.setItems(items);
-                    System.out.println("itemsSet");
-                    leftJoinCondition.redraw();
-                    System.out.println("new Join condition vals loaded");
-                }catch (Exception ex){
-                    System.out.println("failed to load record definitions");
-                    System.out.println(ex.toString());
-                    ex.printStackTrace();
-                }
-               // leftJoinCondition.setItems(items);
-            }
-        });
-      
-        rightRecordSet.addModifyListener(new ModifyListener(){
-            public void modifyText(ModifyEvent e){
-                System.out.println("left RS changed");
-                AutoPopulate ap = new AutoPopulate();
-                try{
-                    System.out.println("Load items for select");
-                    String[] items = ap.fieldsByDataset( rightRecordSet.getText(),jobMeta.getJobCopies());
-                    System.out.println("++++++"+items.length+"+++++");
-                    rightJoinCondition.setItems(items);
-                    System.out.println("itemsSet");
-                    rightJoinCondition.redraw();
-                    System.out.println("new Join condition vals loaded");
-                }catch (Exception ex){
-                    System.out.println("failed to load record definitions");
-                    System.out.println(ex.toString());
-                    ex.printStackTrace();
-                }
-               // leftJoinCondition.setItems(items);
-            }
-        });
-          */
-        //this.leftRecordSet.addListener(SWT.Selection, leftRecordSetListener);
-        //this.leftRecordSet.addModifyListener(leftRecordSetListener);
-      
         // Add listeners
         Listener cancelListener = new Listener() {
 
@@ -242,17 +244,22 @@ public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntr
         if (jobEntry.getName() != null) {
             jobEntryName.setText(jobEntry.getName());
         }
-       
-        //if (jobEntry.getJoinCondition() != null) {
-            //this.joinCondition.setText(jobEntry.getJoinCondition());
-        //}
-        if (jobEntry.getDatasetName() != null) {
-            this.datasetName.setText(jobEntry.getDatasetName());
-        }
-       // if (jobEntry.getLayout() != null) {
-        //    this.layout.setText(jobEntry.getLayout());
-        //}
         
+        if (jobEntry.getHygieneOutputFolder() != null) {
+            this.hygieneOutputFolder.setText(jobEntry.getHygieneOutputFolder());
+        }
+        if (jobEntry.getSpecificitiesOutputFolder() != null) {
+            this.specificitiesOutputFolder.setText(jobEntry.getSpecificitiesOutputFolder());
+        }
+        if (jobEntry.getIteration() != null) {
+            this.iteration.setText(jobEntry.getIteration());
+        }
+
+        if (jobEntry.getDoAgain() != null) {
+            this.doAgain.setText(jobEntry.getDoAgain());
+        }
+
+
 
         shell.pack();
         shell.open();
@@ -276,15 +283,22 @@ public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntr
     		isValid = false;
     		errors += "\"Job Entry Name\" is a required field!\r\n";
     	}
-    	
-    	if(this.datasetName.getText().equals("")){
+    	if(specificitiesOutputFolder.getText().equals("")){
     		isValid = false;
-    		errors += "\"Dataset Name\" is a required field!\r\n";
+    		errors += "Specificities Output Folder is required!\r\n";
+    	}else{
+    		if(!(new File(specificitiesOutputFolder.getText())).exists()){
+    			isValid = false;
+    			errors += "Specificities Folder Not found!\r\n";
+    		}
     	}
-    	//if(this.layout.getText().equals("")){
-    	//	isValid = false;
-    	//	errors += "\"Layout\" is a required field!\r\n";
-    	//}
+    	if(!hygieneOutputFolder.getText().equals("")){
+	    	Boolean exists = (new File(hygieneOutputFolder.getText())).exists();
+			if(!exists){
+				isValid = false;
+				errors += "The \"Path to ML Library\" could not be located\r\n";
+			}
+    	}
     	
     	
     	if(!isValid){
@@ -296,16 +310,57 @@ public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntr
     	return isValid;
     	
     }
-    
+    private void updatePaths(){
+    	String specPath = specificitiesOutputFolder.getText();
+    	
+    	boolean specLast = false;
+    	if(specPath.lastIndexOf("\\") == (specPath.length()-1)){
+    		//has last \
+    		specLast = true;
+    	}
+    	if(!specLast && specPath.lastIndexOf("/") == (specPath.length()-1)){
+    		specLast = true;
+    	}
+    	if(!specLast){
+    		String slash = "/";
+    		if(specPath.contains("\\")){
+    			slash = "\\";
+    		}
+    		specificitiesOutputFolder.setText(specificitiesOutputFolder.getText() + slash);
+    	}
+    	
+    	//hygieneOutputFolder
+    	if(!hygieneOutputFolder.getText().equals("")){
+	    	String hPath = hygieneOutputFolder.getText();
+	    	boolean hLast = false;
+	    	if(hPath.lastIndexOf("\\") == (hPath.length()-1)){
+	    		//has last \
+	    		hLast = true;
+	    	}
+	    	if(!hLast && hPath.lastIndexOf("/") == (hPath.length()-1)){
+	    		hLast = true;
+	    	}
+	    	if(!hLast){
+	    		String slash = "/";
+	    		if(hPath.contains("\\")){
+	    			slash = "\\";
+	    		}
+	    		hygieneOutputFolder.setText(hygieneOutputFolder.getText() + slash);
+	    	}
+    	}
+    }
     private void ok() {
+    	this.updatePaths();
     	if(!validate()){
     		return;
     	}
     	
         jobEntry.setName(jobEntryName.getText());
-        jobEntry.setDatasetName(datasetName.getText());
-        //jobEntry.setLayout(layout.getText());
-       
+        jobEntry.setHygieneOutputFolder(hygieneOutputFolder.getText());
+        jobEntry.setSpecificitiesOutputFolder(specificitiesOutputFolder.getText());
+
+        jobEntry.setDoAgain(doAgain.getText());
+        jobEntry.setIteration(iteration.getText());
         dispose();
     }
 

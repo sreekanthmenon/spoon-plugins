@@ -1,33 +1,31 @@
-package org.hpccsystems.saltui.hygiene;
+package org.hpccsystems.saltui.concept;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import org.hpccsystems.saltui.hygiene.IEntryListViewer;
+public class ConceptEntryList {
+	private ArrayList<ConceptEntryBO> entries = new ArrayList<ConceptEntryBO>();
+	private Set<IConceptEntryListViewer> changeListeners = new HashSet<IConceptEntryListViewer>();
 
-public class EntryList {
-	private ArrayList<EntryBO> entries = new ArrayList<EntryBO>();
-	private Set<IEntryListViewer> changeListeners = new HashSet<IEntryListViewer>();
-
-	public ArrayList<EntryBO> getEntries() {
+	public ArrayList<ConceptEntryBO> getEntries() {
 		return entries;
 	}
 
-	public void setEntries(ArrayList<EntryBO> entries) {
+	public void setEntries(ArrayList<ConceptEntryBO> entries) {
 		this.entries = entries;
 	}
 	
-	public void add(EntryBO eb){
+	public void add(ConceptEntryBO eb){
 		entries.add(eb);
 	}
 	
-	public EntryBO getEntry(int index){
+	public ConceptEntryBO getEntry(int index){
 		return entries.get(index);
 	}
 	
-	public void updateEntry(int index, EntryBO r){
+	public void updateEntry(int index, ConceptEntryBO r){
 		System.out.println("Update Entry: " + index + " - " + r.getField());
 		entries.set(index, r);
 	}
@@ -52,13 +50,13 @@ public class EntryList {
 	
 	//Add a new Record to the existing list
 	public void addEntry(int index) {
-		EntryBO entry = new EntryBO();
+		ConceptEntryBO entry = new ConceptEntryBO();
 		if(index >= 0){
 			entries.add(index+1, entry);
 		} else {
 			entries.add(entries.size(), entry);
 		}
-		Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+		Iterator<IConceptEntryListViewer> iterator = changeListeners.iterator();
 		while (iterator.hasNext()){
 			iterator.next().addEntry(entry);
 		}
@@ -83,29 +81,29 @@ public class EntryList {
 	public void removeEntry(int index) {
 		if(entries.size()>index){
 			entries.remove(index);
-			Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+			Iterator<IConceptEntryListViewer> iterator = changeListeners.iterator();
 			while (iterator.hasNext())
 				iterator.next().removeEntry(index);
 		}
 	}
 
-	public void modifyEntry(EntryBO record) {
-		Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+	public void modifyEntry(ConceptEntryBO record) {
+		Iterator<IConceptEntryListViewer> iterator = changeListeners.iterator();
 		while (iterator.hasNext())
 			iterator.next().modifyEntry(record);
 	}
 	
-	public void removeChangeListener(IEntryListViewer viewer) {
+	public void removeChangeListener(IConceptEntryListViewer viewer) {
 		changeListeners.remove(viewer);
 	}
 
-	public void addChangeListener(IEntryListViewer viewer) {
+	public void addChangeListener(IConceptEntryListViewer viewer) {
 		changeListeners.add(viewer);
 	}
         
-     public void addEntryBO(EntryBO r){
+     public void addEntryBO(ConceptEntryBO r){
     	entries.add(entries.size(), r);
-        Iterator<IEntryListViewer> iterator = changeListeners.iterator();
+        Iterator<IConceptEntryListViewer> iterator = changeListeners.iterator();
         while (iterator.hasNext()){
                 iterator.next().addEntry(r);
         }

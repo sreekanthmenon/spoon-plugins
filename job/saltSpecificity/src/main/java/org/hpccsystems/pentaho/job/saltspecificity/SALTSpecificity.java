@@ -2,15 +2,19 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.saltdataprofiling;
+package org.hpccsystems.pentaho.job.saltspecificity;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import org.hpccsystems.javaecl.SaltDataProfilingAPI;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.recordlayout.RecordBO;
 import org.hpccsystems.recordlayout.RecordList;
+import org.hpccsystems.saltui.hygiene.*;
+//import org.hpccsystems.saltui.EntryBO;
+//import org.hpccsystems.saltui.EntryList;
+//import org.hpccsystems.saltui.HygieneRuleBO;
+//import org.hpccsystems.saltui.HygieneRuleList;
 import org.pentaho.di.cluster.SlaveServer;
 import org.pentaho.di.compatibility.Value;
 import org.pentaho.di.core.Const;
@@ -27,37 +31,46 @@ import org.pentaho.di.repository.ObjectId;
 import org.pentaho.di.repository.Repository;
 import org.w3c.dom.Node;
 import org.hpccsystems.ecljobentrybase.*;
-
+import org.hpccsystems.javaecl.SaltGenerateSpecificities;
+import org.hpccsystems.javaecl.SaltHygieneReport;
 /**
  *
  * @author ChambersJ
  */
-public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implements Cloneable, JobEntryInterface {
+public class SALTSpecificity extends ECLJobEntry{//extends JobEntryBase implements Cloneable, JobEntryInterface {
     
 	
     private String datasetName;
     private String layout;
+	private String idField;
 	
-   
+	
+    
 	public String getDatasetName() {
 		return datasetName;
 	}
+
 	public void setDatasetName(String datasetName) {
 		this.datasetName = datasetName;
 	}
+
 	public String getLayout() {
 		return layout;
 	}
+
 	public void setLayout(String layout) {
 		this.layout = layout;
 	}
 
+	public String getIdField() {
+		return idField;
+	}
 
-    
-    
-    
+	public void setIdField(String idField) {
+		this.idField = idField;
+	}
 
-    @Override
+	@Override
     public Result execute(Result prevResult, int k) throws KettleException {
         
         Result result = prevResult;
@@ -65,16 +78,11 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
         AutoPopulate ap = new AutoPopulate();
         String jobNameNoSpace = "";
         JobMeta jobMeta = super.parentJob.getJobMeta();
-        
-        
         try{
-        //Object[] jec = this.jobMeta.getJobCopies().toArray();
-
-            String jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
-            jobNameNoSpace = jobName.replace(" ", ""); 
-            
-            this.setLayout(ap.getDatasetsField("record_name", this.getDatasetName(),jobMeta.getJobCopies()));
-            
+                String jobName = ap.getGlobalVariable(jobMeta.getJobCopies(),"jobName");
+                jobNameNoSpace = jobName.replace(" ", "_");  
+                this.setLayout(ap.getDatasetsField("record_name", this.getDatasetName(),jobMeta.getJobCopies()));
+                
         }catch (Exception e){
             System.out.println("Error Parsing existing Global Variables ");
             System.out.println(e.toString());
@@ -82,22 +90,22 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
 
         }
         
-        SaltDataProfilingAPI sdp = new SaltDataProfilingAPI();
+        SaltGenerateSpecificities ssr = new SaltGenerateSpecificities();
+        ssr.setDatasetName(datasetName);
+        ssr.setName(this.getName());
+        ssr.setSaltLib(jobNameNoSpace + "module");
+        ssr.setRecordName(layout);
         
-        sdp.setDatasetName(this.getDatasetName());
-        sdp.setLayout(this.getLayout());
-        sdp.setName(this.getName());
-        sdp.setSaltLib(jobNameNoSpace + "module");
-        logBasic("{----DATAPROFILING----}");
-        logBasic("{Dataset Job} Execute = " + sdp.ecl());
         
+        
+       
+        logBasic("{Dataset Job} Execute = " + ssr.ecl());
         logBasic("{Dataset Job} Previous =" + result.getLogText());
         
         result.setResult(true);
         
         RowMetaAndData data = new RowMetaAndData();
-        data.addValue("ecl", Value.VALUE_TYPE_STRING, sdp.ecl());
-        
+        data.addValue("ecl", Value.VALUE_TYPE_STRING, ssr.ecl());
         
         List list = result.getRows();
         list.add(data);
@@ -115,10 +123,11 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
             }
             logBasic("{Dataset Job} ECL Code =" + eclCode);
         }
-        
+
         result.setRows(list);
         result.setLogText("ECLDataset executed, ECL code added");
         
+  
         return result;
     }
  
@@ -131,7 +140,12 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
             	setDatasetName(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "datasetName")));
             if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "layout")) != null)
             	setLayout(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "layout")));
+              
+            if(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "idField")) != null)
+                setIdField(XMLHandler.getNodeValue(XMLHandler.getSubNode(node, "idField")));
+            
 
+                     
         } catch (Exception e) {
             throw new KettleXMLException("ECL Dataset Job Plugin Unable to read step info from XML node", e);
         }
@@ -145,6 +159,7 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
       
         retval += "		<datasetName><![CDATA[" + datasetName + "]]></datasetName>" + Const.CR;
         retval += "		<layout><![CDATA[" + layout + "]]></layout>" + Const.CR;
+        retval += "		<idField><![CDATA[" + this.idField + "]]></idField>" + Const.CR;
         
         return retval;
 
@@ -157,6 +172,8 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
                 datasetName = rep.getStepAttributeString(id_jobentry, "datasetName"); //$NON-NLS-1$
             if(rep.getStepAttributeString(id_jobentry, "layout") != null)
                 layout = rep.getStepAttributeString(id_jobentry, "layout"); //$NON-NLS-1$
+            if(rep.getStepAttributeString(id_jobentry, "idField") != null)
+                this.setIdField(rep.getStepAttributeString(id_jobentry, "idField")); //$NON-NLS-1$
         
         } catch (Exception e) {
             throw new KettleException("Unexpected Exception", e);
@@ -168,7 +185,8 @@ public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implem
             
             rep.saveStepAttribute(id_job, getObjectId(), "datasetName", datasetName); //$NON-NLS-1$
             rep.saveStepAttribute(id_job, getObjectId(), "layout", layout); //$NON-NLS-1$
-            
+            rep.saveStepAttribute(id_job, getObjectId(), "idField", this.getIdField()); //$NON-NLS-1$
+             
         } catch (Exception e) {
             throw new KettleException("Unable to save info into repository" + id_job, e);
         }

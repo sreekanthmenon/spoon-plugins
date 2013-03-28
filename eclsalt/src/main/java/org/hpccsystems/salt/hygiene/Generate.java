@@ -32,9 +32,18 @@ public class Generate {
             if(spec.getIdname() != null){
             	specStr.appendLine("IDNAME:" + spec.getIdname());
             	specStr.appendLine("IDFIELD:" + spec.getIdname());
+            	
+            //	specStr.appendLine("IDFIELD:EXISTS:" + spec.getIdname());
             }
-            
-            
+            //todo:: make not hardcoded and ADD EXISTS
+            //not currently needed for specification
+           
+           if(spec.getRidfield() != null && !spec.getRidfield().equals("")){
+            	specStr.appendLine("RIDFIELD:" + spec.getRidfield());
+            }
+            specStr.appendLine("RECORDS:110");
+            specStr.appendLine("POPULATION:110");
+            specStr.appendLine("NINES:3");
 
             FieldHygieneRule rules[] = spec.getFieldRuleArray();
             for (int i = 0; i < rules.length; i++) {
@@ -62,12 +71,15 @@ public class Generate {
                     likes.appendLine(likesLine.toString());
                 }
 
+                if(hrule.getFieldSpecificity() == null){
+                	hrule.setFieldSpecificity("0");
+                }
                 if (likesLine.length() > 0) {
                     fields.appendLine("FIELD:" + hrule.getFieldName() + ":LIKE(LIKE_"
-                            + hrule.getFieldName() + "):0,0");
+                            + hrule.getFieldName() + "):" + hrule.getFieldSpecificity() + ",0");
                 } else if (!hrule.getFieldType().equals("")){
                     fields.appendLine("FIELD:" + hrule.getFieldName() + ":TYPE("
-                            + hrule.getFieldType() + "):0,0");
+                            + hrule.getFieldType() + "):" + hrule.getFieldSpecificity() + ",0");
                 }else{
                 	fields.appendLine("FIELD:" + hrule.getFieldName() + ":0,0");
                 }
@@ -81,7 +93,7 @@ public class Generate {
             specStr.appendLine(fields.toString());
             
             if(spec.getSourcefield()!= null){
-            	specStr.appendLine("SOURCEFIELD:SRC:CONSISTENT(" + spec.getSourcefield() + ")");
+            	specStr.appendLine("SOURCEFIELD:" + spec.getSourcefield() + ":CONSISTENT");
             }
 
             return specStr.toString();
@@ -104,10 +116,17 @@ public class Generate {
 
     public static void main(String[] args) throws Exception {
         //String fileContent = readFileAsString("../../../../../xsd/SALT-Hygiene.xml");
-        String fileContent = readFileAsString("C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/eclsalt/src/main/xsd/SALT-Hygiene.xml");
-        Generate gen = new Generate();
-        System.out.println(gen.generateHygieneSpec(fileContent));
-
+        String src = "C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/eclsalt/src/main/xsd/SALT-Hygiene.xml";
+        
+        src = "C:/Spoon Demos/new/salt/out_hygine/salt.xml";
+    	try{
+    		String fileContent = readFileAsString(src);
+    		//System.out.println(fileContent);
+    		Generate gen = new Generate();
+    		System.out.println(gen.generateHygieneSpec(fileContent));
+    	}catch (Exception e){
+    		e.printStackTrace();
+    	}
         HygieneSpecDocument doc = HygieneSpecDocument.Factory.newInstance();
         HygieneSpecDocument.HygieneSpec spec = doc.addNewHygieneSpec();
         spec.setModuleName("HelloWorld");

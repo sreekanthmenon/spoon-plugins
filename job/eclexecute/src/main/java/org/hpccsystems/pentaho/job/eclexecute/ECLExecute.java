@@ -6,6 +6,7 @@ package org.hpccsystems.pentaho.job.eclexecute;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 //import org.hpccsystems.javaecl.Output;
@@ -210,11 +211,20 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	        String includeML = "";
 	        String user = "";
 	        String pass = "";
+	        String dsECL = "";
 	        
+
+            String rsDef = "";
+	        String dsDef = "";
+	        String recordName = "";
+	        String dsName = "";
+	        String logicalFile = "";
+	        String fileType = "";
 	        
 	        String SALTPath = "";
 	        String includeSALT = "";
 	        String saltIncludePath = "";
+	        Boolean isInternalLinking = false;
 	        
 	        AutoPopulate ap = new AutoPopulate();
 	        try{
@@ -233,7 +243,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	            user = ap.getGlobalVariable(jobMeta.getJobCopies(),"user_name");
                 pass = ap.getGlobalVariableEncrypted(jobMeta.getJobCopies(),"password");
 
-
+                isInternalLinking = ap.hasNodeofType(jobMeta.getJobCopies(), "SaltInternalLinking");
 	            
 	            SALTPath = ap.getGlobalVariable(jobMeta.getJobCopies(),"SALTPath");
 	            includeSALT = ap.getGlobalVariable(jobMeta.getJobCopies(),"includeSALT");
@@ -249,6 +259,9 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	        
 	      //insert code here to build spec file on compile
 	        if(includeSALT.equalsIgnoreCase("true")){
+	        	saltIncludePath = this.fileName+ "";
+	        }
+	        if(includeSALT.equalsIgnoreCase("true") && !isInternalLinking){
 	        System.out.println("----------- insert code here to build spec file on compile");
 		        try{
 		        	//find all the datasets and build xml files
@@ -268,17 +281,9 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        		String fieldCSV = "";
 		        		for (Iterator<RecordBO> iterator = fields.getRecords().iterator(); iterator.hasNext();) {
 		        			RecordBO obj = (RecordBO) iterator.next();
-		        			//System.out.println("----------------" + obj.getColumnName());
-		        			//System.out.println("----------------" + obj.getColumnType());
-		        			//System.out.println("----------------" + obj.getColumnWidth());
-		        			//TODO: build xml from above data
-		        			/*
-		        			xmlBuilder += "<fielddef>\r\n" +
-		        								"<name>" + obj.getColumnName() + "</name>\r\n" +
-		                    					"<datatype>" + obj.getColumnType() + "</datatype>\r\n" +
-		                    				"</fielddef>\r\n";
-		        			*/
-		        			if(!obj.getColumnName().equals("spoonGeneratedID")){
+		 
+		        			//TODO: fix this so it uses the ID passed in Hygine
+		        			if(!obj.getColumnName().equalsIgnoreCase("spoonClusterID")){
 		        				if(fieldCSV.equals("")){
 		        					fieldCSV += obj.getColumnName();
 		        				}else{
@@ -286,17 +291,33 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        				}
 		        				xmlHygieneBuilder += buildHygieneRule(datasets[i], obj.getColumnName(),obj.getColumnType());
 		        			}
-		        			if(obj.getColumnName().equals("spoonGeneratedID")){
-		        				xmlHygieneBuilder +="<hyg:idname>" + "spoonGeneratedID" + "</hyg:idname>" +"\r\n";
+		        			if(obj.getColumnName().equalsIgnoreCase("spoonClusterID")){
+		        				//xmlHygieneBuilder +="<hyg:idname>" + "spoonClusterID" + "</hyg:idname>" +"\r\n";
 		        			}
+		        			//xmlHygieneBuilder +="<hyg:ridfield>" + "spoonRecordID" + "</hyg:hyg:ridfield>" +"\r\n";
+		        			xmlHygieneBuilder +="<hyg:idname>" + "spoonClusterID" + "</hyg:idname>" +"\r\n";
 		        		}
+		        		
 		        		//jobMeta.getJob
 		        		file_name = ap.getDatasetsField("record_name", datasets[i],jobMeta.getJobCopies());
 		        		
 		        		//todo: write layout_<file_name> to file needed for soap
-		        		layoutECL = "EXPORT layout_" + file_name + " := RECORD\r\n" + resultListToString(fields) + "\r\nEND;\r\n\r\n";
+		        		layoutECL = "EXPORT layout_" + file_name + " := RECORD\r\n" + resultListToString(fields);
+		        		layoutECL += "UNSIGNED6 spoonClusterID := 0;\r\n";
+		        		layoutECL += "UNSIGNED6 spoonRecordID := 0;\r\n";
+		        		layoutECL += "\r\nEND;\r\n\r\n";
 		        		//xmlHygieneBuilder += buildHygieneRule(datasets[i], "SRC","");
-		        		xmlHygieneBuilder += "<hyg:sourcefield>" + fieldCSV + "</hyg:sourcefield>";
+		        		//xmlHygieneBuilder += "<hyg:sourcefield>" + fieldCSV + "</hyg:sourcefield>";
+		        		xmlHygieneBuilder += buildOptReports(datasets[i]);
+		        		//dsECL += System.getProperties().getProperty("Dataset-" + datasets[i]);
+	
+		    	        
+		    	        rsDef = System.getProperties().getProperty("Dataset-" + datasets[i]+"-rsDef");
+		    	        dsDef = System.getProperties().getProperty("Dataset-" + datasets[i]+"-dsDef");
+		    	        recordName = System.getProperties().getProperty("Dataset-" + datasets[i]+"-rs");
+		    	        logicalFile = System.getProperties().getProperty("Dataset-" + datasets[i]+"-logical");
+		    	        fileType = System.getProperties().getProperty("Dataset-" + datasets[i]+"-type");
+		    	        dsName = System.getProperties().getProperty("Dataset-" + datasets[i]+"-ds");
 		        	}
 		        	
 		        	
@@ -319,7 +340,12 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	xmlHygieneBuilder = "<hyg:hygiene-spec xmlns:hyg=\"http://hpccsystems.org/salt/hygiene/bean\">" +"\r\n"+
 										    "<hyg:module-name>" + jobNameNoSpace + "module</hyg:module-name>" +"\r\n"+
 										    "<hyg:file-name>" + file_name + "</hyg:file-name>" +"\r\n"+
-										    
+										    "<hyg:dataset-rsdef><![CDATA[" + rsDef + "]]></hyg:dataset-rsdef>" +"\r\n"+
+										    "<hyg:dataset-dsdef><![CDATA[" + dsDef + "]]></hyg:dataset-dsdef>" +"\r\n"+
+										    "<hyg:dataset-record-name><![CDATA[" + recordName + "]]></hyg:dataset-record-name>" +"\r\n"+
+										    "<hyg:dataset-name><![CDATA[" + dsName + "]]></hyg:dataset-name>" +"\r\n"+
+										    "<hyg:dataset-logical-file><![CDATA[" + logicalFile + "]]></hyg:dataset-logical-file>" +"\r\n"+
+										    "<hyg:dataset-file-type><![CDATA[" + fileType + "]]></hyg:dataset-file-type>" +"\r\n"+
 										    xmlHygieneBuilder +
 										    "</hyg:hygiene-spec>";
 		        	//System.out.println("-------------------------------------SALT COMPILE--------------------------------");
@@ -358,7 +384,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		                }
 		                
 		                //fixEclFiles(this.fileName + "\\" + jobNameNoSpace + "module");
-		                saltIncludePath = this.fileName+ "";
+		                
 		        		
 		            } catch (IOException e) {
 		                 e.printStackTrace();
@@ -516,6 +542,19 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
        return result;
     }
 	
+	public String buildOptReports(String datasetName){
+		String xml = "";
+		JobMeta jobMeta = super.parentJob.getJobMeta();
+        List<JobEntryCopy> jobs = jobMeta.getJobCopies();
+        try{
+	        SaltAutoPopulate sap = new SaltAutoPopulate();
+	        HashMap hm = sap.getHygine(jobs, datasetName);
+	        if(hm.get("srcField") != null){
+	        	xml += "<hyg:sourcefield>" + hm.get("srcField") + "</hyg:sourcefield>";
+	        }
+        }catch (Exception e){}    
+		return xml;
+	}
     
 	public String buildHygieneRule(String datasetName, String columnName, String columnType){
 		String xml = "";
@@ -531,10 +570,11 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		try{
 	        SaltAutoPopulate sap = new SaltAutoPopulate();
 	        String[] rules = sap.getRule(jobs,datasetName, columnName);
-	        ArrayList<EntryBO> entries = sap.entryList.getEntries();
+	        HygieneEntryList hel = sap.getEntryList();
+	        ArrayList<HygieneEntryBO> entries = hel.getEntries();
 	        
 	        for(int i =0; i<entries.size(); i++){
-	        	EntryBO entry = entries.get(i);
+	        	HygieneEntryBO entry = entries.get(i);
 	        	if(columnName.equalsIgnoreCase(entry.getField())){
 	        		System.out.println("Field with Rule: " + entry.getField());
 	        		//we have a column match and it has a rule 
@@ -581,8 +621,16 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	        	}
 	        }
         
-        }catch (Exception e){}
-		
+        }catch (Exception e){
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println (e.toString());
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+        }
 		//Close off the XML Tag
 		xml += "</hyg:field-rule>"+"\r\n";
 		

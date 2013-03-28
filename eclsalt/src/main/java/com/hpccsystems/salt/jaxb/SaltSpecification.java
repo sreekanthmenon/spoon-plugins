@@ -29,6 +29,7 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence>
  *         &lt;element name="module-name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="file-name" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="ridfield" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="fields">
  *           &lt;complexType>
  *             &lt;complexContent>
@@ -119,6 +120,7 @@ import javax.xml.bind.annotation.XmlType;
     "moduleName",
     "fileName",
     "idname",
+    "ridField",
     "sourcefield",
     "fields",
     "matchingRules",
@@ -139,6 +141,9 @@ public class SaltSpecification {
     
     @XmlElement(name = "idname", required = false)
     protected String idname;
+    
+    @XmlElement(name = "ridfield", required = true)
+    protected String ridField;
     
     @XmlElement(name = "sourcefield", required = false)
     protected String sourcefield;
@@ -350,6 +355,18 @@ public class SaltSpecification {
 	public void setSourcefield(String sourcefield) {
 		this.sourcefield = sourcefield;
 	}
+	
+	
+
+	public String getRidField() {
+		return ridField;
+	}
+
+	public void setRidField(String ridField) {
+		this.ridField = ridField;
+	}
+
+
 
 	/**
      * <p>Java class for anonymous complex type.

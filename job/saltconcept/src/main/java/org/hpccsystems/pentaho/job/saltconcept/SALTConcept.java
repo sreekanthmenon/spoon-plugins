@@ -39,7 +39,7 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
     private String layout;
     private String cleanData;
 	//private String rules;
-	private EntryList entryList = new EntryList();
+	private ConceptEntryList entryList = new ConceptEntryList();
 	private ConceptRuleList fieldTypeList = new ConceptRuleList();
    
 	public String getDatasetName() {
@@ -60,10 +60,10 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
 	public void setFieldTypeList(ConceptRuleList fieldTypeList) {
 		this.fieldTypeList = fieldTypeList;
 	}
-	public EntryList getEntryList() {
+	public ConceptEntryList getEntryList() {
 		return entryList;
 	}
-	public void setEntryList(EntryList entryList) {
+	public void setEntryList(ConceptEntryList entryList) {
 		this.entryList = entryList;
 	}
 	
@@ -77,8 +77,8 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
 	}
 	public String saveEntryList(){
         String out = "";
-        ArrayList<EntryBO> list = entryList.getEntries();
-        Iterator<EntryBO> itr = list.iterator();
+        ArrayList<ConceptEntryBO> list = entryList.getEntries();
+        Iterator<ConceptEntryBO> itr = list.iterator();
         boolean isFirst = true;
         while(itr.hasNext()){
             if(!isFirst){out+="|";}
@@ -95,9 +95,9 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
         String[] strLine = in.split("[|]");
         int len = strLine.length;
         if(len>0){
-            entryList = new EntryList();
+            entryList = new ConceptEntryList();
             for(int i =0; i<len; i++){
-                EntryBO eb = new EntryBO(strLine[i]);
+                ConceptEntryBO eb = new ConceptEntryBO(strLine[i]);
                 entryList.addEntryBO(eb);
             }
         }

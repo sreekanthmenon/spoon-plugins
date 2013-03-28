@@ -10,6 +10,7 @@
 				<element name="idfield" type="string" maxOccurs="1" minOccurs="1"/>
 				<element name="idname" type="string" maxOccurs="1" minOccurs="1"/>
 				<element name="sourcefield" type="string" maxOccurs="1" minOccurs="0"/>
+				<element name="ridfield" type="string" maxOccurs="1" minOccurs="0"/>
                 <element name="field-rule" type="tns:field-hygiene-rule" maxOccurs="unbounded" minOccurs="0"/>
             </sequence>
         </complexType>
@@ -25,6 +26,7 @@
             <element name="allow" type="string" maxOccurs="1" minOccurs="0"/>
             <element name="spaces" type="string" maxOccurs="1" minOccurs="0"/>
             <element name="on-fail" type="string" maxOccurs="1" minOccurs="0"/>
+            <element name="field-specificity" type="string" maxOccurs="1" minOccurs="0" />
         </sequence>
     </complexType>
 

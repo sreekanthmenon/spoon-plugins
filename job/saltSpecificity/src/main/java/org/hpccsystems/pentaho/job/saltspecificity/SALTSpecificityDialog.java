@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.saltconcept;
+package org.hpccsystems.pentaho.job.saltspecificity;
 
 import java.util.Iterator;
 import org.eclipse.jface.viewers.TableViewer;
@@ -49,36 +49,35 @@ import org.pentaho.di.ui.trans.step.BaseStepDialog;
 import org.hpccsystems.eclguifeatures.AutoPopulate;
 import org.hpccsystems.eclguifeatures.ErrorNotices;
 import org.hpccsystems.recordlayout.RecordBO;
-import org.hpccsystems.saltui.concept.*;
+//import org.hpccsystems.saltui.
+import org.hpccsystems.saltui.hygiene.*;
 import org.hpccsystems.ecljobentrybase.*;
 /**
  *
  * @author ChambersJ
  */
-public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
+public class SALTSpecificityDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
 
-    private SALTConcept jobEntry;
+    private SALTSpecificity jobEntry;
     private Text jobEntryName;
     private Combo datasetName;
-    private Combo layout;
-    private Label outLabel;
+  //  private Combo idField;
     
     private Button wOK, wCancel;
     private boolean backupChanged;
     private SelectionAdapter lsDef;
     
-    CreateTable createTable = null;
-    private ConceptEntryList entryList;
-    private ConceptRuleList fieldTypeList;
+   
     
+    
+	
 
 
-
-    public SALTConceptDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+    public SALTSpecificityDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (SALTConcept) jobEntryInt;
+        jobEntry = (SALTSpecificity) jobEntryInt;
         if (this.jobEntry.getName() == null) {
-            this.jobEntry.setName("Salt Concept");
+            this.jobEntry.setName("Salt Hygiene");
         }
     }
 
@@ -100,7 +99,6 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         //see need to get the dataset set on screen a pass its fields in
         
         shell = new Shell(parentShell, SWT.DIALOG_TRIM | SWT.RESIZE | SWT.MIN | SWT.MAX);
-        createTable = new CreateTable(shell);
         TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
         FormData data = new FormData();
         
@@ -133,13 +131,13 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
 
 
         shell.setLayout(formLayout);
-        shell.setText("Salt Concept");
+        shell.setText("Salt Hygiene");
 
         int middle = props.getMiddlePct();
         int margin = Const.MARGIN;
 
         shell.setLayout(formLayout);
-        shell.setText("Define Salt Concept Fields");
+        shell.setText("Define Salt Hygiene Rules");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;
@@ -171,55 +169,35 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         joinGroupFormat.height = 150;
         joinGroupFormat.left = new FormAttachment(middle, 0);
         joinGroup.setLayoutData(joinGroupFormat);
+        
+        
 
         item1.setControl(compForGrp);
         this.datasetName = buildCombo("Dataset Name", null, lsMod, middle, margin, joinGroup,datasets);
-        outLabel = buildLabel("The Output will be stored as a file on the cluster as \r\n" +
-        		"~SPOONFILES::[Dataset Name]_CleanedData.\r\n\r\n", this.datasetName, lsMod, 0, margin, joinGroup);
-
-        createTable = new CreateTable(shell);
+        String[] items = null;
         try{
-	        String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
-	        createTable.loadFields(items);
-	        
+	        items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies()); 
         }catch (Exception exc){
         	System.out.println("error loading dataset fields");
         }
+       // this.idField = buildCombo("ID Field", datasetName, lsMod, middle, margin, joinGroup,items);
+       
+        
+       /*
         datasetName.addModifyListener(new ModifyListener(){
             public void modifyText(ModifyEvent e){
                 System.out.println("left RS changed");
                 AutoPopulate ap = new AutoPopulate();
                 try{
                 	String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
-                	createTable.loadFields(items);
-                	outLabel.setText("The Output will be stored as a file on the cluster as \r\n~SPOONFILES::" + datasetName.getText() + "_CleanedData.\r\n\r\n");
+                	populateIDField(datasetName.getText(), items);
                 }catch (Exception exc){
                 	System.out.println("error loading dataset fields");
                 }
             }
         });
+        */
         
-        createTable = new CreateTable(shell);
-        
-        //String[] items = ap.fieldsByDataset( leftRecordSet.getText(),jobMeta.getJobCopies());
-        
-        if(jobEntry.getEntryList() != null){
-            entryList = jobEntry.getEntryList();
-            createTable.setEntryList(jobEntry.getEntryList());
-            /*
-            if(entryList.getEntries() != null && entryList.getEntries().size() > 0) {
-                    System.out.println("Size: "+entryList.getEntries().size());
-                    for (Iterator<EntryBO> iterator = entryList.getEntries().iterator(); iterator.hasNext();) {
-                            EntryBO obj = (EntryBO) iterator.next();
-                    }
-            }*/
-        }
-        if(jobEntry.getFieldTypeList() != null){
-        	fieldTypeList = jobEntry.getFieldTypeList();
-        	createTable.setRuleList(jobEntry.getFieldTypeList());
-        }
-        TabItem item2 = createTable.buildDetailsTab("Rules", tabFolder);
-       
         wOK = new Button(shell, SWT.PUSH);
         wOK.setText("OK");
         wCancel = new Button(shell, SWT.PUSH);
@@ -271,15 +249,23 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         //if (jobEntry.getJoinCondition() != null) {
             //this.joinCondition.setText(jobEntry.getJoinCondition());
         //}
+        
         if (jobEntry.getDatasetName() != null) {
+            
+          /*
+            try{
+            	String[] newItems = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
+            	populateIDField(datasetName.getText(), newItems);
+            }catch (Exception exc){
+            	System.out.println("error loading dataset fields");
+            }*/
             this.datasetName.setText(jobEntry.getDatasetName());
         }
-       // if (jobEntry.getLayout() != null) {
-        //    this.layout.setText(jobEntry.getLayout());
-        //}
-        if (jobEntry.getCleanData() != null) {
-            this.cleanedOutput.setText(jobEntry.getCleanData());
-        }
+
+        //if (jobEntry.getIdField() != null) {
+           // this.idField.setText(jobEntry.getIdField());
+       // }
+
 
         shell.pack();
         shell.open();
@@ -292,109 +278,16 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
         return jobEntry;
 
     }
+    /*
+    public void populateIDField(String dsName, String[] items){
+    	this.idField.removeAll();
+    	for (int i = 0; i<items.length; i++){
+    		this.idField.add(items[i]);
+
+        }
+    }*/
     
-    private TabItem buildDetailsTab2(String tabName, TabFolder tabFolder){
-    	
-    	TabItem tabItem = new TabItem(tabFolder, SWT.NULL);
-		tabItem.setText(tabName);
-		
-		/*Composite composite = new Composite(tabFolder, SWT.NONE);
-		tabItem.setControl(composite);*/
-
-		ScrolledComposite sc2 = new ScrolledComposite(tabFolder, SWT.H_SCROLL | SWT.V_SCROLL);
-		Composite compForGrp2 = new Composite(sc2, SWT.NONE);
-		sc2.setContent(compForGrp2);
-
-		// Set the minimum size
-		sc2.setMinSize(650, 450);
-
-		// Expand both horizontally and vertically
-		sc2.setExpandHorizontal(true);
-		sc2.setExpandVertical(true);
-        
-		
-	
-		/*
-		Composite compForGrp2 = new Composite(tabFolder, SWT.NONE);
-        //compForGrp.setLayout(new FillLayout(SWT.VERTICAL));
-        compForGrp2.setBackground(new Color(tabFolder.getDisplay(),255,255,255));
-        compForGrp2.setLayout(new FormLayout());
-        */
-        
-		//this.addChildControls(compForGrp2);
-        FormLayout groupLayout = new FormLayout();
-        groupLayout.marginWidth = 10;
-        groupLayout.marginHeight = 10;
-        ModifyListener lsMod = new ModifyListener() {
-
-            public void modifyText(ModifyEvent e) {
-                jobEntry.setChanged();
-            }
-        };
-        
-		/*Group generalGroup2 = new Group(compForGrp2, SWT.SHADOW_NONE);
-        props.setLook(generalGroup2);
-        generalGroup2.setText("General Details");
-        generalGroup2.setLayout(groupLayout);
-        FormData generalGroupFormat2 = new FormData();
-        generalGroupFormat2.top = new FormAttachment(0, 0);
-        generalGroupFormat2.width = 400;
-        generalGroupFormat2.height = 65;
-        generalGroupFormat2.left = new FormAttachment(0, 0);
-        generalGroup2.setLayoutData(generalGroupFormat2);
-        
-        Text jobEntryName2 = buildText("Job Entry Name", null, lsMod, 0, 0, generalGroup2);
-        */
-        GridData gridData = new GridData (GridData.HORIZONTAL_ALIGN_FILL | GridData.FILL_BOTH);
-        compForGrp2.setLayoutData (gridData);
-
-		// Set numColumns to 6 for the buttons 
-		GridLayout layout = new GridLayout(6, false);
-		compForGrp2.setLayout (layout);
-		
-		
-		int style = SWT.CHECK | SWT.MULTI | SWT.BORDER | SWT.H_SCROLL | SWT.V_SCROLL | SWT.FULL_SELECTION;
-
-		final Table table = new Table(compForGrp2, style);
-		
-		final TableViewer tableViewer = new TableViewer(table);
-                
-                table.addListener (SWT.Selection, new Listener () {
-                    public void handleEvent (Event event) {
-                            tableViewer.refresh();
-                            table.redraw();
-                    }
-                });      
-		GridData tableGridData = new GridData(GridData.FILL_BOTH);
-		tableGridData.grabExcessVerticalSpace = true;
-		tableGridData.horizontalSpan = 4;
-		tableGridData.grabExcessHorizontalSpace = false;
-		tableGridData.widthHint = 600;
-		table.setLayoutData(tableGridData);		
-					
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
-		
-		TableColumn column = new TableColumn(table, SWT.LEFT, 0);
-        column.setText("Fields");
-        column.setWidth(250);
-        
-        TableColumn column2 = new TableColumn(table, SWT.LEFT, 1);
-        column2.setText("Rules");
-        column2.setWidth(250);
-        
-        TableColumn column3 = new TableColumn(table, SWT.CENTER, 2);
-        column3.setText("");
-        column3.setWidth(50);
-        
-        TableColumn column4 = new TableColumn(table, SWT.CENTER, 3);
-        column4.setText("");
-        column4.setWidth(50);
-
-        //tabItem.setControl(compForGrp2);
-        tabItem.setControl(sc2);
-		return tabItem;
-    }
+    
 
     private boolean validate(){
     	boolean isValid = true;
@@ -411,12 +304,7 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
     		isValid = false;
     		errors += "\"Dataset Name\" is a required field!\r\n";
     	}
-    	//if(this.layout.getText().equals("")){
-    	//	isValid = false;
-    	//	errors += "\"Layout\" is a required field!\r\n";
-    	//}
-    	
-    	
+	
     	if(!isValid){
     		ErrorNotices en = new ErrorNotices();
     		errors += "\r\n";
@@ -433,11 +321,8 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
     	}
     	
         jobEntry.setName(jobEntryName.getText());
-        jobEntry.setDatasetName(datasetName.getText());
-        //jobEntry.setLayout(layout.getText());
-        jobEntry.setEntryList(createTable.getEntryList());
-        jobEntry.setFieldTypeList(createTable.getRuleList());
-        jobEntry.setCleanData((this.cleanedOutput.getText()));
+        jobEntry.setDatasetName(datasetName.getText()); 
+        //jobEntry.setIdField((this.idField.getText()));
         dispose();
     }
 

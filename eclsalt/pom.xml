@@ -67,6 +67,11 @@
 					<artifactId>javaecl</artifactId>
 					<version>0.1-SNAPSHOT</version>
 				</dependency>
+				<dependency>
+					<groupId>org.hpccsystems.pentaho</groupId>
+					<artifactId>eclgui</artifactId>
+					<version>0.1.0</version>
+				</dependency>
 			</dependencies>
 		</dependencyManagement>
 
@@ -79,6 +84,10 @@
 			<dependency>
 				<groupId>org.hpccsystems</groupId>
 				<artifactId>javaecl</artifactId>
+			</dependency>
+			<dependency>
+				<groupId>org.hpccsystems.pentaho</groupId>
+				<artifactId>eclgui</artifactId>
 			</dependency>
 		</dependencies>
 </project>

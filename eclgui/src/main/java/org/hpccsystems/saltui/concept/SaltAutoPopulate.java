@@ -10,7 +10,7 @@ import org.w3c.dom.NodeList;
 
 public class SaltAutoPopulate {
 
-	public EntryList entryList = new EntryList();
+	public ConceptEntryList entryList = new ConceptEntryList();
 	public ConceptRuleList fieldTypeList = new ConceptRuleList();
 	
 	
@@ -137,9 +137,9 @@ public class SaltAutoPopulate {
 	        String[] strLine = in.split("[|]");
 	        int len = strLine.length;
 	        if(len>0){
-	            entryList = new EntryList();
+	            entryList = new ConceptEntryList();
 	            for(int i =0; i<len; i++){
-	                EntryBO eb = new EntryBO(strLine[i]);
+	                ConceptEntryBO eb = new ConceptEntryBO(strLine[i]);
 	                entryList.addEntryBO(eb);
 	            }
 	        }

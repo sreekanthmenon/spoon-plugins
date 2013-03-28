@@ -1,4 +1,4 @@
-package org.hpccsystems.saltui.concept;
+package org.hpccsystems.saltui.hygiene;
 
 import java.util.ArrayList;
 
@@ -7,15 +7,15 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
 
 
-public class EntryBO {
+public class HygieneEntryBO {
 	private String field = "";
 	private String ruleName = "";
-	private ConceptRuleList hygieneRuleList = new ConceptRuleList();
+	private HygieneRuleList hygieneRuleList = new HygieneRuleList();
 	private int	hygieneRuleListIndex = -1;
 	
-	public EntryBO(){}
+	public HygieneEntryBO(){}
 	
-	public EntryBO(String in){
+	public HygieneEntryBO(String in){
         super();
         fromCSV(in);
     }
@@ -43,11 +43,11 @@ public class EntryBO {
 	public void setRuleName(String ruleName) {
 		this.ruleName = ruleName;
 	}
-	public ConceptRuleList getHygieneRuleList() {
+	public HygieneRuleList getHygieneRuleList() {
 		return hygieneRuleList;
 	}
 
-	public void setHygieneRuleList(ConceptRuleList hygieneRuleList) {
+	public void setHygieneRuleList(HygieneRuleList hygieneRuleList) {
 		this.hygieneRuleList = hygieneRuleList;
 	}
 
