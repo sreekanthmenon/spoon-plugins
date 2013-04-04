@@ -3,6 +3,8 @@
     <hyg:file-name>Customers_File</hyg:file-name>
 	<hyg:ridfield>spoongeneratedrid</hyg:ridfield>
 	<hyg:idfield>Customers_File</hyg:idfield>
+	<hyg:idname>Customers_File</hyg:idname>
+	<hyg:idfieldExists>true</hyg:idfieldExists>
 	 <hyg:sourcefield>test</hyg:sourcefield>
 	 <hyg:ridfield>rid</hyg:ridfield>
     <hyg:field-rule>

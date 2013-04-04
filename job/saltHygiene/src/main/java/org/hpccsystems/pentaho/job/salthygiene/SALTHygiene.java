@@ -216,7 +216,7 @@ public class SALTHygiene extends ECLJobEntry{//extends JobEntryBase implements C
         	shr.setOutputCleanedDataset(false);
         }
         
-        if(!this.srcField.equals("")){
+        if(this.srcField != null && !this.srcField.equals("")){
         	if(this.includeClusterCounts.equalsIgnoreCase("yes")){
         		shr.setIncludeClusterCounts(true);
         	}

@@ -120,6 +120,7 @@ import javax.xml.bind.annotation.XmlType;
     "moduleName",
     "fileName",
     "idname",
+    "idfieldExists",
     "ridField",
     "sourcefield",
     "fields",
@@ -141,6 +142,9 @@ public class SaltSpecification {
     
     @XmlElement(name = "idname", required = false)
     protected String idname;
+    
+    @XmlElement(name = "idfieldExists", required = false)
+    protected String idfieldExists;
     
     @XmlElement(name = "ridfield", required = true)
     protected String ridField;
@@ -210,7 +214,17 @@ public class SaltSpecification {
         this.fileName = value;
     }
 
-    /**
+    
+    
+    public String getIdfieldExists() {
+		return idfieldExists;
+	}
+
+	public void setIdfieldExists(String idfieldExists) {
+		this.idfieldExists = idfieldExists;
+	}
+
+	/**
      * Gets the value of the fields property.
      * 
      * @return

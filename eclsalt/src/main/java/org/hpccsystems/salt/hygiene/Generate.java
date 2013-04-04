@@ -29,11 +29,18 @@ public class Generate {
             specStr.appendLine("MODULE:" + spec.getModuleName());
             specStr.appendLine("FILENAME:" + spec.getFileName());
            // specStr.appendLine("IDFIELD:" + spec.getIdfield());
-            if(spec.getIdname() != null){
-            	specStr.appendLine("IDNAME:" + spec.getIdname());
-            	specStr.appendLine("IDFIELD:" + spec.getIdname());
-            	
-            //	specStr.appendLine("IDFIELD:EXISTS:" + spec.getIdname());
+            System.out.println(spec.getIdfieldExists());
+            if(spec.getIdfieldExists() != null && spec.getIdfieldExists().equalsIgnoreCase("true")){
+            	System.out.println("if");
+            	 if(spec.getIdname() != null){
+ 	            	specStr.appendLine("IDFIELD:EXISTS:" + spec.getIdname());
+ 	            }
+            }else{
+            	System.out.println("else");
+	            if(spec.getIdname() != null){
+	            	specStr.appendLine("IDNAME:" + spec.getIdname());
+	            	specStr.appendLine("IDFIELD:" + spec.getIdname());
+	            }
             }
             //todo:: make not hardcoded and ADD EXISTS
             //not currently needed for specification
@@ -41,8 +48,8 @@ public class Generate {
            if(spec.getRidfield() != null && !spec.getRidfield().equals("")){
             	specStr.appendLine("RIDFIELD:" + spec.getRidfield());
             }
-            specStr.appendLine("RECORDS:110");
-            specStr.appendLine("POPULATION:110");
+            specStr.appendLine("RECORDS:20000");
+            specStr.appendLine("POPULATION:10000");
             specStr.appendLine("NINES:3");
 
             FieldHygieneRule rules[] = spec.getFieldRuleArray();
@@ -118,7 +125,7 @@ public class Generate {
         //String fileContent = readFileAsString("../../../../../xsd/SALT-Hygiene.xml");
         String src = "C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/eclsalt/src/main/xsd/SALT-Hygiene.xml";
         
-        src = "C:/Spoon Demos/new/salt/out_hygine/salt.xml";
+       // src = "C:/Spoon Demos/new/salt/out_hygine/salt.xml";
     	try{
     		String fileContent = readFileAsString(src);
     		//System.out.println(fileContent);

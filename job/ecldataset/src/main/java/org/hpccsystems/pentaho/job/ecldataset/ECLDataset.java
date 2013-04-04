@@ -268,8 +268,14 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
             for(int i =0; i<in.size(); i++){
                 RecordBO rb = new RecordBO();
                 rb.setColumnName(in.get(i)[0]);
-                rb.setColumnType(in.get(i)[1].replaceAll("\\d+",""));//replaces digit with "" so we get STRING/INTEGER etc
-                rb.setColumnWidth(in.get(i)[1].replaceAll("\\D+",""));//replace non digit with "" so we get just number 
+                //rb.setColumnType(in.get(i)[1].replaceAll("\\d+",""));//replaces digit with "" so we get STRING/INTEGER etc
+                //System.out.println("Letters: " + x.replaceAll("\\d+[_]*",""));
+                rb.setColumnType(in.get(i)[1].replaceAll("\\d+[_]*",""));//replaces digit with "" so we get STRING/INTEGER etc
+                
+                //rb.setColumnWidth(in.get(i)[1].replaceAll("\\D+",""));//replace non digit with "" so we get just number 
+                //System.out.println("Numbers: " + x.replaceAll("[^0-9_]+",""));
+                rb.setColumnWidth(in.get(i)[1].replaceAll("[^0-9_]+",""));//replace non digit with "" so we get just number 
+                
                 rb.setDefaultValue(in.get(i)[2]);
                 recordList.addRecordBO(rb);
             }

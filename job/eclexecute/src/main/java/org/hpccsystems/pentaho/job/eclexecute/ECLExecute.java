@@ -295,9 +295,9 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        				//xmlHygieneBuilder +="<hyg:idname>" + "spoonClusterID" + "</hyg:idname>" +"\r\n";
 		        			}
 		        			//xmlHygieneBuilder +="<hyg:ridfield>" + "spoonRecordID" + "</hyg:hyg:ridfield>" +"\r\n";
-		        			xmlHygieneBuilder +="<hyg:idname>" + "spoonClusterID" + "</hyg:idname>" +"\r\n";
+		        			
 		        		}
-		        		
+		        		xmlHygieneBuilder +="<hyg:idname>" + "spoonClusterID" + "</hyg:idname>" +"\r\n";
 		        		//jobMeta.getJob
 		        		file_name = ap.getDatasetsField("record_name", datasets[i],jobMeta.getJobCopies());
 		        		
@@ -529,11 +529,64 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                  e.printStackTrace();
             }   
              
-            resName = eclDirect.getResName();
-            System.out.println("++Spring HTML -------------------------" + resName);
-            if(resName.equalsIgnoreCase("dataProfilingResults") || resName.equalsIgnoreCase("Dataprofiling_AllProfiles")){ 
-                RenderWebDisplay rwd = new RenderWebDisplay();
-         		rwd.processFile(this.fileName + "\\" + resName + ".csv", this.fileName);
+            
+            ArrayList<String> resultNames = eclDirect.getResultNames();
+            for (int n = 0; n<resultNames.size(); n++){
+            	System.out.println("+++Results --------------------" + resultNames.get(n));
+            	resName = resultNames.get(n);
+            
+	            //resName = eclDirect.getResName();
+	            System.out.println("++Spring HTML -------------------------" + resName);
+	            if(resName.equalsIgnoreCase("dataProfilingResults") || resName.equalsIgnoreCase("Dataprofiling_AllProfiles")){ 
+	                RenderWebDisplay rwd = new RenderWebDisplay();
+	         		rwd.processFile(this.fileName + "\\" + resName + ".csv", this.fileName);
+	         		
+	         		String saltData = System.getProperty("saltData");
+	         		if(saltData!= null && !saltData.equals("")){
+	         			System.setProperty("saltData",  saltData + "," + this.fileName + "\\" + resName + ".csv");
+	         		}else{
+	         			System.setProperty("saltData",  this.fileName + "\\" + resName + ".csv");
+	         		}
+	            }
+	            
+	            cacheOutputInfo("Dataprofiling_SummaryReport","saltSummaryData", resName);
+	            
+	            /*if(resName.equalsIgnoreCase("Dataprofiling_SummaryReport")){
+	            
+	            	String saltSummaryData = System.getProperty("saltSummaryData");
+	         		if(saltSummaryData != null && !saltSummaryData.equals("")){
+	         			System.setProperty("saltSummaryData",  saltSummaryData + "," + this.fileName + "\\" + resName + ".csv");
+	         		}else{
+	         			System.setProperty("saltSummaryData",  this.fileName + "\\" + resName + ".csv");
+	         		}
+	            }*/
+	            //Dataprofiling_OptimizedLayout
+	            //saltOptimizedLayouts
+	            cacheOutputInfo("Dataprofiling_OptimizedLayout","saltOptimizedLayouts", resName);
+	            /*
+	            if(resName.equalsIgnoreCase("Dataprofiling_OptimizedLayout")){
+		            
+	            	String saltSummaryData = System.getProperty("saltOptimizedLayouts");
+	         		if(saltSummaryData != null && !saltSummaryData.equals("")){
+	         			System.setProperty("saltOptimizedLayouts",  saltSummaryData + "," + this.fileName + "\\" + resName + ".csv");
+	         		}else{
+	         			System.setProperty("saltOptimizedLayouts",  this.fileName + "\\" + resName + ".csv");
+	         		}
+	            }
+	            */
+	         
+	            //SrcOutliers
+	            cacheOutputInfo("SrcOutliers","saltSrcOutliers", resName);
+	            //ClusterSrc
+	            cacheOutputInfo("ClusterSrc","saltClusterSrc", resName);
+	            //ClusterCounts
+	            cacheOutputInfo("ClusterCounts","saltClusterCounts", resName);
+	            //SrcProfiles
+	            cacheOutputInfo("SrcProfiles","saltSrcProfiles", resName);
+	            //Hygiene_ValidityErrors
+	            cacheOutputInfo("Hygiene_ValidityErrors","saltHygiene_ValidityErrors", resName);
+	            //CleanedData
+	            cacheOutputInfo("CleanedData","saltCleanedData", resName);
             }
         
        }
@@ -541,6 +594,23 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
         
        return result;
     }
+	
+	public void cacheOutputInfo(String thisResName,String propertyName, String resName){
+		try{
+		if(resName.equalsIgnoreCase(thisResName)){
+            
+        	String resultData = System.getProperty(propertyName);
+     		if(resultData != null && !resultData.equals("")){
+     			System.setProperty(propertyName,  resultData + "," + this.fileName + "\\" + resName + ".csv");
+     		}else{
+     			System.setProperty(propertyName,  this.fileName + "\\" + resName + ".csv");
+     		}
+        }
+		}catch (Exception e){
+			System.out.println("Error Setting result data");
+		}
+	}
+	
 	
 	public String buildOptReports(String datasetName){
 		String xml = "";
@@ -623,86 +693,15 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
         
         }catch (Exception e){
         	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
         	System.out.println (e.toString());
-        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
+
         }
 		//Close off the XML Tag
 		xml += "</hyg:field-rule>"+"\r\n";
 		
 		return xml;
 	}
-     /*
-    public void createOutputFile_old(ArrayList dsList,String fileName, int count){
-         String outStr = "";
-         String header = "";
-         if(dsList != null){
-         String newline = System.getProperty("line.separator");
-         
-                        for (int iList = 0; iList < dsList.size(); iList++) {
-                            //logBasic("----------Outer-------------");
-                            ArrayList rowList = (ArrayList) dsList.get(iList);
-
-                            for (int jRow = 0; jRow < rowList.size(); jRow++) {
-                                //logBasic("----------Row-------------");
-                                ArrayList columnList = (ArrayList) rowList.get(jRow);
-                                for (int lCol = 0; lCol < columnList.size(); lCol++) {
-                                 //   logBasic("----------Column-------------");
-                                    Column column = (Column) columnList.get(lCol);
-                                    logBasic(column.getName() + "=" + column.getValue() + "|");
-                                    outStr += column.getValue();
-                                 //   logBasic(column.getName() + "=" + column.getValue() + "|");
-                                    //if column has , then wrap in "
-                                    if(column.getValue().contains(",")){
-                                    	outStr += "\"" + column.getValue() + "\"";
-                                    }else{
-                                    	outStr += column.getValue();
-                                    }
-                                    if(lCol< (columnList.size()-1)){
-                                        outStr += ",";
-                                    }
-                                    if(jRow == 0){
-                                        header += column.getName();
-                                    	if(column.getName().contains(",")){
-                                    		header += "\"" + column.getName() + "\"";
-                                    	}else{
-                                    		header += column.getName();
-                                    	}
-                                        if(lCol< (columnList.size()-1)){
-                                            header += ",";
-                                        }else{
-                                            header += newline;
-                                        }
-                                    }
-                                }
-                                logBasic("newline");
-                               // logBasic("newline");
-                                outStr += newline;
-                            }
-                        }
-             try {
-                
-                BufferedWriter out = new BufferedWriter(new FileWriter(fileName));
-                System.getProperties().getProperty("fileName");
-                System.setProperty("fileName"+count, fileName);
-                
-                out.write(header+outStr);
-                out.close();
-           
-            } catch (IOException e) {
-               logError("Failed to write file: " + fileName);
-               //error += "Failed to write ecl code file";
-               //result.setResult(false);
-                e.printStackTrace();
-            }  
-         }
-    }
-    }*/
-
+     
     @Override
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {
         try {

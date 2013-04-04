@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.saltinternallinking;
+package org.hpccsystems.pentaho.job.saltdataprofiling;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -32,7 +32,7 @@ import org.hpccsystems.ecljobentrybase.*;
  *
  * @author ChambersJ
  */
-public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase implements Cloneable, JobEntryInterface {
+public class SALTDataProfiling extends ECLJobEntry{//extends JobEntryBase implements Cloneable, JobEntryInterface {
     
 	
     private String datasetName;

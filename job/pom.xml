@@ -44,6 +44,7 @@
 		
 		<module>saltdataprofiling</module>
 		<module>saltHygiene</module>
+		<module>saltinternallinking</module>
 	</modules>
 
 	<properties>

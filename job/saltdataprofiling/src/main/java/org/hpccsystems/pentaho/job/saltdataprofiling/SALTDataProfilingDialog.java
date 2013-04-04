@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package org.hpccsystems.pentaho.job.saltinternallinking;
+package org.hpccsystems.pentaho.job.saltdataprofiling;
 
 import java.util.Iterator;
 import org.eclipse.jface.viewers.TableViewer;
@@ -52,9 +52,9 @@ import org.hpccsystems.ecljobentrybase.*;
  *
  * @author ChambersJ
  */
-public class SALTInternalLinkingDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
+public class SALTDataProfilingDialog extends ECLJobEntryDialog{//extends JobEntryDialog implements JobEntryDialogInterface {
 
-    private SALTInternalLinking jobEntry;
+    private SALTDataProfiling jobEntry;
     private Text jobEntryName;
     private Combo datasetName;
     private Combo layout;
@@ -66,9 +66,9 @@ public class SALTInternalLinkingDialog extends ECLJobEntryDialog{//extends JobEn
 
 
 
-    public SALTInternalLinkingDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
+    public SALTDataProfilingDialog(Shell parent, JobEntryInterface jobEntryInt, Repository rep, JobMeta jobMeta) {
         super(parent, jobEntryInt, rep, jobMeta);
-        jobEntry = (SALTInternalLinking) jobEntryInt;
+        jobEntry = (SALTDataProfiling) jobEntryInt;
         if (this.jobEntry.getName() == null) {
             this.jobEntry.setName("SaltDataProfling");
         }
@@ -109,13 +109,12 @@ public class SALTInternalLinkingDialog extends ECLJobEntryDialog{//extends JobEn
 
 
         shell.setLayout(formLayout);
-        shell.setText("Join");
-
+       
         int middle = props.getMiddlePct();
         int margin = Const.MARGIN;
 
         shell.setLayout(formLayout);
-        shell.setText("Define an ECL Join");
+        shell.setText("Salt Data Profiling");
 
         FormLayout groupLayout = new FormLayout();
         groupLayout.marginWidth = 10;

@@ -92,7 +92,7 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
         AutoPopulate ap = new AutoPopulate();
         String jobNameNoSpace = "";
         JobMeta jobMeta = super.parentJob.getJobMeta();
-        
+        System.out.println("Start Internal Linking");
         String outputDir = "";
         try{
         	outputDir = ap.getGlobalVariable(jobMeta.getJobCopies(),"file_name");
@@ -105,9 +105,12 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
             e.printStackTrace();
             
         }
-        
+        System.out.println("output dir: " + outputDir);
         LoadSpecificties ls = new LoadSpecificties();
-	
+        ls.setModuleName(jobNameNoSpace+"module");
+        if(!this.iteration.equalsIgnoreCase("1")){
+        	ls.setIdExists(true);
+        }
         ArrayList<DatasetNode> ds = ls.buildLinkingXML(outputDir + "\\",
 														specificitiesOutputFolder,
 														hygieneOutputFolder);
@@ -191,13 +194,7 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
         
         try{
         	String dsEcl = "";//"IMPORT layout_ProductsRS;\r\n";//ls.getRsDef();
-        	//dsEcl = dsECL.replace(ls.getDatasetName(), "In_" + ls.getDatasetName());
         	
-        	//dsECL = dsECL.replace("end;" , "end; EXPORT");
-        	//dsEcl += "" + ls.getDsDef();
-        	//dsEcl = dsEcl.replace("end;", "UNSIGNED6 spoonRecordID;\r\nUNSIGNED6 spoonClusterID;\r\nend;");
-        	
-        	//need to add iterator to add spoonRecordID here
         	//need to add DS dec to xml
         	dsEcl += "inputData_" + ls.getDsName() + " := dataset('" + ls.getLogicalFile() + "',layout_spoon_" + ls.getRecordName() + "," + ls.getFileType() + ");" + "\r\n";
         	
@@ -207,7 +204,8 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
 							         " self.spoonClusterID := 0," +
 									 " self := left));";
         	 */
-        	
+        	int intIteration = Integer.parseInt(this.iteration);
+        	if(intIteration == 1 ){
         	String transform = "layout_"+ ls.getRecordName() + " SpoonTransform(inputData_" + ls.getDsName() + " L) := TRANSFORM\r\n";
         	transform += "SELF.spoonClusterID := 0;\r\n";
         	transform += "SELF.spoonRecordID := 0;\r\n";
@@ -225,7 +223,13 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
         						"END;\r\n"+
         						"EXPORT In_" + ls.getRecordName() +" := ITERATE(In_" + ls.getDsName() + ",AddIds(LEFT,RIGHT));\r\n\r\n";
         	dsEcl = dsEcl + iterator;
-        	
+        	}else if (intIteration > 1){
+        		//non primary iteration
+        		dsEcl += "EXPORT In_" + ls.getRecordName() + " := dataset('~temp::spoonClusterID::" + jobNameNoSpace + "module::it" + (intIteration-1) + "', Layout_" + ls.getRecordName()+ ", flat);\r\n";
+        	}else{
+        		//unknown state trow error
+        		
+        	}
         	//dsEcl += "EXPORT In_" + ls.getRecordName() + " := inputData_" + ls.getDsName() + ";";
         	BufferedWriter out = new BufferedWriter(new FileWriter(outputDir + "\\" + jobNameNoSpace + "module\\In_" + ls.getFileName() + ".ecl"));
         	out.write(dsEcl);
@@ -235,13 +239,14 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
         	System.out.println("****************************************");
         	System.out.println(e.toString());
         }
+        System.out.println("end Internal Linking");
         return result;
     }
 	
 	private boolean buildSaltSpec(String saltPath, String outputDir, String jobNameNoSpace){
 		Boolean result = true;
 		
-		/*try {              
+		try {              
             
 
     		Generate gen = new Generate();
@@ -278,8 +283,8 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
          	 System.out.println(SaltError);
          	 result = false;
          	 return false;
-        } */
-		boolean compileSuccess = compileSalt(saltPath, outputDir + "\\salt.spc", outputDir + "",jobNameNoSpace);
+        } 
+		//boolean compileSuccess = compileSalt(saltPath, outputDir + "\\salt.spc", outputDir + "",jobNameNoSpace);
 		return result;
 	}
 	

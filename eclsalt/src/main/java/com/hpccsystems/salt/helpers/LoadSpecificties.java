@@ -31,7 +31,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 
 public class LoadSpecificties {
-	
+	private String moduleName = "";
 	private String fileName = "";
 	private String eclDatasetCode = "";
 	
@@ -45,6 +45,7 @@ public class LoadSpecificties {
 	
 	private String clusterID = "";
 	private String recordID = "";
+	private boolean idExists = false;
 	
 	public String getFileName() {
 		return fileName;
@@ -115,6 +116,24 @@ public class LoadSpecificties {
 		this.dsName = dsName;
 	}
 
+	
+	public String getModuleName() {
+		return moduleName;
+	}
+
+	public void setModuleName(String moduleName) {
+		this.moduleName = moduleName;
+	}
+
+	
+	public boolean isIdExists() {
+		return idExists;
+	}
+
+	public void setIdExists(boolean idExists) {
+		this.idExists = idExists;
+	}
+
 	//loads the dataset xml and combines the specificities passed in
 	public ArrayList loadDataset(String fileName, HashMap specificities, String outFile){
 		ArrayList<DatasetNode> dataSet = new ArrayList<DatasetNode>();
@@ -131,7 +150,8 @@ public class LoadSpecificties {
 			
 			this.fileName = doc.getElementsByTagName("hyg:file-name").item(0).getTextContent();
 			
-
+			doc.getElementsByTagName("hyg:module-name").item(0).setTextContent(this.moduleName);
+			//doc.getElementsByTagName("hyg:file-name").item(0).setTextContent(this.fileName);
 			this.rsDef = doc.getElementsByTagName("hyg:dataset-rsdef").item(0).getTextContent();
 			this.dsDef = doc.getElementsByTagName("hyg:dataset-dsdef").item(0).getTextContent();
 			this.recordName = doc.getElementsByTagName("hyg:dataset-record-name").item(0).getTextContent();
@@ -140,11 +160,7 @@ public class LoadSpecificties {
 			this.dsName = doc.getElementsByTagName("hyg:dataset-name").item(0).getTextContent();
 			
 			this.eclDatasetCode = rsDef + dsDef;
-			System.out.println("-------------------------------------------------------------------------------------");
-			System.out.println("-------------------------------------------------------------------------------------");
-			System.out.println("-------------------------------------------------------------------------------------");
-			System.out.println(this.getEclDatasetCode());
-			System.out.println("-------------------------------------------------------------------------------------");
+			
 			
 			
 			
@@ -187,8 +203,12 @@ public class LoadSpecificties {
 			newrid.appendChild(doc.createTextNode("spoonRecordID"));
 			spec.item(0).appendChild(newrid);
 			//doc.appendChild(newrid);
-			
-			
+			//add exist code idExists
+			if(idExists){
+				Element newidExists = doc.createElement("hyg:idfieldExists");
+				newidExists.appendChild(doc.createTextNode("true"));
+				spec.item(0).appendChild(newidExists);
+			}
 			//write it out to a new file
 			
 			TransformerFactory transformerFactory = TransformerFactory.newInstance();
