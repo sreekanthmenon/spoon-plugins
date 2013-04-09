@@ -387,6 +387,7 @@ public class ConfigureConceptsUI {
 				conceptRule.setSwitchValue(textSwitchValue.getText());
 				
 				conceptRule.setRecordList(objConceptsTable.getConceptsList());
+				if(conceptListTableViewer != null)
 				conceptListTableViewer.refresh();
 				
 				shell.close();
