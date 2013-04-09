@@ -1,4 +1,4 @@
-package com.hpccsystems.ui.concepts.table;
+package org.hpccsystems.saltui.concept.table;
 
 import org.eclipse.jface.viewers.ICellModifier;
 import org.eclipse.swt.widgets.TableItem;

@@ -1,4 +1,4 @@
-package com.hpccsystems.ui.concepts.table;
+package org.hpccsystems.saltui.concept.table;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -10,16 +10,41 @@ public class ConceptsRecordList {
 	
 	List<ConceptsRecord> listConcepts = null;
 	private Set<IConceptsViewer> changeListeners = new HashSet<IConceptsViewer>();
+	private String delim = "|";
 	
 	public ConceptsRecordList() {
 		listConcepts = new ArrayList<ConceptsRecord>();
-		initData();
+		//initData();
+	}
+	
+	public String saveListAsString(){
+		String out = "";
+		
+		for(int i =0; i<listConcepts.size(); i++){
+			
+			ConceptsRecord obj = listConcepts.get(i);
+			if(!out.equals("")){
+				out += delim;
+			}
+			out += obj.saveAsString();
+		}
+		
+		return out;
+	}
+	
+	public void openFromString(String in){
+		String[] tokens = in.split(delim);
+		for(int i = 0; i<tokens.length; i++){
+			ConceptsRecord obj = new ConceptsRecord();
+			obj.loadFromString(tokens[i]);
+			listConcepts.add(obj);
+		}
 	}
 	
 	/**
 	 * Set the Table Data Here
 	 */
-	public void initData() {
+	public void initTestData() {
 		ConceptsRecord obj = new ConceptsRecord();
 		obj.setChildren("ProductName");
 		obj.setNonNull(true);

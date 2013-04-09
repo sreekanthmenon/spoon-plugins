@@ -1,4 +1,4 @@
-package com.hpccsystems.ui.concepts.table;
+package org.hpccsystems.saltui.concept.table;
 
 public interface IConceptsViewer {
 	

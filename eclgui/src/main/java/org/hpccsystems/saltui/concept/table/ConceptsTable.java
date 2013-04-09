@@ -1,4 +1,4 @@
-package com.hpccsystems.ui.concepts.table;
+package org.hpccsystems.saltui.concept.table;
 
 import java.util.Arrays;
 import java.util.Iterator;
@@ -32,13 +32,22 @@ public class ConceptsTable {
 	
 	public void setConceptsList(ConceptsRecordList conceptsList) {
 		this.conceptsList = conceptsList;
+		initConceptsList();
 	}
 
-	public ConceptsTable(Composite parent) {
+	public ConceptsTable(Composite parent,ConceptsRecordList conceptsList) {
+		 
+		this.conceptsList = conceptsList;
 		this.addChildControls(parent);
-		if(conceptsList.listConcepts != null && conceptsList.listConcepts.size() > 0) {
+		
+		initConceptsList();
+
+	}
+	public void initConceptsList(){
+		if(conceptsList != null && conceptsList.listConcepts != null && conceptsList.listConcepts.size() > 0) {
 			int count = 0;
 			for (Iterator<ConceptsRecord> iterator = conceptsList.listConcepts.iterator(); iterator.hasNext();) {
+				
 				ConceptsRecord obj = iterator.next();
 				TableItem item = table.getItem(count);
 				item.setChecked(obj.isNonNull());
@@ -61,7 +70,8 @@ public class ConceptsTable {
 		tableViewer.setLabelProvider(new ConceptsLabelProvider());
 		
 		// The input for the table viewer is the instance of ExampleTaskList
-		setConceptsList(new ConceptsRecordList());
+		//setConceptsList(new ConceptsRecordList());
+
 		tableViewer.setInput(conceptsList);
 	}
 	
@@ -126,6 +136,7 @@ public class ConceptsTable {
 		
 		@Override
 		public void dispose() {
+			if(conceptsList != null)
 			conceptsList.removeChangeListener(this);
 		}
 

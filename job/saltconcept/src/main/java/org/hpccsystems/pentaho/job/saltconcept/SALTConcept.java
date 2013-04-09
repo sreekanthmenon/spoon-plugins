@@ -40,8 +40,7 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
     private String cleanData;
 	//private String rules;
 	private ConceptEntryList entryList = new ConceptEntryList();
-	private ConceptRuleList fieldTypeList = new ConceptRuleList();
-   
+	
 	public String getDatasetName() {
 		return datasetName;
 	}
@@ -54,12 +53,7 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
 	public void setLayout(String layout) {
 		this.layout = layout;
 	}
-    public ConceptRuleList getFieldTypeList() {
-		return fieldTypeList;
-	}
-	public void setFieldTypeList(ConceptRuleList fieldTypeList) {
-		this.fieldTypeList = fieldTypeList;
-	}
+    
 	public ConceptEntryList getEntryList() {
 		return entryList;
 	}
@@ -107,15 +101,15 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
     
     public String saveFieldTypeList(){
         String out = "";
-        ArrayList<ConceptRuleBO> list = fieldTypeList.getFields();
-        Iterator<ConceptRuleBO> itr = list.iterator();
+        //ArrayList<ConceptEntryBO> list = entryList.getFields();
+       // Iterator<ConceptEntryBO> itr = list.iterator();
         boolean isFirst = true;
-        while(itr.hasNext()){
+       /* while(itr.hasNext()){
             if(!isFirst){out+="|";}
             
             out += itr.next().toCSV();
             isFirst = false;
-        }
+        }*/
         
         //fieldTypes
         return out;
@@ -126,11 +120,11 @@ public class SALTConcept extends ECLJobEntry{//extends JobEntryBase implements C
         int len = strLine.length;
         
         if(len>0){
-            fieldTypeList = new ConceptRuleList();
+           // fieldTypeList = new ConceptRuleList();
             for(int i =0; i<len; i++){
-                ConceptRuleBO ft = new ConceptRuleBO(strLine[i]);
-                ft.fromCSV(strLine[i]);
-                fieldTypeList.add(ft);
+               // ConceptRuleBO ft = new ConceptRuleBO(strLine[i]);
+                //ft.fromCSV(strLine[i]);
+                //fieldTypeList.add(ft);
             }
         }
         

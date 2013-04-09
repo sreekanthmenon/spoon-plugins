@@ -26,7 +26,7 @@ public class ConceptEntryList {
 	}
 	
 	public void updateEntry(int index, ConceptEntryBO r){
-		System.out.println("Update Entry: " + index + " - " + r.getField());
+		
 		entries.set(index, r);
 	}
 	
@@ -35,10 +35,10 @@ public class ConceptEntryList {
 	//deleted
 	public void updateAll(String newName, String oldName){
 		for(int i = 0; i<entries.size();i++){
-			if(entries.get(i).getRuleName().equalsIgnoreCase(oldName)){
-				entries.get(i).setRuleName(newName);
+			if(entries.get(i).getConceptName().equalsIgnoreCase(oldName)){
+				entries.get(i).setConceptName(newName);
 				if(newName.equals("")){
-					entries.get(i).setHygieneRuleListIndex(-1);
+					entries.get(i).setEntryIndex(-1);
 				}
 				System.out.println("Updating NewName: " + newName + " OldName: " + oldName);
 			}//else{
@@ -51,9 +51,11 @@ public class ConceptEntryList {
 	//Add a new Record to the existing list
 	public void addEntry(int index) {
 		ConceptEntryBO entry = new ConceptEntryBO();
+		
 		if(index >= 0){
 			entries.add(index+1, entry);
 		} else {
+			
 			entries.add(entries.size(), entry);
 		}
 		Iterator<IConceptEntryListViewer> iterator = changeListeners.iterator();
@@ -67,7 +69,7 @@ public class ConceptEntryList {
 		//System.out.println("Looking for: " + name);
 		for(int i = 0; i<entries.size();i++){
 			//System.out.println(entries.get(i).getRuleName() + " vs " + name);
-			if(entries.get(i).getRuleName().equalsIgnoreCase(name)){
+			if(entries.get(i).getConceptName().equalsIgnoreCase(name)){
 				index = i;
 			}//else{
 			//	System.out.println("No Update: " + oldName);

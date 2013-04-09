@@ -19,11 +19,8 @@ public class ConceptEntryLabels extends LabelProvider implements ITableLabelProv
 	//ImageRegistry owns all of the image objects registered, and automatically disposes them when SWT Display is disposed.
 	static {
 		String iconPath = "icons/";
-		
 		imageRegistry.put( CHECKED_IMAGE, ImageDescriptor.createFromFile(CreateTable.class, iconPath + CHECKED_IMAGE + ".gif"));
 		imageRegistry.put( UNCHECKED_IMAGE, ImageDescriptor.createFromFile(CreateTable.class, iconPath + UNCHECKED_IMAGE + ".gif"));
-		//imageRegistry.put( UP_ARROW_KEY, ImageDescriptor.createFromFile(CreateTable.class, iconPath + UP_ARROW_KEY + ".jpg"));
-		//imageRegistry.put( DOWN_ARROW_KEY, ImageDescriptor.createFromFile(CreateTable.class, iconPath + DOWN_ARROW_KEY + ".jpg"));
 	}
 	
 	public static Image getImage(String key) {
@@ -35,32 +32,12 @@ public class ConceptEntryLabels extends LabelProvider implements ITableLabelProv
 		ConceptEntryBO objRecord = (ConceptEntryBO) element;
 		switch(columnIndex){
 		case 0:
-			result = objRecord.getField();
+			result = objRecord.getConceptName();
 			break;
-		case 1:
-			result = objRecord.getRuleName();
-			break;
-		//case 3:
-			//result = objRecord.getEditButton();
-		//	break;
+		
+		
 		}
 		
-		/*switch (columnIndex) {
-		case 0: 
-			result = objRecord.getColumnName();
-			break;
-		case 1: 
-			result = objRecord.getDefaultValue();
-			break;
-		case 2:
-			result = objRecord.getColumnType();
-			break;
-		case 3:
-			result = objRecord.getColumnWidth();
-			break;
-		default:
-			break;
-		}*/
 		return result;
 	}
 

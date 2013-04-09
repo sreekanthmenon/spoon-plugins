@@ -1,7 +1,8 @@
-package com.hpccsystems.ui.concepts;
+package org.hpccsystems.saltui.concept.edit;
 
 import java.util.Iterator;
 
+import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
@@ -21,9 +22,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
+import org.hpccsystems.saltui.concept.ConceptEntryBO;
 
-import com.hpccsystems.ui.concepts.table.ConceptsRecord;
-import com.hpccsystems.ui.concepts.table.ConceptsTable;
+import org.hpccsystems.saltui.concept.table.ConceptsRecord;
+import org.hpccsystems.saltui.concept.table.ConceptsRecordList;
+import org.hpccsystems.saltui.concept.table.ConceptsTable;
+
 import com.hpccsystems.ui.constants.Constants;
 
 public class ConfigureConceptsUI {
@@ -37,7 +41,23 @@ public class ConfigureConceptsUI {
 	private Text textSpecificity = null;
 	private Text textSwitchValue =null;
 	
-	public void addChildControls(Shell shell){
+	private ConceptEntryBO conceptRule;
+	private Button btnBagOfWordsCheck = null;
+	private ConceptsTable objConceptsTable = null;
+	private Shell shell;
+	private TableViewer conceptListTableViewer = null;
+	
+	public ConfigureConceptsUI(ConceptEntryBO crb, TableViewer conceptListTable){
+		conceptRule = crb;
+		this.conceptListTableViewer = conceptListTable;
+	}
+	public ConfigureConceptsUI(ConceptEntryBO crb){
+		conceptRule = crb;
+		//this.conceptListTableViewer = new TableViewer(null);
+	}
+	
+	
+	public void addChildControls(){
 		Composite compositeForConcept = new Composite(shell, SWT.NONE);
 		GridLayout layout = new GridLayout();
 	    layout.numColumns = 3;
@@ -85,8 +105,12 @@ public class ConfigureConceptsUI {
 	    comp.setLayoutData(data);
 	    
 	    //The table for displaying fields
-	    final ConceptsTable objConceptsTable = new ConceptsTable(comp);
+	   
+	    objConceptsTable = new ConceptsTable(comp,conceptRule.getRecordList());
+	   
 	    final Table table = objConceptsTable.getTableViewer().getTable();
+	    //objConceptsTable.getTableViewer().setInput(conceptRule.getRecordList());
+	    //objConceptsTable.setConceptsList(conceptRule.getRecordList());
 	    table.addListener(SWT.Selection, new Listener() {
 			public void handleEvent(Event event) {
 		        TableItem item =(TableItem)event.item;
@@ -207,10 +231,10 @@ public class ConfigureConceptsUI {
 		Label labelUseBagOfWords = new Label(grpBagOfWords, SWT.NONE);
 		labelUseBagOfWords.setText(Constants.LABEL_BAG_OF_WORDS);
 		
-		final Button btnCheck = new Button(grpBagOfWords, SWT.CHECK);
+		btnBagOfWordsCheck = new Button(grpBagOfWords, SWT.CHECK);
 		data = new GridData();
 		data.horizontalSpan = 2;
-		btnCheck.setLayoutData(data);
+		btnBagOfWordsCheck.setLayoutData(data);
 		
 		Label labelReOrderType = new Label(grpBagOfWords, SWT.NONE);
 		labelReOrderType.setText(Constants.LABEL_REORDER_TYPE);
@@ -327,11 +351,11 @@ public class ConfigureConceptsUI {
 			
 			@Override
 			public void widgetSelected(SelectionEvent arg0) {
-				
+				/*
 				System.out.println("Concept Name: "+textConceptName.getText());
 				System.out.println("Effect on Specificity : "+comboEffectOnSpecificity.getText());
 				System.out.println("Threshold: "+textThreshold.getText());
-				System.out.println("Bag of Words: "+btnCheck.getSelection());
+				System.out.println("Bag of Words: "+btnBagOfWordsCheck.getSelection());
 				System.out.println("ReOrder Type: "+textReOrderType.getText());
 				System.out.println("Segment Type: "+comboSegmentType.getText());
 				System.out.println("Scale: "+comboScale.getText());
@@ -348,6 +372,25 @@ public class ConfigureConceptsUI {
 						System.out.println("*******************");
 					}
 				}
+				*/
+				//System.out.println("save--");
+				//System.out.println(objConceptsTable.getConceptsList().saveListAsString());
+				
+				conceptRule.setConceptName(textConceptName.getText());
+				conceptRule.setEffectOnSpecificity(comboEffectOnSpecificity.getText());
+				conceptRule.setThreshold(textThreshold.getText());
+				conceptRule.setUseBagOfWords(btnBagOfWordsCheck.getSelection());
+				conceptRule.setReOrderType(textReOrderType.getText());
+				conceptRule.setSegmentType(comboSegmentType.getText());
+				conceptRule.setScale(comboScale.getText());
+				conceptRule.setSpecificity(textSpecificity.getText());
+				conceptRule.setSwitchValue(textSwitchValue.getText());
+				
+				conceptRule.setRecordList(objConceptsTable.getConceptsList());
+				conceptListTableViewer.refresh();
+				
+				shell.close();
+				
 			}
 			
 			@Override
@@ -365,7 +408,7 @@ public class ConfigureConceptsUI {
 		btnCancel.setLayoutData(data);
 		
 		//Check if Selected Items > 3. If yes, disable ReOrderType Text Box.
-		if(objConceptsTable.getConceptsList().getConcepts() != null && objConceptsTable.getConceptsList().getConcepts().size() > 0){
+		if(objConceptsTable.getConceptsList() != null && objConceptsTable.getConceptsList().getConcepts() != null && objConceptsTable.getConceptsList().getConcepts().size() > 0){
 	    	int count = 0;
 	    	for (Iterator<ConceptsRecord> iterator = objConceptsTable.getConceptsList().getConcepts().iterator(); iterator.hasNext();) {
 				ConceptsRecord obj = (ConceptsRecord) iterator.next();
@@ -380,13 +423,27 @@ public class ConfigureConceptsUI {
 				textReOrderType.setEnabled(true);
 			}
 	    }
+		loadData();
+	}
+	public void loadData(){
+		this.textConceptName.setText(this.conceptRule.getConceptName());
+		this.textReOrderType.setText(this.conceptRule.getReOrderType());
+		this.textThreshold.setText(this.conceptRule.getThreshold());
+		this.comboSegmentType.setText(this.conceptRule.getSegmentType());
+		this.comboScale.setText(this.conceptRule.getScale());
+		this.textSpecificity.setText(this.conceptRule.getSpecificity());
+		this.textSwitchValue.setText(this.conceptRule.getSwitchValue());
+		this.comboEffectOnSpecificity.setText(this.conceptRule.getEffectOnSpecificity());
+		this.btnBagOfWordsCheck.setSelection(this.conceptRule.isUseBagOfWords());
 		
 	}
 	
-	public void run() {
+	public void initFields(){
+		//objConceptsTable.getConceptsList().initTestData();
+	}
+	public void run(Shell shell) {
 		
-		Display display = new Display();
-	    Shell shell = new Shell(display);
+		this.shell = shell;
 	    shell.setText(Constants.ADD_CONCEPTS_TITLE);
 	    shell.setSize(800, 550);
 	    GridLayout layout = new GridLayout();
@@ -396,19 +453,36 @@ public class ConfigureConceptsUI {
 	    layout.makeColumnsEqualWidth = true;
 	    shell.setLayout(layout);
 	    
-	    addChildControls(shell);
+	    addChildControls();
 		
 	    shell.open();
-	    while (!shell.isDisposed()) {
-	      if (!display.readAndDispatch())
-	        display.sleep();
-	    }
-	    display.dispose();
+	   
 	}
 	
+	
 	public static void main(String[] args) {
+		Display display = new Display();
+	    Shell shell = new Shell(display);
+	    
+	    
+	    ConceptEntryBO crb = new ConceptEntryBO();
+	    crb.setConceptName("test");
+	    crb.setEffectOnSpecificity("test2");
+	    crb.setUseBagOfWords(true);
+	    ConceptsRecordList crl = new ConceptsRecordList();
+	    crl.initTestData();
+	    
+	    crb.setRecordList(crl);
+	    
+	   
+	    ConfigureConceptsUI ui = new ConfigureConceptsUI(crb);
+		ui.run(shell);
 		
-		new ConfigureConceptsUI().run();
+		while (!shell.isDisposed()) {
+		      if (!display.readAndDispatch())
+		        display.sleep();
+		    }
+		    display.dispose();
 	}
 	
 }
