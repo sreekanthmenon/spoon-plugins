@@ -127,7 +127,9 @@ import javax.xml.bind.annotation.XmlType;
     "matchingRules",
     "hygieneRules",
     "hygieneRuleMap",
-    "matchingRuleMap"
+    "matchingRuleMap",
+    "conceptDef",
+    "conceptDefMap"
 })
 @XmlRootElement(name = "salt-specification")
 public class SaltSpecification {
@@ -163,8 +165,31 @@ public class SaltSpecification {
     protected SaltSpecification.HygieneRuleMap hygieneRuleMap;
     @XmlElement(name = "matching-rule-map", required = true)
     protected SaltSpecification.MatchingRuleMap matchingRuleMap;
+    
+    
+    @XmlElement(name = "concept-def", required = true)
+    protected SaltSpecification.ConceptDef conceptDef;
+    @XmlElement(name = "concept-fields-map", required = true)
+    protected SaltSpecification.ConceptFieldsMap conceptFieldsMap;
 
-    /**
+    public SaltSpecification.ConceptDef getConceptDef() {
+		return conceptDef;
+	}
+
+	public void setConceptDef(SaltSpecification.ConceptDef conceptDef) {
+		this.conceptDef = conceptDef;
+	}
+
+	public SaltSpecification.ConceptFieldsMap getConceptFieldsMap() {
+		return conceptFieldsMap;
+	}
+
+	public void setConceptFieldsMap(
+			SaltSpecification.ConceptFieldsMap conceptFieldsMap) {
+		this.conceptFieldsMap = conceptFieldsMap;
+	}
+
+	/**
      * Gets the value of the moduleName property.
      * 
      * @return
@@ -436,6 +461,24 @@ public class SaltSpecification {
                 fielddef = new ArrayList<FieldDef>();
             }
             return this.fielddef;
+        }
+
+    }
+    
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "conceptfielddef"
+    })
+    public static class ConceptFields {
+
+        protected List<ConceptFields> conceptFields;
+
+       
+        public List<ConceptFields> getConceptdef() {
+            if (conceptFields == null) {
+            	conceptFields = new ArrayList<ConceptFields>();
+            }
+            return this.conceptFields;
         }
 
     }
@@ -860,6 +903,75 @@ public class SaltSpecification {
                 rule = new ArrayList<MatchingRule>();
             }
             return this.rule;
+        }
+
+    }
+    
+    
+    
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "conceptDef"
+    })
+    public static class ConceptDef {
+
+        protected List<ConceptDef> field;
+
+
+        public List<ConceptDef> getRule() {
+            if (field == null) {
+            	field = new ArrayList<ConceptDef>();
+            }
+            return this.field;
+        }
+
+    }
+    
+    
+    @XmlAccessorType(XmlAccessType.FIELD)
+    @XmlType(name = "", propOrder = {
+        "map"
+    })
+    public static class ConceptFieldsMap {
+
+        protected List<SaltSpecification.HygieneRuleMap.Map> map;
+
+
+        public List<SaltSpecification.HygieneRuleMap.Map> getMap() {
+            if (map == null) {
+                map = new ArrayList<SaltSpecification.HygieneRuleMap.Map>();
+            }
+            return this.map;
+        }
+
+
+
+        @XmlAccessorType(XmlAccessType.FIELD)
+        @XmlType(name = "", propOrder = {
+            "conceptDef",
+            "conceptFieldDef"
+        })
+        public static class Map {
+
+            @XmlElement(required = true)
+            protected String conceptDef;
+            @XmlElement(required = true)
+            protected String conceptFieldDef;
+			public String getConceptDef() {
+				return conceptDef;
+			}
+			public void setConceptDef(String conceptDef) {
+				this.conceptDef = conceptDef;
+			}
+			public String getConceptFieldDef() {
+				return conceptFieldDef;
+			}
+			public void setConceptFieldDef(String conceptFieldDef) {
+				this.conceptFieldDef = conceptFieldDef;
+			}
+
+            
+
         }
 
     }

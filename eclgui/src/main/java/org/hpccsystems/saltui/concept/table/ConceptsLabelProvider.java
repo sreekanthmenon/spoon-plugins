@@ -15,8 +15,8 @@ import org.eclipse.swt.widgets.Display;
 import com.hpccsystems.ui.constants.Constants;
 
 // http://stackoverflow.com/questions/6149547/swt-jface-disabled-checkbox-in-a-table-column
-
-public class ConceptsLabelProvider extends LabelProvider implements ITableLabelProvider, ITableFontProvider, ITableColorProvider {
+//ITableFontProvider, ITableColorProvider 
+public class ConceptsLabelProvider extends LabelProvider implements ITableLabelProvider{
 
 	// For the checkbox images
 	private static ImageRegistry imageRegistry = new ImageRegistry();
@@ -59,6 +59,7 @@ public class ConceptsLabelProvider extends LabelProvider implements ITableLabelP
 		return (columnIndex == 1) ? getImage(((ConceptsRecord) element).isNonNull()) : null;
 	}
 	
+	/*
 	public Font getFont(Object element, int columnIndex) {
 		return null;
 	}
@@ -73,5 +74,6 @@ public class ConceptsLabelProvider extends LabelProvider implements ITableLabelP
 	public Color getForeground(Object element, int columnIndex) {
 		return null;
 	}
+	*/
 
 }

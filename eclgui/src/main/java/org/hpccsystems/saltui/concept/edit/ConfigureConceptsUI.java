@@ -1,6 +1,8 @@
 package org.hpccsystems.saltui.concept.edit;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.swt.SWT;
@@ -297,6 +299,8 @@ public class ConfigureConceptsUI {
 	    
 	    textSpecificity = new Text(compositeForSegmentTypes, SWT.BORDER);
 	    textSpecificity.setText(Constants.EMPTY_STRING);
+	    //textSpecificity.setVisible(false);
+	    textSpecificity.setEnabled(false);
 	    data = new GridData();
 	    data.horizontalAlignment = GridData.FILL;
 	    data.grabExcessHorizontalSpace = true;
@@ -311,6 +315,7 @@ public class ConfigureConceptsUI {
 	    
 	    textSwitchValue = new Text(compositeForSegmentTypes, SWT.BORDER);
 	    textSwitchValue.setText(Constants.EMPTY_STRING);
+	    textSwitchValue.setEnabled(false);
 	    data = new GridData();
 	    data.horizontalAlignment = GridData.FILL;
 	    data.grabExcessHorizontalSpace = true;
@@ -387,8 +392,10 @@ public class ConfigureConceptsUI {
 				conceptRule.setSwitchValue(textSwitchValue.getText());
 				
 				conceptRule.setRecordList(objConceptsTable.getConceptsList());
+				
+				System.out.println(conceptRule.getRecordList().saveListAsString());
 				if(conceptListTableViewer != null)
-				conceptListTableViewer.refresh();
+					conceptListTableViewer.refresh();
 				
 				shell.close();
 				
@@ -407,6 +414,22 @@ public class ConfigureConceptsUI {
 		data.grabExcessHorizontalSpace = true;
 		data.widthHint = 80;
 		btnCancel.setLayoutData(data);
+		
+		btnCancel.addSelectionListener(new SelectionListener() {
+			
+			@Override
+			public void widgetSelected(SelectionEvent arg0) {
+				if(conceptListTableViewer != null)
+					conceptListTableViewer.refresh();
+				
+				shell.close();
+			}
+			@Override
+			public void widgetDefaultSelected(SelectionEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 		
 		//Check if Selected Items > 3. If yes, disable ReOrderType Text Box.
 		if(objConceptsTable.getConceptsList() != null && objConceptsTable.getConceptsList().getConcepts() != null && objConceptsTable.getConceptsList().getConcepts().size() > 0){
@@ -470,7 +493,13 @@ public class ConfigureConceptsUI {
 	    crb.setConceptName("test");
 	    crb.setEffectOnSpecificity("test2");
 	    crb.setUseBagOfWords(true);
-	    ConceptsRecordList crl = new ConceptsRecordList();
+	    
+	    List<String> test = new ArrayList();
+	    test.add("myfield");
+	    test.add("myfield2");
+	    test.add("field2");
+	    test.add("field3");
+	    ConceptsRecordList crl = new ConceptsRecordList("myfield*nonNull*selected*0|myfield2*allowNull*selected*1",test);
 	    crl.initTestData();
 	    
 	    crb.setRecordList(crl);

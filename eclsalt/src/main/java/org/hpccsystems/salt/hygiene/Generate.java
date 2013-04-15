@@ -4,8 +4,11 @@ import org.apache.xmlbeans.XmlException;
 
 
 
+import org.hpccsystems.salt.hygiene.bean.ConceptFields;
 import org.hpccsystems.salt.hygiene.bean.FieldHygieneRule;
 import org.hpccsystems.salt.hygiene.bean.HygieneSpecDocument;
+
+import com.hpccsystems.salt.jaxb.ConceptDef;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -21,7 +24,7 @@ public class Generate {
         HygieneSpecDocument doc = HygieneSpecDocument.Factory.parse(in);
         HygieneSpecDocument.HygieneSpec spec = doc.getHygieneSpec();
         if (null != spec) {
-
+        	
             StringBuilderEx specStr = new StringBuilderEx();
             StringBuilderEx likes = new StringBuilderEx();
             StringBuilderEx fields = new StringBuilderEx();
@@ -94,12 +97,56 @@ public class Generate {
 
             }
             
-           
-
             specStr.appendLine(likes.toString());
             specStr.appendLine(fields.toString());
+            org.hpccsystems.salt.hygiene.bean.ConceptDef[] concepts = spec.getConceptDefArray();
+            for (int i = 0; i < concepts.length; i++) {
+            	String conceptStr = "";
+            	
+            	conceptStr += "CONCEPT:" + concepts[i].getConceptName();
+            	
+            	ConceptFields[] cFields = concepts[i].getConceptFieldsArray();
+            	for(int j =0; j < cFields.length; j++){
+            		conceptStr += ":" + cFields[j].getConceptFieldname();
+            		if(cFields[j].getNonNull() != null && cFields[j].getNonNull().equalsIgnoreCase("true")){
+            			System.out.println("test: " + cFields[j].getNonNull());
+            			conceptStr += "+";
+            		}
+            	}
+            	//optional field
+            	//if(!segmentType.equals("")){
+            	if(concepts[i].getSegmentType() != null && !concepts[i].getSegmentType().equals("")){
+            		conceptStr += ":SEGTYPE(" + concepts[i].getSegmentType() + ")";
+            	}
+            	//optional field
+            	if(concepts[i].getScale() != null && !concepts[i].getScale().equals("")){
+            		conceptStr += ":SCALE(" + concepts[i].getScale() + ")";
+            	}
+            	//optional field
+            	if(concepts[i].getUseBagOfWords() != null && concepts[i].getUseBagOfWords().equalsIgnoreCase("true")){
+            		conceptStr += ":BAGOFWORDS";
+            	}
+            	//required field set to 0 if ""
+            	if(concepts[i].getSpecificity() != null){
+            		conceptStr += ":" + concepts[i].getSpecificity();
+            		
+            	}else{
+            		conceptStr += ":0";
+            	}
+            	//required field set to 0 if ""
+            	if(concepts[i].getSwitchValue() != null){
+            		conceptStr += "," + concepts[i].getSwitchValue();
+            		
+            	}else{
+            		conceptStr += ",0";
+            	}
+            	specStr.appendLine(conceptStr);
+            }
+           
             
-            if(spec.getSourcefield()!= null){
+            
+            
+            if(spec.getSourcefield()!= null && !spec.getSourcefield().equalsIgnoreCase("null")){
             	specStr.appendLine("SOURCEFIELD:" + spec.getSourcefield() + ":CONSISTENT");
             }
 
@@ -123,7 +170,7 @@ public class Generate {
 
     public static void main(String[] args) throws Exception {
         //String fileContent = readFileAsString("../../../../../xsd/SALT-Hygiene.xml");
-        String src = "C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/eclsalt/src/main/xsd/SALT-Hygiene.xml";
+        String src = "C:/Documents and Settings/ChambeJX.RISK/My Documents/spoon-plugins/spoon-plugins/eclsalt/src/main/xsd/concept_test.xml";
         
        // src = "C:/Spoon Demos/new/salt/out_hygine/salt.xml";
     	try{
@@ -138,12 +185,14 @@ public class Generate {
         HygieneSpecDocument.HygieneSpec spec = doc.addNewHygieneSpec();
         spec.setModuleName("HelloWorld");
         spec.setFileName("HelloWorld_File");
-       // spec.setIdfield("HelloWorld_File_ID");
-       spec.setIdname("HellowWorldIDName");
-       spec.setSourcefield("test");
+        // spec.setIdfield("HelloWorld_File_ID");
+        spec.setIdname("HellowWorldIDName");
+        spec.setSourcefield("test");
         FieldHygieneRule rule = spec.addNewFieldRule();
         rule.setFieldName("First");
         rule.setLeftTrim(true);
+        
+        //ConceptDef cd = spec.add //new ConceptDef();
 
         System.out.println(doc.toString());
     }

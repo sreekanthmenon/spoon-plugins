@@ -48,7 +48,7 @@ public class ConceptsRecord {
 		out += children;
 		out += delim;
 		if(nonNull){
-			out += "notNull";
+			out += "nonNull";
 		}else{
 			out += "allowNull";
 		}
@@ -63,19 +63,41 @@ public class ConceptsRecord {
 		return out;
 	}
 	public void loadFromString(String in){
-		String[] tokens = in.split(delim);
-		children = tokens[0];
-		if(tokens[1].equalsIgnoreCase("nonNull")){
-			nonNull = true;
-		}else{
-			nonNull = false;
+		if(!in.equals("")){
+			String[] tokens = in.split("[" + delim + "]");
+			children = tokens[0];
+			if(tokens[2].equalsIgnoreCase("selected")){
+				select = true;
+			}else{
+				select = false;
+			}
+			System.out.println("sel: " + select);
+			if(tokens[1].equalsIgnoreCase("nonNull")){
+				nonNull = true;
+			}else{
+				nonNull = false;
+			}
+			System.out.println("nonNull: " + nonNull);
+			counter = Integer.parseInt(tokens[3]);
 		}
-		if(tokens[2].equalsIgnoreCase("selected")){
-			select = true;
-		}else{
-			select = false;
+	}
+	
+	public String fromStringToXML(String in){
+		String xml = "";
+		if(!in.equals("")){
+			String[] tokens = in.split("[" + delim + "]");
+			String nonNull = "false";
+			if(tokens[1].equalsIgnoreCase("nonNull")){
+				nonNull = "true";
+			}
+			if(tokens[2].equalsIgnoreCase("selected")){
+				xml += "	<hyg:concept-fields>\r\n" +
+						"		<hyg:conceptFieldname>" + tokens[0] + "</hyg:conceptFieldname>\r\n" +
+						"		<hyg:nonNull>" + nonNull + "</hyg:nonNull>\r\n" +
+						"	</hyg:concept-fields>\r\n";
+			}
 		}
-		counter = Integer.parseInt(tokens[3]);
+		return xml;
 	}
 	
 }

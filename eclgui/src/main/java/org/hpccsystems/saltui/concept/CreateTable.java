@@ -34,6 +34,7 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 import org.hpccsystems.recordlayout.RecordLabels;
 import org.hpccsystems.saltui.concept.edit.ConfigureConceptsUI;
+import org.hpccsystems.saltui.concept.table.ConceptsRecordList;
 
 import com.hpccsystems.ui.constants.Constants;
 
@@ -41,6 +42,7 @@ import com.hpccsystems.ui.constants.Constants;
 
 public class CreateTable {
 	//public Boolean hasChanged = false;
+	private ArrayList datasetFields = null;
 	private Shell shell;
 	private Table table;
 	private TableViewer tableViewer;
@@ -82,6 +84,11 @@ public class CreateTable {
 	
 	public void loadFields(String fields[]){
 		this.fields = fields;
+		this.datasetFields = new ArrayList();
+		for(int i = 0; i< fields.length; i++){
+			this.datasetFields.add(fields[i]);
+		}
+		
 	}
 	public TabItem buildDetailsTab(String tabName, TabFolder tabFolder){
     	
@@ -299,9 +306,13 @@ public class CreateTable {
 	public static void main(String[] args) {
 		ConceptEntryBO e = new ConceptEntryBO();
 		e.setConceptName("tester");
+		
 		//e.setField("test");
 		//e.setRuleName("To Uppercase");
 		CreateTable ct = new CreateTable();
+		ct.datasetFields = new ArrayList();
+		ct.datasetFields.add("test");
+		ct.datasetFields.add("test2");
 		Display display = new Display ();
 		final Shell dialog = new Shell (display, SWT.DIALOG_TRIM);
 		ct.shell = dialog;
@@ -310,6 +321,11 @@ public class CreateTable {
 		//ct.editRuleDialog.setText("Edit Concept");
 		//
 		ct.entryList = new ConceptEntryList();
+		
+		GridLayout layout = new GridLayout(1, false);
+		ct.shell.setLayout (layout);
+		
+		
 		ct.run(dialog);
 		while (!ct.shell.isDisposed ()) {
 			ct.refreshTable();
@@ -317,21 +333,35 @@ public class CreateTable {
 		}
 		ct.shell.dispose ();
 		
+		
 	}
 	
 	public void run(Shell shell) {
 		
 		this.shell = shell;
 	    shell.setText(Constants.ADD_CONCEPTS_TITLE);
-	    shell.setSize(800, 550);
-	    GridLayout layout = new GridLayout();
-	    layout.numColumns = 3;
+	    shell.setSize(800, 650);
+	    
+	    GridLayout layout = new GridLayout(2, false);
+		
+	    layout.numColumns = 1;
 	    layout.marginLeft = 10;
 	    layout.marginRight = 10;
-	    layout.makeColumnsEqualWidth = true;
+	    layout.makeColumnsEqualWidth = false;
 	    shell.setLayout(layout);
 	    TabFolder tabFolder = new TabFolder (shell, SWT.FILL | SWT.RESIZE | SWT.MIN | SWT.MAX);
 	    TabItem item2 = this.buildDetailsTab("Concepts", tabFolder);
+	    
+	    Button tmpSave = new Button(shell, SWT.NONE);
+	    tmpSave.setText("Test Save");
+		Listener saveListener = new Listener() {
+
+            public void handleEvent(Event e) {
+                
+            }
+        };
+
+        tmpSave.addListener(SWT.Selection, saveListener);
 	    //addChildControls();
 		
 	    shell.open();
@@ -342,7 +372,14 @@ public class CreateTable {
 			//tableViewer.getElementAt(index).
 		editRuleDialog = new Shell(this.shell, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
 		editRuleDialog.setText("Edit Concept");
+		String inputFields = "";
+		if(newEntry != null && newEntry.getRecordList() != null){
+			inputFields = newEntry.getRecordList().saveListAsString();
+		}
+		ConceptsRecordList recordList = new ConceptsRecordList(inputFields,datasetFields);
+	    newEntry.setRecordList(recordList);
 		ConfigureConceptsUI concept = new ConfigureConceptsUI(newEntry,tableViewer);
+		
 		concept.run(editRuleDialog);
 				
 	}
@@ -494,6 +531,16 @@ private void createButtons(Composite parent) {
 		//ruleList.createDefault();
 		this.shell = shell;
 	}
+	
+	public CreateTable(Shell shell, String[] datasets) {
+		//	ruleList = new ConceptRuleList();
+			//ruleList.createDefault();
+			this.shell = shell;
+			this.datasetFields = new ArrayList();
+			for(int i = 0; i< datasets.length; i++){
+				this.datasetFields.add(datasets[i]);
+			}
+		}
 	
 	
 	

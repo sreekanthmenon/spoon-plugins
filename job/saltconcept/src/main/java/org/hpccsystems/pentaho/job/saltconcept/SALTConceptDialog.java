@@ -169,8 +169,10 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
        
 
         createTable = new CreateTable(shell);
+        String[] items = null;// = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
         try{
-	        String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
+	        //String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
+        	items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
 	        createTable.loadFields(items);
 	        
         }catch (Exception exc){
@@ -182,14 +184,15 @@ public class SALTConceptDialog extends ECLJobEntryDialog{//extends JobEntryDialo
                 System.out.println("left RS changed");
                 AutoPopulate ap = new AutoPopulate();
                 try{
-                	
+                	String[] items = ap.fieldsByDataset( datasetName.getText(),jobMeta.getJobCopies());
+                	createTable.loadFields(items);
                 	}catch (Exception exc){
                 	System.out.println("error loading dataset fields");
                 }
             }
         });
         
-        createTable = new CreateTable(shell);
+        createTable = new CreateTable(shell,items);
         
         //String[] items = ap.fieldsByDataset( leftRecordSet.getText(),jobMeta.getJobCopies());
         

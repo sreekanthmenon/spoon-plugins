@@ -112,49 +112,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	}
 	 
 	
-	public boolean compileSalt(String saltPath, String spcFile, String outputDir, String jobNameNoSpace){
-		boolean saltExists = (new File(saltPath + "\\salt.exe")).exists();
-		boolean outExists = (new File(outputDir).exists());
-		boolean success = false;
-		if(saltExists && outExists){
-			String cmd = "\"" + saltPath + "\\salt.exe\" -ga -D\"" + outputDir + "\" \"" + spcFile + "\"";
-			//System.out.println("-->" + cmd + "<--");
-		 	try{
-				 System.out.println("runtime");
-				 File path = new File(saltPath);
-				 Runtime rt = java.lang.Runtime.getRuntime();
-				 Process p = rt.exec(cmd, null, path);
-				 
-				//block until salt compile is completed
-	                int b = 0;
-	                while(!(new File(this.fileName + "\\" + jobNameNoSpace + "module")).exists() && b < 150){
-	                	Thread.sleep(1000);
-	                	b++;
-	                }
-	                
-				// if(p.exitValue() == 0){
-					 if((new File(this.fileName + "\\" + jobNameNoSpace + "module")).exists()){
-						 success = true;
-					 }
-				// }
-				 
-				 
-                    
-		 	}catch (Exception e){
-	            System.out.println(e.toString());
-	            e.printStackTrace();
-	            error += "Couldn't Locate the Salt Install and/or the output Directory Please Verify settings!";
-	            return false;
-	        }
-		}else{
-			//salt install doesn't exist
-			if(!saltExists){error += "Salt not found in provided path, please check Global Variables! \r\n";}
-			if(!outExists){error += "Output Directory defined in Execute step doesn't exist";}
-			success = false;
-		}
-		
-		return success;
-	}
+	
 	 
 	public void fixEclFiles(String dir){
 		File folder = new File(dir);
@@ -256,8 +214,13 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	            e.printStackTrace();
 	
 	        }
-	        
+	        saltIncludePath = ECLExecuteSalt.buildDatasetSalt(result, jobMeta, fileName, error);
+	        if(!error.equals("")){
+	        	logBasic(error);
+	        }
 	      //insert code here to build spec file on compile
+	        
+	        /*
 	        if(includeSALT.equalsIgnoreCase("true")){
 	        	saltIncludePath = this.fileName+ "";
 	        }
@@ -322,19 +285,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		        	
 		        	
 		        	
-		        	
-		        	//need to load the hygine data if it exists
-		        	
-		        	/*
-		        	xmlBuilder = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?>\r\n" +
-		        				"<salt-specification xmlns=\"http://hpccsystems.com/SALT\">\r\n" +
-		        				"<module-name>" + jobNameNoSpace + "module</module-name>\r\n" +
-		        				"<file-name>" + file_name + "</file-name>\r\n" +
-		        				"<fields>\r\n" + xmlBuilder +
-		        				"</fields>\r\n" +
-		        				"</salt-specification>";
-		        	*/
-		        	//write file to output directory				
+		        				
 		
 					
 		        	xmlHygieneBuilder = "<hyg:hygiene-spec xmlns:hyg=\"http://hpccsystems.org/salt/hygiene/bean\">" +"\r\n"+
@@ -367,7 +318,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		                
 		                String modFile = "";
 		                //System.out.println("-------------------------------------SALT COMPILE2--------------------------------");
-		                boolean compileSuccess = compileSalt(SALTPath, this.fileName + "\\salt.spc", this.fileName+ "",jobNameNoSpace);
+		                boolean compileSuccess = ECLExecuteSalt.compileSalt(SALTPath, this.fileName + "\\salt.spc", this.fileName+ "",jobNameNoSpace,error,this.fileName);
 		                
 		                if(!compileSuccess){
 		                	 String SaltError = "Unable to create the SALT files! Please check your salt path in Global Variables, and your output path in Execute.";
@@ -414,7 +365,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 		            e.printStackTrace();
 		        }
 	        }
-	        
+	        */
 	        //System.out.println("Output -- Finished setting up Global Variables");
 	        this.setServerAddress(serverHost);
 	        this.setServerPort(serverPort);
@@ -612,95 +563,9 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	}
 	
 	
-	public String buildOptReports(String datasetName){
-		String xml = "";
-		JobMeta jobMeta = super.parentJob.getJobMeta();
-        List<JobEntryCopy> jobs = jobMeta.getJobCopies();
-        try{
-	        SaltAutoPopulate sap = new SaltAutoPopulate();
-	        HashMap hm = sap.getHygine(jobs, datasetName);
-	        if(hm.get("srcField") != null){
-	        	xml += "<hyg:sourcefield>" + hm.get("srcField") + "</hyg:sourcefield>";
-	        }
-        }catch (Exception e){}    
-		return xml;
-	}
+	
     
-	public String buildHygieneRule(String datasetName, String columnName, String columnType){
-		String xml = "";
-        JobMeta jobMeta = super.parentJob.getJobMeta();
-        List<JobEntryCopy> jobs = jobMeta.getJobCopies();
-        
-		xml += "<hyg:field-rule>"+"\r\n";
-		xml += "    <hyg:field-name>" + columnName + "</hyg:field-name>"+"\r\n";
-		xml += "    <hyg:field-type>" + columnType + "</hyg:field-type>"+"\r\n";
-		
-		//see if hygine rule exists for field
-		//if rule exists build it
-		try{
-	        SaltAutoPopulate sap = new SaltAutoPopulate();
-	        String[] rules = sap.getRule(jobs,datasetName, columnName);
-	        HygieneEntryList hel = sap.getEntryList();
-	        ArrayList<HygieneEntryBO> entries = hel.getEntries();
-	        
-	        for(int i =0; i<entries.size(); i++){
-	        	HygieneEntryBO entry = entries.get(i);
-	        	if(columnName.equalsIgnoreCase(entry.getField())){
-	        		System.out.println("Field with Rule: " + entry.getField());
-	        		//we have a column match and it has a rule 
-	        		//look up rule
-	        		HygieneRuleBO rule = sap.fieldTypeList.get(sap.fieldTypeList.getIndex(entry.getRuleName()));
-	        		//we have the rule time to build the xml
-	        		if(rule.isCaps()){
-	        			xml += "    <hyg:caps>true</hyg:caps>"+"\r\n";
-	        		}
-	        		if(rule.isLefttrim()){
-	        			xml += "    <hyg:left-trim>true</hyg:left-trim>"+"\r\n";
-	        		}
-	        		if(!rule.getAllow().equals("")){
-	        			xml += "    <hyg:allow>"+rule.getAllow()+"</hyg:allow>"+"\r\n";
-	        		}
-	        		if(!rule.getSpaces().equals("")){
-	        			xml += "    <hyg:spaces>"+rule.getSpaces()+"</hyg:spaces>"+"\r\n";
-	        		}
-	        		if(!rule.getOnfail().equals("")){
-	        			xml += "    <hyg:on-fail>"+rule.getOnfail()+"</hyg:on-fail>"+"\r\n";
-	        		}
-	        		if(!rule.getIgnore().equals("")){
-	        			//not implemented
-	        			xml += "    <hyg:ignore>"+rule.getIgnore()+"</hyg:ignore>"+"\r\n";
-	        		}
-	        		if(!rule.getLengths().equals("")){
-	        			//not implemented
-	        			xml += "    <hyg:lengths>"+rule.getLengths()+"</hyg:lengths>"+"\r\n";
-	        		}
-	        		if(!rule.getDisallowedQuotes().equals("")){
-	        			//not implemented
-	        			xml += "    <hyg:disallowed-quotes>"+rule.getDisallowedQuotes()+"</hyg:disallowed-quotes>"+"\r\n";
-	        		}
-	        		//if(!rule.getLike().equals("")){
-	        			//not implemented
-	        		//	xml += "    <hyg:like>"+rule.getLike()+"</hyg:like>"+"\r\n";
-	        		//}
-	        		if(!rule.getWords().equals("")){
-	        			//not implemented
-	        			xml += "    <hyg:words>"+rule.getWords()+"</hyg:words>"+"\r\n";
-	        		}
-	        		
-	        		
-	        	}
-	        }
-        
-        }catch (Exception e){
-        	System.out.println("~~~~~~~~~~~~~~~~~~~~ERROR~~~~~~~~~~~~~~~~~~~~~~~~~~");
-        	System.out.println (e.toString());
-
-        }
-		//Close off the XML Tag
-		xml += "</hyg:field-rule>"+"\r\n";
-		
-		return xml;
-	}
+	
      
     @Override
     public void loadXML(Node node, List<DatabaseMeta> list, List<SlaveServer> list1, Repository rpstr) throws KettleXMLException {

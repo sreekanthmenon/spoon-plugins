@@ -10,6 +10,7 @@ import org.eclipse.jface.viewers.IStructuredContentProvider;
 import org.eclipse.jface.viewers.TableViewer;
 import org.eclipse.jface.viewers.Viewer;
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Rectangle;
 import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
@@ -50,7 +51,7 @@ public class ConceptsTable {
 				
 				ConceptsRecord obj = iterator.next();
 				TableItem item = table.getItem(count);
-				item.setChecked(obj.isNonNull());
+				item.setChecked(obj.isSelect());
 				count++;
 			}
 		}
@@ -90,6 +91,10 @@ public class ConceptsTable {
 	    data.verticalAlignment = GridData.FILL;
 	    data.grabExcessHorizontalSpace = true;
 	    data.grabExcessVerticalSpace = true;
+	    int tableHeight = table.getItemHeight() * 5;
+	    Rectangle trim = table.computeTrim(0, 0, 0, tableHeight);
+	    data.heightHint = trim.height;
+	    
 	    table.setLayoutData(data);
 	    
 	    table.setLinesVisible(true);

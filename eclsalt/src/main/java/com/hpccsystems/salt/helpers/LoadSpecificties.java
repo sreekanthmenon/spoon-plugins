@@ -198,6 +198,26 @@ public class LoadSpecificties {
 				}
 			}
 			
+			NodeList conceptList = doc.getElementsByTagName("hyg:concept-def");
+			for (int temp = 0; temp < conceptList.getLength(); temp++) {
+				
+				Node nNode = conceptList.item(temp);
+				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+					Element cElement = (Element) nNode;
+					String conceptName = cElement.getElementsByTagName("hyg:concept-name").item(0).getTextContent();
+					//System.out.println(conceptName);
+					String specificity = (String)specificities.get(conceptName.toLowerCase() + "_specificity");
+					if(specificity != null){
+						if(cElement.getElementsByTagName("hyg:specificity").item(0) != null){
+							cElement.getElementsByTagName("hyg:specificity").item(0).setTextContent(specificity);
+						}else{
+							Element newSpecificity = doc.createElement("hyg:specificity");
+							newSpecificity.appendChild(doc.createTextNode(specificity));
+							cElement.appendChild(newSpecificity);
+						}
+					}
+				}
+			}
 			NodeList spec = doc.getElementsByTagName("hyg:hygiene-spec");
 			Element newrid = doc.createElement("hyg:ridfield");
 			newrid.appendChild(doc.createTextNode("spoonRecordID"));
@@ -249,7 +269,7 @@ public class LoadSpecificties {
 	    	String [] vals = null;
 	    	int cnt = 0; 
 	    	
-	    	while ((nextLine = reader.readNext()) != null) {
+	    	while ((nextLine = reader.readNext()) != null && cnt < 2) {
 	    		if(cnt == 0){
 	    			//build hash map keys
 	    			keys = nextLine;
@@ -262,8 +282,13 @@ public class LoadSpecificties {
 	    	}
 	    	if(keys.length == vals.length){
 		    	for(int i = 0; i< keys.length; i++){
-		    		Integer val = (int)Math.ceil(Float.parseFloat(vals[i]));
-		    		spec.put(keys[i].toLowerCase(), val.toString());
+		    		
+		    		if(vals[i].replaceAll("[.0-9]+","").length() == 0){
+		    			//System.out.println("xx: |" + vals[i].replaceAll("[.0-9]+","") + "|");
+		    			//System.out.println(keys[i] + " - " + vals[i]);
+		    			Integer val = (int)Math.ceil(Float.parseFloat(vals[i]));
+		    			spec.put(keys[i].toLowerCase(), val.toString());
+		    		}
 		    		//System.out.println("KEY: " + keys[i] + " Vals: " + Math.ceil(Float.parseFloat(vals[i])));
 		    	}
 	    	}
@@ -274,6 +299,7 @@ public class LoadSpecificties {
 			
 		}catch (Exception e){
 			System.out.println("Error");
+			e.printStackTrace();
 		}finally{
 			try{
 				fstream.close();
@@ -326,7 +352,7 @@ public class LoadSpecificties {
 													"C:/Spoon Demos/new/salt/out_specificities/",
 													"C:/Spoon Demos/new/salt/out_hygine/");
 													*/
-		ArrayList<DatasetNode> ds = ls.buildLinkingXML("C:\\Spoon Demos\\new\\salt\\out_internal_clustering\\", "C:\\Spoon Demos\\new\\salt\\out_specificities\\", "C:\\Spoon Demos\\new\\salt\\out_hygine\\");
+		ArrayList<DatasetNode> ds = ls.buildLinkingXML("C:\\Spoon Demos\\new\\salt\\out_internal_clustering\\", "C:\\Spoon Demos\\new\\saltdemos\\specificity_out\\", "C:\\Spoon Demos\\new\\saltdemos\\datahygiene_out\\");
 		//System.out.println(ls.getEclDatasetCode());
 		/*for(int i = 0; i< ds.size(); i++){
         	System.out.println("Field Name : " + ds.get(i).getFieldName());

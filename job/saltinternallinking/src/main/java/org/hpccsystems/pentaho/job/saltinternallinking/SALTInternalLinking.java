@@ -105,7 +105,7 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
             e.printStackTrace();
             
         }
-        System.out.println("output dir: " + outputDir);
+        //System.out.println("output dir: " + outputDir);
         LoadSpecificties ls = new LoadSpecificties();
         ls.setModuleName(jobNameNoSpace+"module");
         if(!this.iteration.equalsIgnoreCase("1")){
@@ -114,10 +114,11 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
         ArrayList<DatasetNode> ds = ls.buildLinkingXML(outputDir + "\\",
 														specificitiesOutputFolder,
 														hygieneOutputFolder);
-		System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println(outputDir + " : " +
-				specificitiesOutputFolder + " : " +
-				hygieneOutputFolder);
+		//System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		//System.out.println(outputDir + " : " +
+		//		specificitiesOutputFolder + " : " +
+		//		hygieneOutputFolder);
+        
 		/*
 		ArrayList<DatasetNode> ds = ls.buildLinkingXML("C:/Spoon Demos/new/salt/out_internal_clustering/",
 				"C:/Spoon Demos/new/salt/out_specificities/",
@@ -135,10 +136,10 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
 		//String ecl = dsECL + "" + sl.ecl();
 		String ecl = sl.ecl();
         
-        logBasic("{----DATAPROFILING----}");
-        logBasic("{Dataset Job} Execute = " + ecl);
+        logBasic("{----SALT INTERNAL LINKING----}");
+        logBasic("{SALT INTERNAL LINKING Job} Execute = " + ecl);
         
-        logBasic("{Dataset Job} Previous =" + result.getLogText());
+        logBasic("{SALT INTERNAL LINKING Job} Previous =" + result.getLogText());
         
         result.setResult(true);
         
@@ -236,10 +237,10 @@ public class SALTInternalLinking extends ECLJobEntry{//extends JobEntryBase impl
         	out.close();
         }catch(Exception e){
         	
-        	System.out.println("****************************************");
+        	//System.out.println("****************************************");
         	System.out.println(e.toString());
         }
-        System.out.println("end Internal Linking");
+        //System.out.println("end Internal Linking");
         return result;
     }
 	

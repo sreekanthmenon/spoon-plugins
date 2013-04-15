@@ -18,8 +18,9 @@ public class ConceptEntryBO {
 	private int entryIndex = 0;
 	
 	public ConceptEntryBO(){}
-	public ConceptEntryBO(String conceptName){
-		this.conceptName = conceptName;
+	public ConceptEntryBO(String conceptCSV){
+		//this.conceptName = conceptName;
+		this.fromCSV(conceptCSV);
 	}
 
 	
@@ -110,14 +111,41 @@ public class ConceptEntryBO {
 		csv += scale + delm;//6
 		csv += specificity + delm;//7
 		csv += switchValue + delm;//8
-		csv += recordList.saveListAsString() + delm;//9
+		if(recordList != null){
+			csv += recordList.saveListAsString();//9
+		}
 		
 		
         return csv;
     }
-    
+    public String fromCSVtoXML(String in){
+    	 String[] strArr = in.split("[,]");
+    	 String xml = "";
+         try{
+        		recordList = new ConceptsRecordList();
+        	 xml = "<hyg:concept-def>\r\n" +
+        				"	<hyg:concept-name>" + strArr[0] + "</hyg:concept-name>\r\n" +
+        				"	<hyg:effectOnSpecificity>" + strArr[1] + "</hyg:effectOnSpecificity>\r\n" +
+        				"	<hyg:threshold>" + strArr[2] + "</hyg:threshold>\r\n" +
+        				"	<hyg:useBagOfWords>" + strArr[3] + "</hyg:useBagOfWords>\r\n" +
+        				"	<hyg:reOrderType>" + strArr[4] + "</hyg:reOrderType>\r\n" +
+        				"	<hyg:segmentType>" + strArr[5] + "</hyg:segmentType>\r\n" +
+        				"	<hyg:scale>" + strArr[6] + "</hyg:scale>\r\n" +
+        				"	<hyg:specificity>" + strArr[7] + "</hyg:specificity>\r\n" +
+        				"	<hyg:switchValue>" + strArr[8] + "</hyg:switchValue>\r\n" +
+        				recordList.fromStringToXML(strArr[9]) +
+        			"</hyg:concept-def>\r\n";
+        	 
+         }catch (Exception e){
+         	System.out.println("ConceptEntryBO: Failed to open fromCSV");
+         	System.out.println(in);
+         	System.out.println(e.toString());
+         	e.printStackTrace();
+         }
+         return xml;
+    }
     public void fromCSV(String in){
-        String[] strArr = in.split(",");
+        String[] strArr = in.split("[,]");
         try{
         	conceptName = strArr[0];
         	effectOnSpecificity = strArr[1];
@@ -132,13 +160,16 @@ public class ConceptEntryBO {
         	scale = strArr[6];
         	specificity = strArr[7];
         	switchValue = strArr[8];
+        	recordList = new ConceptsRecordList();
         	recordList.openFromString(strArr[9]);
         
         
         
         }catch (Exception e){
-        	System.out.println("Failed to open fromCSV");
+        	System.out.println("ConceptEntryBO: Failed to open fromCSV");
+        	System.out.println(in);
         	System.out.println(e.toString());
+        	e.printStackTrace();
         }
         
     }
