@@ -482,6 +482,7 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
              
             
             ArrayList<String> resultNames = eclDirect.getResultNames();
+            writeResultsLog(resultNames,eclDirect.getWuid());
             for (int n = 0; n<resultNames.size(); n++){
             	System.out.println("+++Results --------------------" + resultNames.get(n));
             	resName = resultNames.get(n);
@@ -634,7 +635,31 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
     }
     
     
-    
+   
+    public void writeResultsLog(ArrayList<String> resultNames, String wuid){
+    	String xml = "<elcResults>\r\n";
+    	xml += "<wuid><![CDATA[" + wuid + "]]><wuid>\r\n";
+    	for (int n = 0; n<resultNames.size(); n++){
+        	String resName = "";
+        	resName = resultNames.get(n);
+        	xml += "<result resulttype=\"" + resName + "\">\r\n";
+        	xml += "	<![CDATA[" + this.fileName + "\\" + resName + ".csv]]>\r\n";
+        	xml += "</result>\r\n";
+        	
+    	}
+    	xml += "</elcResults>";
+    	//write file as results.xml
+    	String resultFile = this.fileName + "\\results.xml";
+    	 try {              
+             System.getProperties().setProperty("resultsFile",resultFile);
+             
+             BufferedWriter out = new BufferedWriter(new FileWriter(resultFile));
+             out.write(xml);
+             out.close();
+         } catch (IOException e) {
+              e.printStackTrace();
+         }   
+    }
     
     
    
