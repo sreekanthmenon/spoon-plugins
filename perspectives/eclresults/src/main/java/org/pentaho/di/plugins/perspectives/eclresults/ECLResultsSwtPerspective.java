@@ -40,6 +40,7 @@ import au.com.bytecode.opencsv.CSVReader;
 
 
 public class ECLResultsSwtPerspective implements SpoonPerspective {
+
   private Composite comp;
   private static ECLResultsSwtPerspective instance = new ECLResultsSwtPerspective();
   
@@ -77,10 +78,6 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
   private void createUI(){
     String newFile = "";
     
-    System.out.println("create eclResults GUI");
-    //fileName = System.getProperty("fileName");
-   // fileName =  System.getProperties().getProperty("fileName");
-   // System.out.println("fileName" + fileName);
     
     parentShell = ((Spoon) SpoonFactory.getInstance()).getShell();
     
@@ -100,9 +97,7 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
  
     fileButton.setLayoutData(new GridData(SWT.LEFT, SWT.TOP, true, false));
     fileButton.setText("OPEN FILE");
-    
-    
-        
+  
     //Listener for the file open button (fileButton)
     Listener fileOpenListener = new Listener() {
 
@@ -124,43 +119,17 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
      
   fileButton.addListener(SWT.Selection, fileOpenListener);
   
-  
-  //folder = new TabFolder(comp, SWT.CLOSE);
-  
   folder = new CTabFolder(comp, SWT.CLOSE);
   folder.setSimple(false);
   folder.setBorderVisible(true);
   folder.setLayoutData(new GridData(GridData.FILL_BOTH));
-  //folder.addCTabFolder2Listener(null);
-   //for(int i = 0; i<5; i++){
- 
-	    //Tab 2
-//	   buildTab("tab"+i);
-       
-          // openFile(fileName);     
-  //}         
-            
-   /*     
-  table = new Table (group, SWT.VIRTUAL | SWT.BORDER);
-  table.setLinesVisible (true);
-  table.setHeaderVisible (true);
-  table.clearAll();
-  GridData data = new GridData(SWT.FILL, SWT.FILL, true, true);
-	data.heightHint = 200;
-	table.setLayoutData(data);
   
- 
-       
-   openFile(fileName);     
-        
- */
      
   }
   
   
   public void buildTab(String filename){
             
-    //TabItem tab2 = new TabItem(folder, SWT.NONE);
     CTabItem tab2 = new CTabItem(folder, SWT.NONE);
     tab2.setText(filename);
     
@@ -210,14 +179,8 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
                     System.out.println("Failed to find and open file fileName" + i );
                 }
             }
-            //folder.setSelection(0);
-            //int len = folder.getChildren().length;
             int len = folder.getItemCount();
-            //System.out.println("Number of items: " + folder.getItemCount());
-           // System.out.println("Number of tabs: " + len);
             folder.setSelection(len-1);
-            //System.out.println("fileName" + fileName);
-            //System.out.println("setActive -- isactive = true");
             this.isActive = true;
          }else{
              this.isActive = false;
@@ -225,7 +188,6 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
           
       }else{
            System.out.println("create eclResults setActive -- deactivate");
-          //  this.isActive = false;
       }
   }
 
@@ -302,27 +264,12 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
               //outStr = strLine;
               TableItem item = null;
               
-              
-              //item.setText(0,strLine);
-              
-              //StringTokenizer st = new StringTokenizer(strLine,",");
-              //length = st.countTokens();
-              //String[] strLineArr = strLine.split("\\,");
               if(first){
                   length = strLineArr.length;
               }else{
                    item = new TableItem (table, SWT.NONE);
               }
               
-              /*
-               * if(first){
-                for (int i=0; i<length; i++) {
-                    TableColumn column = new TableColumn (table, SWT.NONE);
-                    column.setText (i + " col");
-                }
-              }else{
-                  
-              }*/
               int thisLen = strLineArr.length;
               if(thisLen<=length){
                   //String[] line = new String[length];
@@ -332,12 +279,6 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
                       if(first){
                           TableColumn column = new TableColumn (table, SWT.NONE);
                           column.setText(strLineArr[i]);
-                           //System.out.println("*");
-                                    //System.out.println("**");
-                                    //System.out.println("***");
-                                    //System.out.println("****");
-                                    //System.out.println("*****");
-                                   // System.out.println(strLineArr[i]);
                       }else{
                          
                           //System.out.println("-- "+i+" -- " + strLineArr[i]);
@@ -383,6 +324,10 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
         }
         
     }
+  
+  
+  
+ 
   
   
   
