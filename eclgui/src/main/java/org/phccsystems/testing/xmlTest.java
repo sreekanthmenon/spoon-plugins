@@ -36,13 +36,13 @@ public class xmlTest {
 	      try{
 	    	  
 	    	  DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
-				Document doc = (Document) dBuilder.parse(fileName);
-				doc.getDocumentElement().normalize();
+			  DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
+			  Document doc = (Document) dBuilder.parse(fileName);
+			  doc.getDocumentElement().normalize();
 				
-				System.out.println("Root element : " + doc.getDocumentElement().getNodeName());
+			  System.out.println("Root element : " + doc.getDocumentElement().getNodeName());
 				
-				String wuid =  doc.getElementsByTagName("wuid").item(0).getTextContent();
+			  String wuid =  doc.getElementsByTagName("wuid").item(0).getTextContent();
 	          System.out.println(wuid);
 	          NodeList results = doc.getElementsByTagName("result");
 	          
