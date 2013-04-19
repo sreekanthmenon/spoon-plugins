@@ -55,7 +55,8 @@ public class SourceProfilesRecordList {
 					//arrayHeaders = lineArr;
 					first = false;
 				} else {
-					if(lineArr[1].length() >= firstRowLen){
+					//if(lineArr[1].length() >= firstRowLen){
+					if(lineArr.length == firstRowLen){
 						SourceProfilesRow objSourceProfilesRow =  new SourceProfilesRow();
 						objSourceProfilesRow.setSource(lineArr[0]);
 						len = lineArr[1];

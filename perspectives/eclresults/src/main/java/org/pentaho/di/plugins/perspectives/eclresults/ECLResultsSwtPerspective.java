@@ -330,10 +330,10 @@ public class ECLResultsSwtPerspective implements SpoonPerspective {
   }
   public void buildSrcProfilesTab(String thefilename,String resType,CTabFolder subfolder){
 	  System.out.println("buildSrcProfilesTab");
-	    //SourceProfilesTable table = new SourceProfilesTable(thefilename);
-	    //table.createContents(folder);
-	    //subfolder.setSelection(subfolder.getItemCount()-1);
-	  buildTab(thefilename,resType,subfolder);
+	    SourceProfilesTable table = new SourceProfilesTable(thefilename);
+	    table.createContents(subfolder);
+	    subfolder.setSelection(subfolder.getItemCount()-1);
+	  //buildTab(thefilename,resType,subfolder);
   }
   public void buildHygieneValidityErrorsTab(String thefilename,String resType,CTabFolder subfolder){
 	  System.out.println("buildHygieneValidityErrorsTab");
