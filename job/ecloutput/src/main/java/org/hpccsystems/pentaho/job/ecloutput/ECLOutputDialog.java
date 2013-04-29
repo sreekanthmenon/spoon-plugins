@@ -548,7 +548,7 @@ public class ECLOutputDialog extends ECLJobEntryDialog implements JobEntryDialog
         recordsetDetailsGroup.layout();
 
 
-        this.outputFormat = buildText("Format", null, lsMod, middle, margin, recordsetDetailsGroup);
+        this.outputFormat = buildText("Limit Columns (CSV)", null, lsMod, middle, margin, recordsetDetailsGroup);
         this.outputType = buildCombo("Type", this.outputFormat, lsMod, middle, margin, recordsetDetailsGroup,new String[]{"", "File", "File - CSV", "File - XML", "Piped", "Named"});
         
         if(jobEntry.getOutputFormat() != null){
@@ -772,6 +772,10 @@ public class ECLOutputDialog extends ECLJobEntryDialog implements JobEntryDialog
     	if(isDef.getText().equalsIgnoreCase("")){
     		isValid = false;
     		errors += "\"Is Definition\" is a required field!\r\n";
+    	}else if(isDef.getText().equalsIgnoreCase("yes")){
+    		isValid = false;
+    		errors += "Warning: \"Is Definition\" is set to yes, please keep in mind this output will not be executed until called.\r\n";
+    		errors += "\tAlso if this is your only output and the Definition isn't called then this will cause an error.\r\n";
     	}
     	
     	if(this.inputType.getText().equals("Expression")){
@@ -798,7 +802,7 @@ public class ECLOutputDialog extends ECLJobEntryDialog implements JobEntryDialog
     	
     	if(!isValid){
     		ErrorNotices en = new ErrorNotices();
-    		errors += "If you continue to save with errors you may encounter compile errors.\r\n\r\n";
+    		errors += "If you continue to save with Errors/Warnings you may encounter compile errors.\r\n\r\n";
     		
     		isValid = en.openValidateDialog(getParent(),errors);
     	}

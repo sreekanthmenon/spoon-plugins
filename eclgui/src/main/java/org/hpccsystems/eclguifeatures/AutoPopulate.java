@@ -750,7 +750,7 @@ public class AutoPopulate {
     
     public String getGlobalVariableEncrypted(List<JobEntryCopy> jobs, String ofType) throws Exception{
     	String pass = getGlobalVariable(jobs,ofType);
-    	if(pass.equalsIgnoreCase("")){
+    	if(pass == null || pass.equalsIgnoreCase("")){
 			return "";
 		}else{
 			return Encr.decryptPassword(pass);
@@ -884,6 +884,9 @@ public class AutoPopulate {
             //saving the loop code using arraylists
             datasets = adDS.toArray(new String[k]);
 
+        }
+        if(out == null){
+        	out = "";
         }
         return out;
 

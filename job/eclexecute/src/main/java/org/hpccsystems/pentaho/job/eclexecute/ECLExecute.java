@@ -472,8 +472,11 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
             //write the executed ecl code to file
             try {              
                 System.getProperties().setProperty("eclCodeFile",fileName);
-                
-                BufferedWriter out = new BufferedWriter(new FileWriter(this.fileName + "\\eclcode.txt"));
+                String tempFileName = this.fileName + "eclcode.txt";
+                if (System.getProperty("os.name").startsWith("Windows")) {
+                	tempFileName = this.fileName + "\\eclcode.txt";
+                }
+                BufferedWriter out = new BufferedWriter(new FileWriter(tempFileName));
                 out.write(eclCode);
                 out.close();
             } catch (IOException e) {
@@ -491,13 +494,17 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
 	            System.out.println("++Spring HTML -------------------------" + resName);
 	            if(resName.equalsIgnoreCase("dataProfilingResults") || resName.equalsIgnoreCase("Dataprofiling_AllProfiles")){ 
 	                RenderWebDisplay rwd = new RenderWebDisplay();
-	         		rwd.processFile(this.fileName + "\\" + resName + ".csv", this.fileName);
+	                String resFileName = this.fileName + resName + ".csv";
+	                if (System.getProperty("os.name").startsWith("Windows")) {
+	                	resFileName = this.fileName + "\\" + resName + ".csv";
+	                }
+	         		rwd.processFile(resFileName, this.fileName);
 	         		
 	         		String saltData = System.getProperty("saltData");
 	         		if(saltData!= null && !saltData.equals("")){
-	         			System.setProperty("saltData",  saltData + "," + this.fileName + "\\" + resName + ".csv");
+	         			System.setProperty("saltData",  saltData + "," + resFileName);
 	         		}else{
-	         			System.setProperty("saltData",  this.fileName + "\\" + resName + ".csv");
+	         			System.setProperty("saltData",  resFileName);
 	         		}
 	            }
 	            
@@ -658,12 +665,19 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
         	String resName = "";
         	resName = resultNames.get(n);
         	xml += "<result resulttype=\"" + resName + "\">";
-        	xml += "<![CDATA[" + this.fileName + "\\" + resName + ".csv]]>";
+        	if (System.getProperty("os.name").startsWith("Windows")) {
+        		xml += "<![CDATA[" + this.fileName + "\\" + resName + ".csv]]>";
+        	}else{
+        		xml += "<![CDATA[" + this.fileName + "" + resName + ".csv]]>";
+        	}
         	xml += "</result>\r\n";
     	}
     	xml += "</elcResults>";
     	//write file as results.xml
-    	String resultFile = this.fileName + "\\results.xml";
+    	String resultFile = this.fileName + "results.xml";
+        if (System.getProperty("os.name").startsWith("Windows")) {
+        	resultFile = this.fileName + "\\eclcode.txt";
+        }
     	 try {              
              //System.getProperties().setProperty("resultsFile",resultFile);
              cacheOutputInfo(resultFile);

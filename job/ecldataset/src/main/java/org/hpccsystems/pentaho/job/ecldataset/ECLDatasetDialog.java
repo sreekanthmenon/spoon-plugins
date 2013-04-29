@@ -167,11 +167,19 @@ public class ECLDatasetDialog extends ECLJobEntryDialog{//extends JobEntryDialog
         
         String serverHost = "";
         int serverPort = 8010;
+        //String serverAddress = "";        
+        //String serverHost = "";
+        //String serverPort = "";
+        String user = "";
+        String pass = "";
         try{
             //Object[] jec = this.jobMeta.getJobCopies().toArray();
                 
                 serverHost = ap.getGlobalVariable(this.jobMeta.getJobCopies(),"server_ip");
                 serverPort = Integer.parseInt(ap.getGlobalVariable(jobMeta.getJobCopies(),"server_port"));
+                user = ap.getGlobalVariable(jobMeta.getJobCopies(),"user_name");
+                pass = ap.getGlobalVariableEncrypted(jobMeta.getJobCopies(),"password");
+                
                
             }catch (Exception e){
                 System.out.println("Error Parsing existing Global Variables ");
@@ -179,7 +187,7 @@ public class ECLDatasetDialog extends ECLJobEntryDialog{//extends JobEntryDialog
                 
             }
 
-        final HPCCServerInfo hsi = new HPCCServerInfo(serverHost,serverPort);
+        final HPCCServerInfo hsi = new HPCCServerInfo(serverHost,serverPort,user,pass);
         fileList = hsi.fetchFileList();
         try{
         	ArrayList<String> files = ap.getLogicalFileName(this.jobMeta.getJobCopies());
