@@ -1,4 +1,4 @@
-package com.lexisnexis.resources;
+package com.hpccsystems.resources;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,7 +18,7 @@ public class PropertiesReader {
 	/* Property file read in this properties object */
 	private static Properties applicationProperties;
 	private static String propertiesFileLocation;
-	private static String fileName;
+	private static String fileName = "hpccsystems";
 	
 	
 	
@@ -39,7 +39,8 @@ public class PropertiesReader {
 		try {
 			String currentDir = System.getProperty("user.dir");
 		    System.out.println("Current dir using System:" +currentDir);
-			propertiesFileLocation = currentDir + "\\" + fileName + ".properties";
+			propertiesFileLocation = currentDir + "\\hpccsystems.properties";
+			System.out.println("Using file:" +propertiesFileLocation);
 			//applicationProperties.load(PropertiesReader.class.getClassLoader().getResourceAsStream(propertiesFileLocation));
 			applicationProperties.load(new FileInputStream(propertiesFileLocation));
 			

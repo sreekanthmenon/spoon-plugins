@@ -1,4 +1,4 @@
-package com.lexisnexis.resources;
+package com.hpccsystems.resources;
 
 import java.io.IOException;
 

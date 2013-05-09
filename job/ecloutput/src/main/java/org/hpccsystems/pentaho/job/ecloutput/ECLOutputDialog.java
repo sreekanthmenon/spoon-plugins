@@ -637,18 +637,22 @@ public class ECLOutputDialog extends ECLJobEntryDialog implements JobEntryDialog
         
         String serverHost = "";
         int serverPort = 8010;
+        String user = "";
+        String pass = "";
         try{
             //Object[] jec = this.jobMeta.getJobCopies().toArray();
                 
                 serverHost = ap.getGlobalVariable(this.jobMeta.getJobCopies(),"server_ip");
                 serverPort = Integer.parseInt(ap.getGlobalVariable(jobMeta.getJobCopies(),"server_port"));
-               
+                user = ap.getGlobalVariable(jobMeta.getJobCopies(),"user_name");
+                pass = ap.getGlobalVariableEncrypted(jobMeta.getJobCopies(),"password");
+                
             }catch (Exception e){
                 System.out.println("Error Parsing existing Global Variables ");
                 System.out.println(e.toString());
                 
             }
-        HPCCServerInfo hsi = new HPCCServerInfo(serverHost,serverPort);
+        HPCCServerInfo hsi = new HPCCServerInfo(serverHost,serverPort,user,pass);
         
         clusters = hsi.fetchTargetClusters();
         
