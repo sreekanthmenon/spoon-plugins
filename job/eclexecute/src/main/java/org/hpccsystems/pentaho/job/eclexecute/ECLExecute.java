@@ -513,10 +513,10 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
                 isValid = eclDirect.execute(eclCode, this.debugLevel);
                // System.out.println("---------------- finished submitToCluster");
 
-                //System.out.println("---------------- finished submitToCluster");
+                System.out.println("---------------- finished submitToCluster");
                 if(isValid){
                 	//System.out.println("---------------- writing file");
-                //	System.out.println("---------------- writing file");
+                	System.out.println("---------------- writing file");
                 	isValid = eclDirect.writeResultsToFile(this.fileName);
                 }
                 if(!isValid){
@@ -754,15 +754,17 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
     	xml += "<serverAddress><![CDATA[" + serverAddress + "]]></serverAddress>\r\n";
     	xml += "<serverPort><![CDATA[" + port + "]]></serverPort>\r\n";
     	for (int n = 0; n<resultNames.size(); n++){
-        	String resName = "";
-        	resName = resultNames.get(n);
-        	xml += "<result resulttype=\"" + resName + "\">";
-        	if (System.getProperty("os.name").startsWith("Windows")) {
-        		xml += "<![CDATA[" + this.fileName + "\\" + wuid + "_" + resName + ".csv]]>";
-        	}else{
-        		xml += "<![CDATA[" + this.fileName + ""+ wuid + "_" + resName + ".csv]]>";
-        	}
-        	xml += "</result>\r\n";
+    		if(wuid != null && !wuid.equalsIgnoreCase("null")){
+	        	String resName = "";
+	        	resName = resultNames.get(n);
+	        	xml += "<result resulttype=\"" + resName + "\">";
+	        	if (System.getProperty("os.name").startsWith("Windows")) {
+	        		xml += "<![CDATA[" + this.fileName + "\\" + wuid + "_" + resName + ".csv]]>";
+	        	}else{
+	        		xml += "<![CDATA[" + this.fileName + ""+ wuid + "_" + resName + ".csv]]>";
+	        	}
+	        	xml += "</result>\r\n";
+    		}
     	}
     	xml += "</elcResults>";
     	//write file as results.xml
@@ -779,16 +781,18 @@ public class ECLExecute extends ECLJobEntry{//extends JobEntryBase implements Cl
         //if (System.getProperty("os.name").startsWith("Windows")) {
         //	resultFile = this.fileName + "\\results.xml";
         //}
-        System.out.println("writing results xml: " + resultFile);
-    	 try {              
-             //System.getProperties().setProperty("resultsFile",resultFile);
-             cacheOutputInfo(resultFile);
-             BufferedWriter out = new BufferedWriter(new FileWriter(resultFile));
-             out.write(xml);
-             out.close();
-         } catch (IOException e) {
-              e.printStackTrace();
-         }   
+     	if(wuid != null && !wuid.equalsIgnoreCase("null")){
+	        System.out.println("writing results xml: " + resultFile);
+	    	 try {              
+	             //System.getProperties().setProperty("resultsFile",resultFile);
+	             cacheOutputInfo(resultFile);
+	             BufferedWriter out = new BufferedWriter(new FileWriter(resultFile));
+	             out.write(xml);
+	             out.close();
+	         } catch (IOException e) {
+	              e.printStackTrace();
+	         }   
+    	}
     }
     
     

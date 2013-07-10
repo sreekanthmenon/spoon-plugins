@@ -238,12 +238,6 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
         }
         
         
-        System.setProperty("Dataset-" + getDatasetName()+"-rsDef",  dataset.getRecordDef());
-        System.setProperty("Dataset-" + getDatasetName()+"-dsDef",  dataset.getDatasetDef());
-        System.setProperty("Dataset-" + getDatasetName()+"-rs", dataset.getRecordName());
-        System.setProperty("Dataset-" + getDatasetName()+"-ds", dataset.getName());
-        System.setProperty("Dataset-" + getDatasetName()+"-logical",this.getLogicalFileName());
-        System.setProperty("Dataset-" + getDatasetName()+"-type",this.getFileType());
         
         
         
@@ -276,6 +270,14 @@ public class ECLDataset extends ECLJobEntry{//extends JobEntryBase implements Cl
         */
         result.setRows(list);
         result.setLogText("ECLDataset executed, ECL code added");
+        
+        
+        System.setProperty("Dataset-" + getDatasetName()+"-rsDef",  dataset.getRecordDef());
+        System.setProperty("Dataset-" + getDatasetName()+"-dsDef",  dataset.getDatasetDef());
+        System.setProperty("Dataset-" + getDatasetName()+"-rs", dataset.getRecordName());
+        System.setProperty("Dataset-" + getDatasetName()+"-ds", dataset.getName());
+        System.setProperty("Dataset-" + getDatasetName()+"-logical",this.getLogicalFileName());
+        System.setProperty("Dataset-" + getDatasetName()+"-type",this.getFileType());
         
         return result;
     }
